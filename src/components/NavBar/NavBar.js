@@ -1,11 +1,10 @@
 import React from "react";
-import NavLeftSide from "./LeftSide";
 import NavRightSide from "./RightSide";
 import NavBarContainer from "./NavBarContainer";
-import MenuIcon from "@material-ui/icons/Menu";
-import { Typography, IconButton, Button } from "@material-ui/core/";
+import { Typography, IconButton, Avatar } from "@material-ui/core/";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import { Link } from "react-router-dom";
+import NavBarMenu from "./NavBarMenu";
+import capitalize from "lodash/fp/capitalize";
 
 const styles = {
   navLeftSideButton: {
@@ -16,41 +15,64 @@ const styles = {
     color: "#467611"
   },
   typography: {
-    color: "black",
-    fontFamily: "roboto",
+    color: "white",
+    fontFamily: "Verdana, Geneva, sans-serif",
     fontSize: 20
   },
   accountCircle: {
-    fontSize: 40,
-    color: "#736D6D"
+    fontSize: 50
+  },
+  avatar: {
+    color: "#c4c6c6",
+    backgroundColor: "#969696"
   }
 };
 
-function NavBar(props) {
-  return (
-    <NavBarContainer>
-      <NavLeftSide>
-        <Button
-          variant="fab"
-          style={styles.navLeftSideButton}
-          aria-label="Edit"
-          mini
-          component={Link}
-          to="/dashboard"
-        >
-          <MenuIcon style={styles.menuIcon} />
-        </Button>
-      </NavLeftSide>
+class NavBar extends React.Component {
 
-      <NavRightSide>
-        <Typography style={styles.typography}>{props.userName}</Typography>
+  constructor(props) {
+    super(props);
+    this.state = { anchorEl: null };
+  }
 
-        <IconButton color="secondary" aria-label="Menu">
-          <AccountCircle style={styles.accountCircle} />
-        </IconButton>
-      </NavRightSide>
-    </NavBarContainer>
-  );
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  render(){
+
+    const { anchorEl } = this.state;
+    const { name } = this.props.auth.user;
+    const { onLogout } = this.props.auth;
+
+    return (
+      <NavBarContainer>
+        <NavRightSide>
+          <Typography style={styles.typography}>{capitalize(name)}</Typography>
+          <IconButton 
+            aria-label="Menu"
+            aria-owns={anchorEl ? "menu-appbar" : undefined}
+            aria-haspopup="true"
+            onClick={this.handleClick}
+          >
+            <Avatar style={styles.avatar}>
+              <AccountCircle style={styles.accountCircle} />
+            </Avatar>
+          </IconButton>
+          <NavBarMenu  
+            anchorEl={anchorEl}
+            handleClose={this.handleClose}
+            handleLogout={onLogout}
+          />
+        </NavRightSide>
+      </NavBarContainer>
+    );
+  }
+
 }
 
 export default NavBar;

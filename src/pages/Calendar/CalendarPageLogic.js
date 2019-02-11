@@ -11,6 +11,7 @@ import * as Utils from "./Utils.js";
 import "./Calendar.css";
 import HeaderStrategy from "./HeaderStrategy";
 import CalendarStrategy from "./CalendarStrategy";
+import capitalize from "lodash/fp/capitalize";
 
 class CalendarPageLogic extends React.Component {
   constructor(...args) {
@@ -144,14 +145,16 @@ class CalendarPageLogic extends React.Component {
       };
     });
   };
+  
   componentDidMount() {
     this.printAppointments();
   }
 
   render() {
+
     return (
       <div>
-        <NavBar userName={this.props.auth.user.name.toUpperCase()} />
+        <NavBar auth={this.props.auth} />
 
         <div className="calendar-container">
           <HeaderView
