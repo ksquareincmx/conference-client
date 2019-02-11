@@ -1,0 +1,30 @@
+.weeks-container {
+  height: 500px;
+  width: 100%;
+  margin: auto;
+}
+
+.weeks-container div.rbc-time-header {
+  visibility: visible;
+  width: 100%;
+  height: 40px;
+}
+
+.weeks-container .rbc-toolbar {
+  visibility: hidden;
+  height: 0%;
+  width: 0%;
+}
+
+.weeks-container .rbc-time-header-content {
+  width: 560px;
+}
+
+.weeks-container .rbc-time-content {
+  width: 100%;
+  overflow: hidden;
+}
+
+.weeks-container .rbc-time-view-resources .rbc-day-slot {
+  min-width: 112px;
+}

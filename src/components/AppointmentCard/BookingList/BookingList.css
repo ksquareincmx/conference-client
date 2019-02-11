@@ -1,0 +1,5 @@
+.booking-list {
+  max-height: 450px;
+  overflow: auto;
+  max-width: 550px;
+}

@@ -1,0 +1,11 @@
+.months-container {
+  height: 500px;
+  width: 100%;
+  margin: auto;
+}
+
+.months-container .rbc-toolbar {
+  visibility: hidden;
+  width: 0%;
+  height: 0%;
+}
