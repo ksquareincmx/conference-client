@@ -1,40 +1,46 @@
-import React from 'react'
-import Chip from '@material-ui/core/Chip';
-import TextField from '@material-ui/core/TextField';
-import cuid from 'cuid';
+import React from "react";
+import Chip from "@material-ui/core/Chip";
+import TextField from "@material-ui/core/TextField";
+import { Grid } from "@material-ui/core";
+import { withStyles } from '@material-ui/core'
+import cuid from "cuid";
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    maxHeight: 110,
+    overflow: "auto"
+  },
+  chips: {
+    fontSize: 20
+  },
+  chip: {
+    fontSize: 20,
+    margin: theme.spacing.unit / 4
+  }
+});
 
 class ChipList extends React.Component {
-
   state = {
     chipData: [],
-    value: ''
+    value: ""
   };
 
-  styles = {
-    chip: {
-      fontSize: 20,
-      marginRight: 24,
-      marginBottom: 24,
-    }
-  }
-
-  handleEnterPress = (e) => {
-    if (e.key === 'Enter') {
-      const user = { key: cuid(), user: e.target.value }
+  handleEnterPress = e => {
+    if (e.key === "Enter") {
+      const user = { key: cuid(), user: e.target.value };
       this.setState(prevState => ({
         chipData: [...prevState.chipData, user],
-        value: ''
+        value: ""
       }));
     }
+  };
 
-  }
-
-  handleChangeValue = (e) => {
-    this.setState({ value: e.target.value })
-  }
+  handleChangeValue = e => {
+    this.setState({ value: e.target.value });
+  };
 
   handleDelete = data => () => {
-
     this.setState(state => {
       const chipData = [...state.chipData];
       const chipToDelete = chipData.indexOf(data);
@@ -44,32 +50,30 @@ class ChipList extends React.Component {
   };
 
   render() {
+    const { classes } = this.props
     return (
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-          <TextField
-            value={this.state.value}
-            label='Share'
-            placeholder='User email'
-            onKeyPress={this.handleEnterPress}
-            onChange={this.handleChangeValue}
-            style={{ marginBottom: 30, fontSize: 20 }}
-          />
-        </div>
-
+      <Grid className={classes.root}>
+        <TextField
+          fullWidth
+          value={this.state.value}
+          placeholder="Enter Email"
+          className={classes.chips}
+          onKeyPress={this.handleEnterPress}
+          onChange={this.handleChangeValue}
+        />
         <div>
-          {this.state.chipData.map(data =>
+          {this.state.chipData.map(data => (
             <Chip
-              style={this.styles.chip}
+              className={classes.chip}
               key={data.key}
               label={data.user}
               onDelete={this.handleDelete(data)}
             />
-          )}
+          ))}
         </div>
-      </div>
+      </Grid>
     );
   }
 }
 
-export default ChipList;
+export default withStyles(styles)(ChipList);

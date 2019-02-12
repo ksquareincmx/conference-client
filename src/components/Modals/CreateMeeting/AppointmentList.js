@@ -1,39 +1,42 @@
 import React from "react";
-import { Card, Grid, CardContent } from "@material-ui/core/";
+import { Card, CardContent, CardActions, CardHeader } from "@material-ui/core/";
+import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
-import TimeSelect from "./TimeSelect";
-import RoomSelect from "./RoomSelect";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList/";
 import DatePicker from "./DatePicker";
+import TimeSelect from "./TimeSelect";
+import RoomSelect from "./RoomSelect";
+import addZeros from "../../../utils/AddZeros";
+
+const styles = theme => ({
+  card: {
+    backgroundColor: theme.palette.background.paper,
+    width: 500,
+    maxWidth: 500,
+    borderRadius: 5,
+    maxHeight: 760
+  },
+  root: {
+    flexGrow: 1
+  },
+  header: {
+    fontSize: 40,
+    color: "#5094E3"
+  },
+  content: {
+    padding: theme.spacing.unit * 1.5
+  },
+  subtitle: {
+    fontWeight: "bold",
+    color: "#1E90FF"
+  }
+});
 
 class AppointmentList extends React.Component {
-  styles = {
-    card: {
-      backgroundColor: "#fefefe",
-      width: 700,
-      maxWidth: 700,
-      minHeight: 600,
-      borderRadius: 25,
-      padding: 20,
-      display: "flex",
-      flexDirection: "column"
-    },
-
-    header: {
-      fontSize: 40,
-      color: "#5094E3",
-      fontFamily: "roboto"
-    },
-
-    cardContent: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between"
-    }
-  };
-
   state = {
     disabledEndTimeSelect: true,
     disabledStartTimeSelect: true,
@@ -110,13 +113,6 @@ class AppointmentList extends React.Component {
     this.setState({ reasonAppoointmentText: event.target.value });
   };
 
-  addZeros = number => {
-    if (number < 10) {
-      return "0" + String(number);
-    }
-    return String(number);
-  };
-
   getDate = () => {
     const date = new Date();
     const day = addZeros(date.getDate());
@@ -185,6 +181,7 @@ class AppointmentList extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     let date = (
       <DatePicker
         setDate={this.setDate}
@@ -203,88 +200,109 @@ class AppointmentList extends React.Component {
         alignItems="center"
         style={{ height: "100%" }}
       >
-        <Card style={this.styles.card}>
-          <div>
-            <header style={this.styles.header}>Appointment List</header>
-            <Divider />
-          </div>
-
-          <CardContent style={this.styles.cardContent}>
-            <div style={{ fontWeight: "bold" }}> Reservation date </div>
-            <Grid container direction="row">
+        <Card className={classes.card}>
+          <CardHeader classes={{ title: classes.header }} title="New Meeting" />
+          <Divider />
+          <CardContent xs={12} className={classes.root}>
+            <Grid
+              xs={12}
+              container
+              direction="column"
+              className={classes.content}
+            >
+              <Typography className={classes.subtitle} variant="subtitle1">
+                Reservation Date
+              </Typography>
               {date}
             </Grid>
-
-            <div style={{ fontWeight: "bold" }}>Reservation time</div>
-            <Grid container direction="row">
-              <TimeSelect
-                disabledHour={this.state.disabledStartTimeSelect}
-                SetTime={this.setBookingStartTime}
-                startTime={this.state.startTime}
-              />
-              <TimeSelect
-                disabledHour={this.state.disabledEndTimeSelect}
-                SetTime={this.setBookingEndTime}
-                endTime={this.state.endTime}
+            <Grid
+              xs={12}
+              container
+              direction="column"
+              className={classes.content}
+            >
+              <Typography className={classes.subtitle} variant="subtitle1">
+                Reservation Time
+              </Typography>
+              <Grid container direction="row">
+                <TimeSelect
+                  disabledHour={this.state.disabledStartTimeSelect}
+                  SetTime={this.setBookingStartTime}
+                  startTime={this.state.startTime}
+                />
+                <TimeSelect
+                  disabledHour={this.state.disabledEndTimeSelect}
+                  SetTime={this.setBookingEndTime}
+                  endTime={this.state.endTime}
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              xs={12}
+              container
+              direction="column"
+              className={classes.content}
+            >
+              <Typography className={classes.subtitle} variant="subtitle1">
+                Conference Room
+              </Typography>
+              <RoomSelect
+                disabled={this.state.disabledConferenceSelect}
+                setRoom={this.setRoom}
+                room={room}
+                roomService={this.props.roomService}
               />
             </Grid>
-
-            <div style={{ fontWeight: "bold" }}> Conference Room </div>
-            <RoomSelect
-              disabled={this.state.disabledConferenceSelect}
-              setRoom={this.setRoom}
-              room={room}
-              roomService={this.props.roomService}
-            />
-
-            <div style={{ fontWeight: "bold" }}>Reason for the Appointment</div>
-            <TextField
-              id="standard-full-width"
-              style={{ margin: 8 }}
-              placeholder="Reason"
-              fullWidth
-              margin="normal"
-              onChange={this.handleChangeReason}
-              InputLabelProps={{
-                shrink: true
-              }}
-            />
+            <Grid
+              xs={12}
+              container
+              direction="column"
+              className={classes.content}
+            >
+              <Typography className={classes.subtitle} variant="subtitle1">
+                Reason for the Appointment
+              </Typography>
+              <TextField
+                id="standard-full-width"
+                placeholder="Reason"
+                fullWidth
+                onChange={this.handleChangeReason}
+                InputLabelProps={{
+                  shrink: true
+                }}
+              />
+            </Grid>
+            <Grid
+              xs={12}
+              container
+              direction="column"
+              className={classes.content}
+            >
+              <Typography className={classes.subtitle} variant="subtitle1">
+                Invite People
+              </Typography>
+              <ChipList />
+            </Grid>
           </CardContent>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              marginLeft: 30
-            }}
-          >
-            <ChipList />
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <CardActions style={{ justifyContent: "center" }}>
             <MaterialButton
               textButton="Back"
+              sizeButton="large"
+              colorButton="#909497"
               onClick={this.props.handleOnCloseModal}
-              colorButton="#1F599D"
             />
-
             <MaterialButton
               textButton="Next"
+              sizeButton="large"
               colorButton="#5094E3"
               onClick={this.handleClickNext}
               disabled={this.state.disabledNextButton}
             />
-          </div>
+          </CardActions>
         </Card>
       </Grid>
     );
   }
-}
-
-function addZeros(number) {
-  if (number < 10) {
-    return "0" + String(number);
-  }
-  return String(number);
 }
 
 function postDto(state) {
@@ -311,4 +329,4 @@ function postDto(state) {
   };
 }
 
-export default AppointmentList;
+export default withStyles(styles)(AppointmentList);
