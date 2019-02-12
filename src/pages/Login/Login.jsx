@@ -32,7 +32,7 @@ function LoginPage(props) {
         auth.jwt == null ? (
           <LoginPageLogic auth={auth} />
         ) : (
-          <Redirect to="/calendar" />
+          <Redirect to="/dashboard" />
         )
       }
     </AuthConsumer>

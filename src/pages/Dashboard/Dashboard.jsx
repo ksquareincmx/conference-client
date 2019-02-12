@@ -8,34 +8,36 @@ import AppointmentCard from "components/AppointmentCard/";
 
 class DashboardPageLogic extends React.Component {
   render() {
+    const { auth } = this.props;
+
     return (
-      <BookingProvider auth={this.props.auth}>
-        <BookingConsumer>
-          {booking => (
-            <RoomProvider auth={this.props.auth}>
-              <RoomConsumer>
-                {roomService => (
-                  <UserProvider auth={this.props.auth}>
-                    <UserConsumer>
-                      {userService => (
-                        <div>
-                          <NavBar userName={this.props.auth.user.name} />
+      <div> 
+        <NavBar auth={auth} />
+        <BookingProvider auth={auth}>
+          <BookingConsumer>
+            {booking => (
+              <RoomProvider auth={auth}>
+                <RoomConsumer>
+                  {roomService => (
+                    <UserProvider auth={auth}>
+                      <UserConsumer>
+                        {userService => (
                           <AppointmentCard
                             booking={booking}
-                            auth={this.props.auth}
+                            auth={auth}
                             roomService={roomService}
                             userService={userService}
                           />
-                        </div>
-                      )}
-                    </UserConsumer>
-                  </UserProvider>
-                )}
-              </RoomConsumer>
-            </RoomProvider>
-          )}
-        </BookingConsumer>
-      </BookingProvider>
+                        )}
+                      </UserConsumer>
+                    </UserProvider>
+                  )}
+                </RoomConsumer>
+              </RoomProvider>
+            )}
+          </BookingConsumer>
+        </BookingProvider>
+      </div>
     );
   }
 }
