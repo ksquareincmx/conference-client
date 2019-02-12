@@ -1,7 +1,6 @@
 import React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
 import { Select, Grid } from "@material-ui/core/";
 import cuid from "cuid";
 
@@ -13,8 +12,6 @@ class RoomSelect extends React.Component {
 
   styles = {
     select: {
-      marginTop: 8,
-      marginRight: 8,
       width: 150
     }
   };
@@ -62,10 +59,13 @@ class RoomSelect extends React.Component {
           onChange={this.handleOnChange}
           style={this.styles.select}
           disabled={this.props.disabled}
+          displayEmpty
         >
+          <MenuItem value="" disabled>
+            Room
+          </MenuItem>
           {this.state.rooms.map(room => (
             <MenuItem value={room.id} key={cuid()}>
-              {" "}
               {room.name}
             </MenuItem>
           ))}
@@ -75,10 +75,7 @@ class RoomSelect extends React.Component {
 
     return (
       <Grid item xs={6}>
-        <FormControl style={{ marginRight: 20, marginBottom: 20 }}>
-          <InputLabel>Room</InputLabel>
-          {roomSelect}
-        </FormControl>
+        <FormControl>{roomSelect}</FormControl>
       </Grid>
     );
   }
