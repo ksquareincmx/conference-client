@@ -1,5 +1,6 @@
 import React from "react";
 import AuthService from "services/AuthService";
+import StorageService from "services/StorageService"
 import baseUri from "../../config/baseUri";
 
 const AuthContext = React.createContext({
@@ -12,19 +13,24 @@ const AuthContext = React.createContext({
 export const AuthConsumer = AuthContext.Consumer;
 
 export class AuthProvider extends React.Component {
-  authService = AuthService(baseUri + "auth/googlelogin");
+
   state = {
     user: null,
     jwt: null
   };
 
+  authService = AuthService(baseUri + "auth/googlelogin");
+  localStorage = StorageService();
+
   componentDidMount() {
-    // this.refreshLocalStorage();
     if (typeof Storage !== "undefined") {
-      if (localStorage.getItem("cb_jwt") && localStorage.getItem("cb_user")) {
-        const user = JSON.parse(localStorage.getItem("cb_user"));
-        const jwt = JSON.parse(localStorage.getItem("cb_jwt"));
-        this.setState({ user, jwt });
+
+      const jwt = this.localStorage.getAuthToken();
+      const user = this.localStorage.getUserInfo();
+
+      if (jwt && user) {
+        this.setState({ jwt, user });
+        this.localStorage.update(jwt, user);
       }
     }
   }
@@ -40,7 +46,10 @@ export class AuthProvider extends React.Component {
           refreshToken: res.refresh_token
         },
         user: res.user // { id: number, email: string, name: string, role: string, picture: string }
-      }, this.refreshLocalStorage);
+      }, () => {
+        const { jwt, user } = this.state;
+        this.localStorage.update(jwt, user);
+      });
     } catch (err) {
       console.log(err);
     }
@@ -50,15 +59,12 @@ export class AuthProvider extends React.Component {
     this.setState({
       user: null,
       jwt: null
-    }, this.refreshLocalStorage);
+    }, () => {
+      const { jwt, user } = this.state;
+      this.localStorage.update(jwt, user);
+    });
     
   };
-
-  refreshLocalStorage = () => {
-    const { user, jwt } = this.state;
-    localStorage.setItem("cb_user", JSON.stringify(user));
-    localStorage.setItem("cb_jwt", JSON.stringify(jwt));
-  }
 
   render() {
     return (
