@@ -15,6 +15,7 @@ function DatePickers(props) {
         }}
         disabled={props.disabled}
         onChange={props.setDate}
+        error={props.isInvalidDate}
       />
     </form>
   );

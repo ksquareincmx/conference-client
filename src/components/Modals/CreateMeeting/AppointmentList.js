@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, CardContent, CardActions, CardHeader } from "@material-ui/core/";
+import React, {Fragment} from "react";
+import { Card, CardContent, CardActions, CardHeader, Collapse } from "@material-ui/core/";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
@@ -11,6 +11,7 @@ import DatePicker from "./DatePicker";
 import TimeSelect from "./TimeSelect";
 import RoomSelect from "./RoomSelect";
 import addZeros from "../../../utils/AddZeros";
+import {validateBooking} from "./meetingValidations";
 
 const styles = theme => ({
   card: {
@@ -33,6 +34,9 @@ const styles = theme => ({
   subtitle: {
     fontWeight: "bold",
     color: "#1E90FF"
+  },
+  alertMessage: {
+    color: "red",
   }
 });
 
@@ -49,8 +53,15 @@ class AppointmentList extends React.Component {
     startTime: "",
     endTime: "",
     room: "",
-    reasonAppoointmentText: "",
-    attendees: []
+    reasonAppointmentText: "",
+    attendees: [],
+    isInvalidDate: false,
+    isInvalidHour: false,
+    isInvalidReason: false,
+    isInvalidInvite: false,
+    invalidWeekendMessage: "",
+    invalidDateMessage: "",
+    invalidHourMessage: ""
   };
 
   enableStartTimeSelect = () => {
@@ -94,24 +105,59 @@ class AppointmentList extends React.Component {
     );
   };
 
+  validate = (bookingObj) => {
+    const bookingValidated = validateBooking(bookingObj);
+
+    this.setState({
+      ...bookingValidated.specificValidations
+    });
+
+    return bookingValidated.isValidBooking;
+  }
+
   handleClickNext = async () => {
     const post = postDto(this.state);
+    let isBookingValid= this.validate(post);
 
-    if (this.state.bookingClicked) {
-      const res = await this.props.booking.modifyBooking(
-        post,
-        this.props.bookingClickedObj.bookingId
-      );
-      window.location.href = "/calendar";
-      return 0;
+    if (isBookingValid) {
+      if (this.state.bookingClicked) {
+        const res = await this.props.booking.modifyBooking(
+          post,
+          this.props.bookingClickedObj.bookingId
+        );
+        window.location.href = "/calendar";
+        return 0;
+      }
+      try {
+        const res = await this.props.booking.createNewBooking(post);
+        this.props.handleOnCloseModal();
+        window.location.reload();
+        console.log(res);
+        if (res.id) {
+          //Temporal solution,it should redirect to /booking:id
+          alert(
+            "id: " + res.id + " " +
+            "Start date: " + res.start + " " + 
+            "End date: " + res.end + " " +
+            "Reason: " + res.description
+          );
+        } else {
+          alert(res); 
+        }
+      } catch (error) {
+        alert(error);
+      }   
     }
-    const res = await this.props.booking.createNewBooking(post);
-    window.location.href = "/calendar";
+    //window.location.href = "/calendar";
   };
 
   handleChangeReason = event => {
-    this.setState({ reasonAppoointmentText: event.target.value });
+    this.setState({ reasonAppointmentText: event.target.value });
   };
+
+  handleChangeInvite = attendeesList => {
+    this.setState({attendees: attendeesList});
+  }
 
   getDate = () => {
     const date = new Date();
@@ -187,6 +233,7 @@ class AppointmentList extends React.Component {
         setDate={this.setDate}
         disabled={this.state.disabledDate}
         date={this.state.date}
+        isInvalidDate={this.state.isInvalidDate}
       />
     );
     let room = this.props.room;
@@ -214,6 +261,22 @@ class AppointmentList extends React.Component {
                 Reservation Date
               </Typography>
               {date}
+              <Collapse in={this.state.isInvalidDate}>
+              <small className={classes.alertMessage}>
+                {
+                  this.state.invalidWeekendMessage !== "" ?
+                  <Fragment>
+                    {this.state.invalidWeekendMessage}
+                    <br />
+                    {this.state.invalidDateMessage}
+                  </Fragment>
+                :
+                  <Fragment>
+                    {this.state.invalidDateMessage}
+                  </Fragment>
+                }
+              </small>
+            </Collapse>
             </Grid>
             <Grid
               xs={12}
@@ -229,13 +292,20 @@ class AppointmentList extends React.Component {
                   disabledHour={this.state.disabledStartTimeSelect}
                   SetTime={this.setBookingStartTime}
                   startTime={this.state.startTime}
+                  isInvalidHour={this.state.isInvalidHour}
                 />
                 <TimeSelect
                   disabledHour={this.state.disabledEndTimeSelect}
                   SetTime={this.setBookingEndTime}
                   endTime={this.state.endTime}
+                  isInvalidHour={this.state.isInvalidHour}
                 />
               </Grid>
+              <Collapse in={this.state.isInvalidHour}>
+                <small className={classes.alertMessage}>
+                  {this.state.invalidHourMessage}
+                </small>
+              </Collapse>
             </Grid>
             <Grid
               xs={12}
@@ -270,7 +340,13 @@ class AppointmentList extends React.Component {
                 InputLabelProps={{
                   shrink: true
                 }}
+                error={this.state.isInvalidReason}
               />
+              <Collapse in={this.state.isInvalidReason}>
+              <small className={classes.alertMessage}>
+                Reason can not be empty
+              </small>
+            </Collapse>
             </Grid>
             <Grid
               xs={12}
@@ -281,7 +357,17 @@ class AppointmentList extends React.Component {
               <Typography className={classes.subtitle} variant="subtitle1">
                 Invite People
               </Typography>
-              <ChipList />
+              <ChipList 
+                handleChangeInvite={this.handleChangeInvite} 
+                isInvalidInvite={this.state.isInvalidInvite}
+              />
+              <Fragment>
+                <Collapse in={this.state.isInvalidInvite}>
+                  <small className={classes.alertMessage}>
+                    You need to invite at least one person
+                  </small>
+                </Collapse>
+              </Fragment>
             </Grid>
           </CardContent>
           <CardActions style={{ justifyContent: "center" }}>
@@ -307,7 +393,7 @@ class AppointmentList extends React.Component {
 
 function postDto(state) {
   return {
-    description: state.reasonAppoointmentText,
+    description: state.reasonAppointmentText,
     roomId: state.roomId,
     start:
       state.date +
@@ -316,7 +402,7 @@ function postDto(state) {
       ":" +
       state.startTime.minute +
       ":" +
-      "00.000Z",
+      "00.000-06:00",
     end:
       state.date +
       "T" +
@@ -324,7 +410,7 @@ function postDto(state) {
       ":" +
       state.endTime.minute +
       ":" +
-      "00.000Z",
+      "00.000-06:00",
     attendees: [...state.attendees]
   };
 }

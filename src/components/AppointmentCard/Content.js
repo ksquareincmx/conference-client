@@ -19,7 +19,12 @@ class Content extends React.Component {
   };
 
   handleOnClickCreateMeeting = event => {
-    this.setState({ openModal: true });
+    this.setState({ 
+      openModal: true, 
+      room: undefined,
+      quickAppointment: false,
+      roomId: null,
+    });
   };
 
   handleOnCloseModal = event => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, MenuItem } from "@material-ui/core/";
+import { Menu, MenuItem, Divider } from "@material-ui/core/";
 import { Link } from "react-router-dom";
 
 
@@ -39,7 +39,7 @@ function NavBarMenu (props) {
           Dashboard
         </MenuItem>
         
-        <hr />
+        <Divider />
         
         <MenuItem
           onClick={handleLogout}

@@ -58,8 +58,8 @@ class TimeSelect extends React.Component {
   };
 
   componentDidMount() {
-    const hoursArray = Array.from(new Array(24), (x, i) => [
-      addZeros(i),
+    const hoursArray = Array.from(new Array(11), (x, i) => [
+      addZeros(8 + i),
       false
     ]);
     const minutesArray = Array.from(new Array(4), (x, i) => [
@@ -118,6 +118,7 @@ class TimeSelect extends React.Component {
             className={classes.select}
             MenuProps={this.MenuProps}
             disabled={this.props.disabledHour}
+            error={this.props.isInvalidHour}
           >
             {hours}
           </Select>
@@ -130,6 +131,7 @@ class TimeSelect extends React.Component {
             onChange={this.MinuteChangedHandler}
             className={classes.select}
             disabled={this.state.disabledMinutes}
+            error={this.props.isInvalidHour}
           >
             {minutes}
           </Select>
