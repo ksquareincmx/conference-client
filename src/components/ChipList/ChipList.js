@@ -3,7 +3,7 @@ import Chip from "@material-ui/core/Chip";
 import TextField from "@material-ui/core/TextField";
 import { Grid, withStyles, Collapse } from "@material-ui/core";
 import cuid from "cuid";
-import {isValidMail} from "../Modals/CreateMeeting/meetingValidations";
+import { isValidMail } from "../Modals/CreateMeeting/meetingValidations";
 
 const styles = theme => ({
   root: {
@@ -18,8 +18,8 @@ const styles = theme => ({
     fontSize: 20,
     margin: theme.spacing.unit / 4
   },
-  invalid:{
-    color:"red"
+  invalid: {
+    color: "red"
   }
 });
 
@@ -32,36 +32,35 @@ class ChipList extends React.Component {
   };
 
   handleFocus = () => {
-    this.setState({isFocused: true});
-  }
+    this.setState({ isFocused: true });
+  };
 
   handleBlur = () => {
-    this.setState({isFocused: false});
-  }
+    this.setState({ isFocused: false });
+  };
 
-  getEmails = (chipData) =>{
+  getEmails = chipData => {
     return chipData.map(data => data.email);
-  }
+  };
 
   handleEnterPress = e => {
     const input = e.target.value;
     if (e.key === "Enter" && input !== "") {
       if (isValidMail(input)) {
-        this.setState({isInvalidMail: false});
+        this.setState({ isInvalidMail: false });
         this.handleBlur();
         const attendee = { key: cuid(), email: input };
-        this.setState(prevState => { 
-          let emailsList= this.getEmails(prevState.chipData);
+        return this.setState(prevState => {
+          let emailsList = this.getEmails(prevState.chipData);
           emailsList.push(attendee.email);
           this.props.handleChangeInvite(emailsList);
-          return ({
+          return {
             chipData: [...prevState.chipData, attendee],
             value: ""
-          });
+          };
         });
-      } else {
-        this.setState({isInvalidMail: true});
       }
+      this.setState({ isInvalidMail: true });
     }
   };
 
@@ -82,7 +81,7 @@ class ChipList extends React.Component {
   };
 
   render() {
-    const { classes } = this.props
+    const { classes } = this.props;
     return (
       <Grid className={classes.root}>
         <TextField

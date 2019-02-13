@@ -1,5 +1,11 @@
-import React, {Fragment} from "react";
-import { Card, CardContent, CardActions, CardHeader, Collapse } from "@material-ui/core/";
+import React, { Fragment } from "react";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  CardHeader,
+  Collapse
+} from "@material-ui/core/";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
@@ -11,7 +17,7 @@ import DatePicker from "./DatePicker";
 import TimeSelect from "./TimeSelect";
 import RoomSelect from "./RoomSelect";
 import addZeros from "../../../utils/AddZeros";
-import {validateBooking} from "./meetingValidations";
+import { validateBooking } from "./meetingValidations";
 
 const styles = theme => ({
   card: {
@@ -36,7 +42,7 @@ const styles = theme => ({
     color: "#1E90FF"
   },
   alertMessage: {
-    color: "red",
+    color: "red"
   }
 });
 
@@ -105,7 +111,7 @@ class AppointmentList extends React.Component {
     );
   };
 
-  validate = (bookingObj) => {
+  validate = bookingObj => {
     const bookingValidated = validateBooking(bookingObj);
 
     this.setState({
@@ -113,11 +119,11 @@ class AppointmentList extends React.Component {
     });
 
     return bookingValidated.isValidBooking;
-  }
+  };
 
   handleClickNext = async () => {
     const post = postDto(this.state);
-    let isBookingValid= this.validate(post);
+    let isBookingValid = this.validate(post);
 
     if (isBookingValid) {
       if (this.state.bookingClicked) {
@@ -130,25 +136,29 @@ class AppointmentList extends React.Component {
       }
       try {
         const res = await this.props.booking.createNewBooking(post);
-        this.props.handleOnCloseModal();
-        window.location.reload();
-        console.log(res);
         if (res.id) {
+          this.props.handleOnCloseModal();
+          window.location.reload();
           //Temporal solution,it should redirect to /booking:id
-          alert(
-            "id: " + res.id + " " +
-            "Start date: " + res.start + " " + 
-            "End date: " + res.end + " " +
-            "Reason: " + res.description
+          return alert(
+            "id: " +
+              res.id +
+              " " +
+              "Start date: " +
+              res.start +
+              " " +
+              "End date: " +
+              res.end +
+              " " +
+              "Reason: " +
+              res.description
           );
-        } else {
-          alert(res); 
         }
+        alert(res);
       } catch (error) {
         alert(error);
-      }   
+      }
     }
-    //window.location.href = "/calendar";
   };
 
   handleChangeReason = event => {
@@ -156,8 +166,8 @@ class AppointmentList extends React.Component {
   };
 
   handleChangeInvite = attendeesList => {
-    this.setState({attendees: attendeesList});
-  }
+    this.setState({ attendees: attendeesList });
+  };
 
   getDate = () => {
     const date = new Date();
@@ -262,21 +272,18 @@ class AppointmentList extends React.Component {
               </Typography>
               {date}
               <Collapse in={this.state.isInvalidDate}>
-              <small className={classes.alertMessage}>
-                {
-                  this.state.invalidWeekendMessage !== "" ?
-                  <Fragment>
-                    {this.state.invalidWeekendMessage}
-                    <br />
-                    {this.state.invalidDateMessage}
-                  </Fragment>
-                :
-                  <Fragment>
-                    {this.state.invalidDateMessage}
-                  </Fragment>
-                }
-              </small>
-            </Collapse>
+                <small className={classes.alertMessage}>
+                  {this.state.invalidWeekendMessage !== "" ? (
+                    <Fragment>
+                      {this.state.invalidWeekendMessage}
+                      <br />
+                      {this.state.invalidDateMessage}
+                    </Fragment>
+                  ) : (
+                    <Fragment>{this.state.invalidDateMessage}</Fragment>
+                  )}
+                </small>
+              </Collapse>
             </Grid>
             <Grid
               xs={12}
@@ -343,10 +350,10 @@ class AppointmentList extends React.Component {
                 error={this.state.isInvalidReason}
               />
               <Collapse in={this.state.isInvalidReason}>
-              <small className={classes.alertMessage}>
-                Reason can not be empty
-              </small>
-            </Collapse>
+                <small className={classes.alertMessage}>
+                  Reason can not be empty
+                </small>
+              </Collapse>
             </Grid>
             <Grid
               xs={12}
@@ -357,8 +364,8 @@ class AppointmentList extends React.Component {
               <Typography className={classes.subtitle} variant="subtitle1">
                 Invite People
               </Typography>
-              <ChipList 
-                handleChangeInvite={this.handleChangeInvite} 
+              <ChipList
+                handleChangeInvite={this.handleChangeInvite}
                 isInvalidInvite={this.state.isInvalidInvite}
               />
               <Fragment>

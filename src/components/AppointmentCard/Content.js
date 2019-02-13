@@ -12,7 +12,7 @@ import { withRouter } from "react-router-dom";
 class Content extends React.Component {
   state = {
     openModal: false,
-    room: undefined,
+    room: null,
     quickAppointment: false,
     bookingClicked: false,
     bookingClickedObj: ""
@@ -21,7 +21,7 @@ class Content extends React.Component {
   handleOnClickCreateMeeting = event => {
     this.setState({ 
       openModal: true, 
-      room: undefined,
+      room: null,
       quickAppointment: false,
       roomId: null,
     });
