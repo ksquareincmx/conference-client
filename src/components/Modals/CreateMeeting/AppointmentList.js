@@ -297,13 +297,13 @@ class AppointmentList extends React.Component {
               <Grid container direction="row">
                 <TimeSelect
                   disabledHour={this.state.disabledStartTimeSelect}
-                  SetTime={this.setBookingStartTime}
+                  setTime={this.setBookingStartTime}
                   startTime={this.state.startTime}
                   isInvalidHour={this.state.isInvalidHour}
                 />
                 <TimeSelect
                   disabledHour={this.state.disabledEndTimeSelect}
-                  SetTime={this.setBookingEndTime}
+                  setTime={this.setBookingEndTime}
                   endTime={this.state.endTime}
                   isInvalidHour={this.state.isInvalidHour}
                 />
@@ -409,7 +409,7 @@ function postDto(state) {
       ":" +
       state.startTime.minute +
       ":" +
-      "00.000-06:00",
+      "00.000Z",
     end:
       state.date +
       "T" +
@@ -417,7 +417,7 @@ function postDto(state) {
       ":" +
       state.endTime.minute +
       ":" +
-      "00.000-06:00",
+      "00.000Z",
     attendees: [...state.attendees]
   };
 }

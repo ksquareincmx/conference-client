@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const validateReason = reason => reason !== "";
 
 const validateInvite = attendeesList => attendeesList.length > 0;
@@ -6,6 +8,7 @@ const validateIsWeekDay = day => day > 0 && day < 6;
 
 const validateIsCoherentDate = date => {
   const today = new Date();
+  console.log("today: ", today);
 
   const isValidY = date.getFullYear() >= today.getFullYear();
   const isCurrentY = date.getFullYear() === today.getFullYear();
@@ -39,8 +42,9 @@ const validateBooking = bookingObj => {
   const isValidReason = validateReason(bookingObj.description);
   const isValidInvite = validateInvite(bookingObj.attendees);
 
-  const startDate = new Date(bookingObj.start);
-  const endDate = new Date(bookingObj.end);
+  //Use this for Zulu UTC +00:00
+  const startDate = moment.utc(bookingObj.start).add(6, "hours")._d;
+  const endDate = moment.utc(bookingObj.end).add(6, "hours")._d;
 
   const isWeekDay = validateIsWeekDay(startDate.getDay());
   const weekendMessage = isWeekDay
