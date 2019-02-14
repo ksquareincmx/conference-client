@@ -45,10 +45,13 @@ class TimeSelect extends React.Component {
   }
 
   HourChangedHandler = event => {
-    this.setState({
-      hourSelected: event.target.value,
-      disabledMinutes: false
-    });
+    this.setState(
+      {
+        hourSelected: event.target.value,
+        disabledMinutes: false
+      },
+      () => this.props.SetTime(this.TimeFormat())
+    );
   };
 
   MinuteChangedHandler = event => {
