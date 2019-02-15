@@ -8,7 +8,6 @@ const validateIsWeekDay = day => day > 0 && day < 6;
 
 const validateIsCoherentDate = date => {
   const today = new Date();
-  console.log("today: ", today);
 
   const isValidY = date.getFullYear() >= today.getFullYear();
   const isCurrentY = date.getFullYear() === today.getFullYear();
@@ -55,7 +54,7 @@ const validateBooking = bookingObj => {
 
   let dateMessage = isCoherentDate
     ? ""
-    : "You can't make reservation before today's date";
+    : "You can't make reservations before today's date";
 
   const isValidDate = isWeekDay && isCoherentDate;
 
