@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 
 function DatePickers(props) {
@@ -15,13 +14,10 @@ function DatePickers(props) {
         }}
         disabled={props.disabled}
         onChange={props.setDate}
+        error={props.isInvalidDate}
       />
     </form>
   );
 }
-
-DatePickers.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default DatePickers;

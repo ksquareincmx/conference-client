@@ -35,7 +35,7 @@ class TimeSelect extends React.Component {
     }
   };
 
-  TimeFormat() {
+  timeFormat() {
     //let time = (this.state.hourSelected + ':' + this.state.minuteSelected + ':' + '00.000Z')
     let time = {
       hour: this.state.hourSelected,
@@ -44,22 +44,25 @@ class TimeSelect extends React.Component {
     return time;
   }
 
-  HourChangedHandler = event => {
-    this.setState({
-      hourSelected: event.target.value,
-      disabledMinutes: false
-    });
+  hourChangedHandler = event => {
+    this.setState(
+      {
+        hourSelected: event.target.value,
+        disabledMinutes: false
+      },
+      () => this.props.setTime(this.timeFormat())
+    );
   };
 
-  MinuteChangedHandler = event => {
+  minuteChangedHandler = event => {
     this.setState({ minuteSelected: event.target.value }, () =>
-      this.props.SetTime(this.TimeFormat())
+      this.props.setTime(this.timeFormat())
     );
   };
 
   componentDidMount() {
-    const hoursArray = Array.from(new Array(24), (x, i) => [
-      addZeros(i),
+    const hoursArray = Array.from(new Array(11), (x, i) => [
+      addZeros(8 + i),
       false
     ]);
     const minutesArray = Array.from(new Array(4), (x, i) => [
@@ -114,10 +117,11 @@ class TimeSelect extends React.Component {
           <InputLabel>Hour</InputLabel>
           <Select
             value={this.state.hourSelected}
-            onChange={this.HourChangedHandler}
+            onChange={this.hourChangedHandler}
             className={classes.select}
             MenuProps={this.MenuProps}
             disabled={this.props.disabledHour}
+            error={this.props.isInvalidHour}
           >
             {hours}
           </Select>
@@ -127,9 +131,10 @@ class TimeSelect extends React.Component {
           <InputLabel>Minutes</InputLabel>
           <Select
             value={this.state.minuteSelected}
-            onChange={this.MinuteChangedHandler}
+            onChange={this.minuteChangedHandler}
             className={classes.select}
             disabled={this.state.disabledMinutes}
+            error={this.props.isInvalidHour}
           >
             {minutes}
           </Select>
