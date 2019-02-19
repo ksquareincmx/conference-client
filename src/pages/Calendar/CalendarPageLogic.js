@@ -145,16 +145,18 @@ class CalendarPageLogic extends React.Component {
       };
     });
   };
-  
+
   componentDidMount() {
     this.printAppointments();
   }
 
   render() {
+    const { onLogout } = this.props.auth;
+    const { name } = this.props.auth.user;
 
     return (
       <div>
-        <NavBar auth={this.props.auth} />
+        <NavBar username={name} onLogout={onLogout} />
 
         <div className="calendar-container">
           <HeaderView

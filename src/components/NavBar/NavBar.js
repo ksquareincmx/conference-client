@@ -1,10 +1,10 @@
 import React from "react";
 import NavRightSide from "./RightSide";
 import NavBarContainer from "./NavBarContainer";
-import { Typography, IconButton, Avatar } from "@material-ui/core/";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import AvatarButton from "./AvatarButton";
+import UsernameLabel from "./UsernameLabel";
 import NavBarMenu from "./NavBarMenu";
-import capitalize from "lodash/fp/capitalize";
+import { throws } from "assert";
 
 const styles = {
   navLeftSideButton: {
@@ -29,11 +29,9 @@ const styles = {
 };
 
 class NavBar extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = { anchorEl: null };
-  }
+  state = {
+    anchorEl: null
+  };
 
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -43,27 +41,17 @@ class NavBar extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  render(){
-
+  render() {
     const { anchorEl } = this.state;
-    const { name } = this.props.auth.user;
-    const { onLogout } = this.props.auth;
+    const { username, onLogout } = this.props;
 
     return (
       <NavBarContainer>
         <NavRightSide>
-          <Typography style={styles.typography}>{capitalize(name)}</Typography>
-          <IconButton 
-            aria-label="Menu"
-            aria-owns={anchorEl ? "menu-appbar" : undefined}
-            aria-haspopup="true"
-            onClick={this.handleClick}
-          >
-            <Avatar style={styles.avatar}>
-              <AccountCircle style={styles.accountCircle} />
-            </Avatar>
-          </IconButton>
-          <NavBarMenu  
+          <UsernameLabel username={username} />
+          <AvatarButton handleClick={this.handleClick} />
+
+          <NavBarMenu
             anchorEl={anchorEl}
             handleClose={this.handleClose}
             handleLogout={onLogout}
@@ -72,7 +60,6 @@ class NavBar extends React.Component {
       </NavBarContainer>
     );
   }
-
 }
 
 export default NavBar;

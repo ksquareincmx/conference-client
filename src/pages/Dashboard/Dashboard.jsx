@@ -2,54 +2,49 @@ import React from "react";
 import { BookingConsumer, BookingProvider } from "providers/Booking";
 import { RoomConsumer, RoomProvider } from "providers/Room";
 import { UserConsumer, UserProvider } from "providers/User";
-import { AuthConsumer } from "providers/Auth";
 import NavBar from "components/NavBar/NavBar";
 import AppointmentCard from "components/AppointmentCard/";
 
-class DashboardPageLogic extends React.Component {
-  render() {
-    const { auth } = this.props;
+import WithAuthContext from "../../hocs/Auth";
+import { Redirect } from "react-router-dom";
 
-    return (
-      <div> 
-        <NavBar auth={auth} />
-        <BookingProvider auth={auth}>
-          <BookingConsumer>
-            {booking => (
-              <RoomProvider auth={auth}>
-                <RoomConsumer>
-                  {roomService => (
-                    <UserProvider auth={auth}>
-                      <UserConsumer>
-                        {userService => (
-                          <AppointmentCard
-                            booking={booking}
-                            auth={auth}
-                            roomService={roomService}
-                            userService={userService}
-                          />
-                        )}
-                      </UserConsumer>
-                    </UserProvider>
-                  )}
-                </RoomConsumer>
-              </RoomProvider>
-            )}
-          </BookingConsumer>
-        </BookingProvider>
-      </div>
-    );
+function Dashboard({ context }) {
+  const { jwt } = context;
+  if (!jwt) {
+    return <Redirect to="/Login" />;
   }
+
+  const { onLogout } = context;
+  const { name } = context.user;
+  return (
+    <div>
+      <NavBar username={name} onLogout={onLogout} />
+      <BookingProvider auth={context}>
+        <BookingConsumer>
+          {booking => (
+            <RoomProvider auth={context}>
+              <RoomConsumer>
+                {roomService => (
+                  <UserProvider auth={context}>
+                    <UserConsumer>
+                      {userService => (
+                        <AppointmentCard
+                          booking={booking}
+                          auth={context}
+                          roomService={roomService}
+                          userService={userService}
+                        />
+                      )}
+                    </UserConsumer>
+                  </UserProvider>
+                )}
+              </RoomConsumer>
+            </RoomProvider>
+          )}
+        </BookingConsumer>
+      </BookingProvider>
+    </div>
+  );
 }
 
-function VerifyAuth(auth) {
-  if (auth.jwt !== null) {
-    return <DashboardPageLogic auth={auth} />;
-  }
-}
-
-function DashboardPage() {
-  return <AuthConsumer>{auth => VerifyAuth(auth)}</AuthConsumer>;
-}
-
-export default DashboardPage;
+export default WithAuthContext(Dashboard);

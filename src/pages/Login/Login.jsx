@@ -1,42 +1,22 @@
-import React, { Component } from "react";
-import { GoogleLogin, GoogleLogout } from "react-google-login";
+import React from "react";
+
 import "./Login.css";
 import LoginCard from "./LoginCard";
-import { AuthConsumer } from "providers/Auth";
+import LoginButton from "./LoginButton";
+import WithAuthContext from "../../hocs/Auth";
+
 import { Redirect } from "react-router-dom";
 
-class LoginPageLogic extends Component {
-  onFailure = res => {
-    console.log("Error:", res);
-  };
-
-  render() {
-    return (
-      <LoginCard>
-        <GoogleLogin
-          clientId="129092023456-82964pfqurangtddv4q9g4q62cbq6abm.apps.googleusercontent.com"
-          buttonText="Sign in with Google"
-          className="login-button"
-          onSuccess={this.props.auth.onLogin}
-          onFailure={this.onFailure}
-        />
-      </LoginCard>
-    );
+function Login({ context: { jwt, onLogin } }) {
+  if (jwt) {
+    return <Redirect to="/dashboard" />;
   }
-}
 
-function LoginPage(props) {
   return (
-    <AuthConsumer>
-      {auth =>
-        auth.jwt == null ? (
-          <LoginPageLogic auth={auth} />
-        ) : (
-          <Redirect to="/dashboard" />
-        )
-      }
-    </AuthConsumer>
+    <LoginCard>
+      <LoginButton onLogin={onLogin} />
+    </LoginCard>
   );
 }
 
-export default LoginPage;
+export default WithAuthContext(Login);
