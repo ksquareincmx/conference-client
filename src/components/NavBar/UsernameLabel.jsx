@@ -10,11 +10,9 @@ const styles = {
   }
 };
 
-function UsernameLabel(props) {
+export function UsernameLabel(props) {
   const { username } = props;
   return (
     <Typography style={styles.typography}>{capitalize(username)}</Typography>
   );
 }
-
-export default UsernameLabel;

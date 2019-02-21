@@ -1,14 +1,14 @@
 import React from "react";
 
 import "./Login.css";
-import LoginCard from "./LoginCard";
-import LoginButton from "./LoginButton";
-import WithAuthContext from "../../hocs/Auth";
+import { LoginCard } from "./LoginCard";
+import { LoginButton } from "./LoginButton";
+import { withAuthContext } from "../../hocs/Auth";
 
 import { Redirect } from "react-router-dom";
 
-function Login({ context: { jwt, onLogin } }) {
-  if (jwt) {
+function Login({ context: { isAuth, onLogin } }) {
+  if (isAuth) {
     return <Redirect to="/dashboard" />;
   }
 
@@ -19,4 +19,4 @@ function Login({ context: { jwt, onLogin } }) {
   );
 }
 
-export default WithAuthContext(Login);
+export const LoginWithAuthContext = withAuthContext(Login);

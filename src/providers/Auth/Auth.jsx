@@ -1,20 +1,23 @@
 import React from "react";
 import AuthService from "services/AuthService";
-import StorageService from "services/StorageService";
+import { StorageService } from "services/StorageService";
 import baseUri from "../../config/baseUri";
 
 // Context object template
 const AuthContext = React.createContext({
-  user: null,
-  jwt: null,
+  isAuth: false,
+  sessionInfo: null,
   onLogin: () => {},
   onLogout: () => {}
 });
 
 class AuthProvider extends React.Component {
   state = {
-    user: null,
-    jwt: null
+    sessionInfo: {
+      user: null,
+      jwt: null
+    },
+    isAuth: false
   };
 
   authService = AuthService(baseUri + "auth/googlelogin");
@@ -26,7 +29,7 @@ class AuthProvider extends React.Component {
 
     if (jwt && user) {
       const sessionInfo = { jwt, user };
-      this.setState(sessionInfo);
+      this.setState({ sessionInfo, isAuth: true });
       this.storageService.updateInfoInStorage(sessionInfo);
     }
   }
@@ -35,43 +38,49 @@ class AuthProvider extends React.Component {
     const idToken = googleUser.getAuthResponse().id_token;
     try {
       const res = await this.authService.onLogin(idToken);
-      this.setState(
-        {
-          jwt: {
-            token: res.token,
-            expires: res.expires,
-            refreshToken: res.refresh_token
-          },
-          user: res.user // { id: number, email: string, name: string, role: string, picture: string }
+      const sessionInfo = {
+        jwt: {
+          token: res.token,
+          expires: res.expires,
+          refreshToken: res.refresh_token
         },
-        () => {
-          const { jwt, user } = this.state;
-          this.storageService.updateInfoInStorage({ jwt, user });
-        }
-      );
+        /**
+         * {
+         *  id: number,
+         *  email: string,
+         *  name: string,
+         *  role: string,
+         *  picture: string
+         * }
+         */
+        user: res.user
+      };
+      this.setState({ sessionInfo, isAuth: true }, () => {
+        const { sessionInfo } = this.state;
+        this.storageService.updateInfoInStorage(sessionInfo);
+      });
     } catch (err) {
       console.log(err);
     }
   };
 
   onLogout = () => {
-    this.setState(
-      {
-        user: null,
-        jwt: null
-      },
-      () => {
-        const { jwt, user } = this.state;
-        this.storageService.updateInfoInStorage({ jwt, user });
-      }
-    );
+    const sessionInfo = {
+      user: null,
+      jwt: null
+    };
+    this.setState({ sessionInfo, isAuth: false }, () => {
+      const { sessionInfo } = this.state;
+      this.storageService.updateInfoInStorage(sessionInfo);
+    });
   };
 
   render() {
     return (
       <AuthContext.Provider
         value={{
-          ...this.state,
+          isAuth: this.state.isAuth,
+          sessionInfo: this.state.sessionInfo,
           onLogin: this.onLogin,
           onLogout: this.onLogout
         }}

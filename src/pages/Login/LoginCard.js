@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Grid } from "@material-ui/core/";
 import CardContent from "@material-ui/core/CardContent";
 
-function LoginCard(props) {
+export function LoginCard(props) {
   const styles = {
     card: {
       width: 500,
@@ -14,7 +14,7 @@ function LoginCard(props) {
       flexDirection: "column",
       justifyContent: "space-between",
       textAlign: "center",
-      borderRadius: 20,
+      borderRadius: 20
     },
 
     header: {
@@ -47,5 +47,3 @@ function LoginCard(props) {
     </Grid>
   );
 }
-
-export default LoginCard;

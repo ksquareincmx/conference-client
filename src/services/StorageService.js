@@ -32,7 +32,7 @@
  * @namespace StorageSertvice
  */
 
-const StorageService = () => {
+export const StorageService = () => {
   /**
    * Return authorization token
    * @returns {AuthToken}
@@ -60,5 +60,3 @@ const StorageService = () => {
     updateInfoInStorage
   };
 };
-
-export default StorageService;

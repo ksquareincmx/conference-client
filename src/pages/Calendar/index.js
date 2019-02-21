@@ -1,1 +1,1 @@
-export { default } from './Calendar';
+export { CalendarWithAuthContext as Calendar } from "./Calendar";

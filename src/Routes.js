@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Login from "pages/Login";
-import Home from "pages/Home";
-import Calendar from "pages/Calendar";
-import Dashboard from "pages/Dashboard";
+import { Login } from "pages/Login";
+import { Home } from "pages/Home";
+import { Calendar } from "pages/Calendar";
+import { Dashboard } from "pages/Dashboard";
 
-const Routes = () => (
+export const Routes = () => (
   <Router>
     <div>
       <Route exact path="/" component={Home} />
@@ -15,5 +15,3 @@ const Routes = () => (
     </div>
   </Router>
 );
-
-export default Routes;

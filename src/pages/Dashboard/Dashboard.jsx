@@ -2,35 +2,32 @@ import React from "react";
 import { BookingConsumer, BookingProvider } from "providers/Booking";
 import { RoomConsumer, RoomProvider } from "providers/Room";
 import { UserConsumer, UserProvider } from "providers/User";
-import NavBar from "components/NavBar/NavBar";
+import { NavBar } from "components/NavBar";
 import AppointmentCard from "components/AppointmentCard/";
 
-import WithAuthContext from "../../hocs/Auth";
+import { withAuthContext } from "../../hocs/Auth";
 import { Redirect } from "react-router-dom";
 
-function Dashboard({ context }) {
-  const { jwt } = context;
-  if (!jwt) {
+function Dashboard({ context: { isAuth, sessionInfo } }) {
+  if (!isAuth) {
     return <Redirect to="/Login" />;
   }
 
-  const { onLogout } = context;
-  const { name } = context.user;
   return (
     <div>
-      <NavBar username={name} onLogout={onLogout} />
-      <BookingProvider auth={context}>
+      <NavBar />
+      <BookingProvider auth={sessionInfo}>
         <BookingConsumer>
           {booking => (
-            <RoomProvider auth={context}>
+            <RoomProvider auth={sessionInfo}>
               <RoomConsumer>
                 {roomService => (
-                  <UserProvider auth={context}>
+                  <UserProvider auth={sessionInfo}>
                     <UserConsumer>
                       {userService => (
                         <AppointmentCard
                           booking={booking}
-                          auth={context}
+                          auth={sessionInfo}
                           roomService={roomService}
                           userService={userService}
                         />
@@ -47,4 +44,4 @@ function Dashboard({ context }) {
   );
 }
 
-export default WithAuthContext(Dashboard);
+export const DashboardWithAuthContext = withAuthContext(Dashboard);

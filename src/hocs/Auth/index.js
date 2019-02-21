@@ -1,1 +1,1 @@
-export { default } from "./WithAuthContext";
+export { withAuthContext } from "./WithAuthContext";

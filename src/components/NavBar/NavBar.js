@@ -1,32 +1,11 @@
 import React from "react";
 import NavRightSide from "./RightSide";
 import NavBarContainer from "./NavBarContainer";
-import AvatarButton from "./AvatarButton";
-import UsernameLabel from "./UsernameLabel";
-import NavBarMenu from "./NavBarMenu";
-import { throws } from "assert";
+import { AvatarButton } from "./AvatarButton";
+import { UsernameLabel } from "./UsernameLabel";
+import { NavBarMenu } from "./NavBarMenu";
 
-const styles = {
-  navLeftSideButton: {
-    backgroundColor: "#7CCE22"
-  },
-  menuIcon: {
-    fontSize: 40,
-    color: "#467611"
-  },
-  typography: {
-    color: "white",
-    fontFamily: "Verdana, Geneva, sans-serif",
-    fontSize: 20
-  },
-  accountCircle: {
-    fontSize: 50
-  },
-  avatar: {
-    color: "#c4c6c6",
-    backgroundColor: "#969696"
-  }
-};
+import { withAuthContext } from "../../hocs/Auth";
 
 class NavBar extends React.Component {
   state = {
@@ -43,18 +22,25 @@ class NavBar extends React.Component {
 
   render() {
     const { anchorEl } = this.state;
-    const { username, onLogout } = this.props;
+    const {
+      context: {
+        sessionInfo: {
+          user: { name }
+        },
+        onLogout
+      }
+    } = this.props;
 
     return (
       <NavBarContainer>
         <NavRightSide>
-          <UsernameLabel username={username} />
-          <AvatarButton handleClick={this.handleClick} />
+          <UsernameLabel username={name} />
+          <AvatarButton onClick={this.handleClick} />
 
           <NavBarMenu
             anchorEl={anchorEl}
-            handleClose={this.handleClose}
-            handleLogout={onLogout}
+            onClose={this.handleClose}
+            onLogout={onLogout}
           />
         </NavRightSide>
       </NavBarContainer>
@@ -62,4 +48,4 @@ class NavBar extends React.Component {
   }
 }
 
-export default NavBar;
+export const NavBarWithAuthContext = withAuthContext(NavBar);

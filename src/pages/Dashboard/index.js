@@ -1,1 +1,1 @@
-export { default } from './Dashboard';
+export { DashboardWithAuthContext as Dashboard } from "./Dashboard";

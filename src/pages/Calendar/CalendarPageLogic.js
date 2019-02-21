@@ -2,7 +2,7 @@ import React from "react";
 import dates from "react-big-calendar/lib/utils/dates";
 import { Redirect, withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import NavBar from "components/NavBar/NavBar";
+import { NavBar } from "components/NavBar";
 import DraggingCalendar from "components/Modals/DraggingCalendar";
 import HeaderView from "components/Calendar/Header";
 import FooterView from "components/Calendar/Footer";

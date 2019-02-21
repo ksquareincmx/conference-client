@@ -2,10 +2,10 @@ import React from "react";
 import { GoogleLogin } from "react-google-login";
 import googleClientID from "config/googleClientID";
 
-function LoginButton({ onLogin }) {
+export function LoginButton({ onLogin }) {
   return (
     <GoogleLogin
-      clientId={googleClientID}
+      clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
       buttonText="Sign in with Google"
       className="login-button"
       onSuccess={onLogin}
@@ -13,5 +13,3 @@ function LoginButton({ onLogin }) {
     />
   );
 }
-
-export default LoginButton;

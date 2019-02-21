@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, MenuItem } from "@material-ui/core/";
+import { Menu, MenuItem, Divider } from "@material-ui/core/";
 import { Link } from "react-router-dom";
 
 // const
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 //   state = {};
 // }
 
-function NavBarMenu({ anchorEl, handleClose, handleLogout }) {
+export function NavBarMenu({ anchorEl, onClose, onLogout }) {
   return (
     <Menu
       id="menu-appbar"
@@ -22,21 +22,19 @@ function NavBarMenu({ anchorEl, handleClose, handleLogout }) {
         horizontal: "right"
       }}
       open={Boolean(anchorEl)}
-      onClose={handleClose}
+      onClose={onClose}
     >
-      <MenuItem onClick={handleClose}>Profile</MenuItem>
+      <MenuItem onClick={onClose}>Profile</MenuItem>
 
-      <MenuItem onClick={handleClose} component={Link} to="/dashboard">
+      <MenuItem onClick={onClose} component={Link} to="/dashboard">
         Dashboard
       </MenuItem>
 
-      <hr />
+      <Divider />
 
-      <MenuItem onClick={handleLogout} component={Link} to="/login">
+      <MenuItem onClick={onLogout} component={Link} to="/login">
         Log Out
       </MenuItem>
     </Menu>
   );
 }
-
-export default NavBarMenu;

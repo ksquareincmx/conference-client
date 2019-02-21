@@ -12,14 +12,14 @@ const styles = {
   }
 };
 
-function AvatarButton(props) {
-  const { anchorEl, handleClick } = props;
+export function AvatarButton(props) {
+  const { anchorEl, onClick } = props;
   return (
     <IconButton
       aria-label="Menu"
       aria-owns={anchorEl ? "menu-appbar" : undefined}
       aria-haspopup="true"
-      onClick={handleClick}
+      onClick={onClick}
     >
       <Avatar style={styles.avatar}>
         <AccountCircle style={styles.accountCircle} />
@@ -27,5 +27,3 @@ function AvatarButton(props) {
     </IconButton>
   );
 }
-
-export default AvatarButton;
