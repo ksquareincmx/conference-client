@@ -1,37 +1,36 @@
 import React from "react";
 import AuthService from "services/AuthService";
-import StorageService from "services/StorageService"
+import { StorageService } from "services/StorageService";
 import baseUri from "../../config/baseUri";
 
+// Context object template
 const AuthContext = React.createContext({
-  user: null,
-  jwt: null,
-  onLogin: () => { },
-  onLogout: () => { }
+  isAuth: false,
+  sessionInfo: null,
+  onLogin: () => {},
+  onLogout: () => {}
 });
 
-export const AuthConsumer = AuthContext.Consumer;
-
-export class AuthProvider extends React.Component {
-
+class AuthProvider extends React.Component {
   state = {
-    user: null,
-    jwt: null
+    sessionInfo: {
+      user: null,
+      jwt: null
+    },
+    isAuth: false
   };
 
   authService = AuthService(baseUri + "auth/googlelogin");
-  localStorage = StorageService();
+  storageService = StorageService();
 
   componentDidMount() {
-    if (typeof Storage !== "undefined") {
+    const jwt = this.storageService.getAuthToken();
+    const user = this.storageService.getUserInfo();
 
-      const jwt = this.localStorage.getAuthToken();
-      const user = this.localStorage.getUserInfo();
-
-      if (jwt && user) {
-        this.setState({ jwt, user });
-        this.localStorage.update(jwt, user);
-      }
+    if (jwt && user) {
+      const sessionInfo = { jwt, user };
+      this.setState({ sessionInfo, isAuth: true });
+      this.storageService.updateInfoInStorage(sessionInfo);
     }
   }
 
@@ -39,16 +38,26 @@ export class AuthProvider extends React.Component {
     const idToken = googleUser.getAuthResponse().id_token;
     try {
       const res = await this.authService.onLogin(idToken);
-      this.setState({
+      const sessionInfo = {
         jwt: {
           token: res.token,
           expires: res.expires,
           refreshToken: res.refresh_token
         },
-        user: res.user // { id: number, email: string, name: string, role: string, picture: string }
-      }, () => {
-        const { jwt, user } = this.state;
-        this.localStorage.update(jwt, user);
+        /**
+         * {
+         *  id: number,
+         *  email: string,
+         *  name: string,
+         *  role: string,
+         *  picture: string
+         * }
+         */
+        user: res.user
+      };
+      this.setState({ sessionInfo, isAuth: true }, () => {
+        const { sessionInfo } = this.state;
+        this.storageService.updateInfoInStorage(sessionInfo);
       });
     } catch (err) {
       console.log(err);
@@ -56,21 +65,22 @@ export class AuthProvider extends React.Component {
   };
 
   onLogout = () => {
-    this.setState({
+    const sessionInfo = {
       user: null,
       jwt: null
-    }, () => {
-      const { jwt, user } = this.state;
-      this.localStorage.update(jwt, user);
+    };
+    this.setState({ sessionInfo, isAuth: false }, () => {
+      const { sessionInfo } = this.state;
+      this.storageService.updateInfoInStorage(sessionInfo);
     });
-    
   };
 
   render() {
     return (
       <AuthContext.Provider
         value={{
-          ...this.state,
+          isAuth: this.state.isAuth,
+          sessionInfo: this.state.sessionInfo,
           onLogin: this.onLogin,
           onLogout: this.onLogout
         }}
@@ -80,3 +90,7 @@ export class AuthProvider extends React.Component {
     );
   }
 }
+
+const AuthConsumer = AuthContext.Consumer;
+
+export { AuthConsumer, AuthProvider };

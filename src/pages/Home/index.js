@@ -1,1 +1,1 @@
-export { default } from './Home';
+export { HomeWithAuthContext as Home } from "./Home";

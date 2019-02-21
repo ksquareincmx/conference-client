@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import './App.css';
-import Routes from './Routes';
-import { AuthProvider } from './providers/Auth';
+import React, { Component } from "react";
+import "./App.css";
+import { Routes } from "./Routes";
+import { AuthProvider } from "./providers/Auth";
 
 class App extends Component {
   render() {
