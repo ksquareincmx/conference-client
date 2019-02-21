@@ -32,19 +32,19 @@ const getStickerColor = color => {
 
 const getRoomSticker = name => {
   return name
-    ? capitalize(name.substring(0, 1) + name.substring(name.length - 1))
+    ? capitalize(`${name.substring(0, 1)}${name.substring(name.length - 1)}`)
     : "...";
 };
 
 const RoomStickerComponent = props => {
-  const { classes } = props;
+  const { classes, roomColor, roomName } = props;
   return (
     <Paper
       elevation={0}
       className={classes.roomSticker}
-      style={getStickerColor(props.roomColor)}
+      style={getStickerColor(roomColor)}
     >
-      {getRoomSticker(props.roomName)}
+      {getRoomSticker(roomName)}
     </Paper>
   );
 };

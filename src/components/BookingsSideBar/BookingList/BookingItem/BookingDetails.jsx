@@ -13,13 +13,12 @@ const styles = theme => ({
 });
 
 const BookingDetailsComponent = props => {
-  const { classes } = props;
+  const { classes, userName, startTime, endTime } = props;
   return (
     <Grid container direction={"row"}>
-      <div className={classes.userInfo}>{props.userName}</div>
+      <div className={classes.userInfo}>{userName}</div>
       <div className={classes.hourInfo}>
-        {/*"From " + props.startTime + " to " + props.endTime*/}
-        {`From ${props.startTime} to ${props.endTime}`}
+        {`From ${startTime} to ${endTime}`}
       </div>
     </Grid>
   );
