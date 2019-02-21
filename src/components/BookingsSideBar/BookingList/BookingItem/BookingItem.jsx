@@ -3,7 +3,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { Card, withStyles, IconButton, Grid } from "@material-ui/core";
 import { RoomSticker } from "./RoomSticker";
 import { BookingDetails } from "./BookingDetails";
-import moment from "moment";
+import { getDateText, formatDate, formatTime } from "./BookingItemFormater";
 
 const styles = theme => ({
   itemCard: {
@@ -39,32 +39,12 @@ const styles = theme => ({
   }
 });
 
-const normaliceTZ = date => date.substring(0, date.length - 1);
-
 function BookingItemComponent(props) {
   const { classes } = props;
   const { roomColor, roomName, userName, start, end } = props.booking;
-  const startDate = moment(normaliceTZ(start));
-  const startTime = startDate.format("LT");
-  const endTime = moment(normaliceTZ(end)).format("LT");
-
-  const getDateText = date => {
-    if (date) {
-      const today = moment();
-      const tomorrow = moment().add(1, "days");
-      const isCurrentMonth =
-        date.year() === today.year() && date.month() === today.month();
-
-      return isCurrentMonth
-        ? date.date() === today.date()
-          ? "Today"
-          : date.date() === tomorrow.date()
-          ? "Tomorrow"
-          : date.format("L")
-        : date.format("L");
-    }
-    return "";
-  };
+  const startDate = formatDate(start);
+  const startTime = formatTime(startDate);
+  const endTime = formatTime(formatDate(end));
 
   return (
     <Card elevation={1} square className={classes.itemCard}>

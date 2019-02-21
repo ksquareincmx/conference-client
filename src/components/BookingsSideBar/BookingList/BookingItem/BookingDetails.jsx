@@ -18,7 +18,8 @@ const BookingDetailsComponent = props => {
     <Grid container direction={"row"}>
       <div className={classes.userInfo}>{props.userName}</div>
       <div className={classes.hourInfo}>
-        {"From " + props.startTime + " to " + props.endTime}
+        {/*"From " + props.startTime + " to " + props.endTime*/}
+        {`From ${props.startTime} to ${props.endTime}`}
       </div>
     </Grid>
   );
