@@ -1,7 +1,7 @@
 import React from "react";
 import { AuthConsumer } from "providers/Auth/Auth";
 
-// Cambiar el nombre de la propiedad por authContext
+// Change the prop name for authContext
 export function withAuthContext(Component) {
   return function WrappedComponent(props) {
     return (
