@@ -1,23 +1,27 @@
 import React from "react";
 import { BookingConsumer, BookingProvider } from "providers/Booking";
-import { AuthConsumer } from "providers/Auth";
 import CalendarPageLogic from "./CalendarPageLogic";
 
-function VerifyAuth(auth) {
-  if (auth.jwt !== null) {
-    return (
-      <BookingProvider auth={auth}>
-        <BookingConsumer>
-          {bookingService => (
-            <CalendarPageLogic bookingService={bookingService} auth={auth} />
-          )}
-        </BookingConsumer>
-      </BookingProvider>
-    );
+import { Redirect } from "react-router-dom";
+import { withAuthContext } from "../../hocs/Auth";
+
+function Calendar({ context: { isAuth, sessionInfo } }) {
+  if (!isAuth) {
+    return <Redirect to="/login" />;
   }
+
+  return (
+    <BookingProvider auth={sessionInfo}>
+      <BookingConsumer>
+        {bookingService => (
+          <CalendarPageLogic
+            bookingService={bookingService}
+            auth={sessionInfo}
+          />
+        )}
+      </BookingConsumer>
+    </BookingProvider>
+  );
 }
 
-function CalendarPage() {
-  return <AuthConsumer>{auth => VerifyAuth(auth)}</AuthConsumer>;
-}
-export default CalendarPage;
+export const CalendarWithAuthContext = withAuthContext(Calendar);

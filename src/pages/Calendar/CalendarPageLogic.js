@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import dates from "react-big-calendar/lib/utils/dates";
 import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import NavBar from "components/NavBar/NavBar";
+import { NavBar } from "components/NavBar";
 import DraggingCalendar from "components/Modals/DraggingCalendar";
 import HeaderView from "components/Calendar/Header";
 import FooterView from "components/Calendar/Footer";
@@ -152,9 +152,12 @@ class CalendarPageLogic extends React.Component {
   }
 
   render() {
+    const { onLogout } = this.props.auth;
+    const { name } = this.props.auth.user;
+    
     return (
       <Fragment>
-        <NavBar auth={this.props.auth} />
+        <NavBar username={name} onLogout={onLogout} />
         <Grid container direction="row">
           <Grid item xs={3}>
             <BookingsSideBar auth={this.props.auth} />
