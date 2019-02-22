@@ -48,13 +48,13 @@ const validateBooking = bookingObj => {
   const isWeekDay = validateIsWeekDay(startDate.getDay());
   const weekendMessage = isWeekDay
     ? ""
-    : "You can't make reservations on weekends";
+    : "A meeting can't be booked on weekends";
 
   const isCoherentDate = validateIsCoherentDate(startDate);
 
   let dateMessage = isCoherentDate
     ? ""
-    : "You can't make reservations before today's date";
+    : "A meeting can't be booked before today's date";
 
   const isValidDate = isWeekDay && isCoherentDate;
 
@@ -72,13 +72,13 @@ const validateBooking = bookingObj => {
 
   let hourMessage = isDiferentHour
     ? ""
-    : "The start time of the meeting can't be the same time of the end";
+    : "The start time of the meeting can't be set at the same as the end time";
   hourMessage = isCoherentHour
     ? hourMessage
-    : "The end time of the meeting can't be before the start time";
+    : "The end time of the meeting can't be set earlier than the start time";
   hourMessage = isWorkingHours
     ? hourMessage
-    : "You can't start or end a meeting after 6 pm";
+    : "A meeting can't start or finish after 18:00";
 
   return {
     specificValidations: {

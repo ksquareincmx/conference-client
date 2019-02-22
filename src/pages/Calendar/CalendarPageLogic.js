@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 import dates from "react-big-calendar/lib/utils/dates";
-import { Redirect, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { NavBar } from "components/NavBar";
 import DraggingCalendar from "components/Modals/DraggingCalendar";
@@ -11,7 +11,8 @@ import * as Utils from "./Utils.js";
 import "./Calendar.css";
 import HeaderStrategy from "./HeaderStrategy";
 import CalendarStrategy from "./CalendarStrategy";
-import capitalize from "lodash/fp/capitalize";
+import { Grid } from "@material-ui/core";
+import { BookingsSideBar } from "../../components/BookingsSideBar/BookingsSideBar.jsx";
 
 class CalendarPageLogic extends React.Component {
   constructor(...args) {
@@ -153,53 +154,59 @@ class CalendarPageLogic extends React.Component {
   render() {
     const { onLogout } = this.props.auth;
     const { name } = this.props.auth.user;
-
+    
     return (
-      <div>
+      <Fragment>
         <NavBar username={name} onLogout={onLogout} />
-
-        <div className="calendar-container">
-          <HeaderView
-            onClickViewButton={this.handlerOnClickViewButton}
-            headerDateContainer={
-              <HeaderStrategy
-                type={this.state.selector}
-                numberDayInMonth={this.state.focusDate.getDate()}
-                fullYear={this.state.focusDate.getFullYear()}
-                date={this.state.focusDate}
-                dayName={Utils.getNameDay(this.state.focusDate)}
-                monthName={Utils.getNameMonth(this.state.focusDate)}
-                numberWeekInYear={Utils.getWeekOfYear(this.state.focusDate)}
+        <Grid container direction="row">
+          <Grid item xs={3}>
+            <BookingsSideBar auth={this.props.auth} />
+          </Grid>
+          <Grid item xs={9}>
+            <div className="calendar-container">
+              <HeaderView
+                onClickViewButton={this.handlerOnClickViewButton}
+                headerDateContainer={
+                  <HeaderStrategy
+                    type={this.state.selector}
+                    numberDayInMonth={this.state.focusDate.getDate()}
+                    fullYear={this.state.focusDate.getFullYear()}
+                    date={this.state.focusDate}
+                    dayName={Utils.getNameDay(this.state.focusDate)}
+                    monthName={Utils.getNameMonth(this.state.focusDate)}
+                    numberWeekInYear={Utils.getWeekOfYear(this.state.focusDate)}
+                  />
+                }
               />
-            }
-          />
-          <CalendarStrategy
-            type={this.state.selector}
-            events={this.state.events}
-            handleSelect={this.handleSelect}
-            components={{ event: this.handleEventView }}
-            localizer={Utils.localizer}
-            minDate={Utils.minDate}
-            maxDate={Utils.maxDate}
-            step={Utils.step}
-            timeSlots={Utils.timeSlots}
-            date={this.state.focusDate}
-          />
+              <CalendarStrategy
+                type={this.state.selector}
+                events={this.state.events}
+                handleSelect={this.handleSelect}
+                components={{ event: this.handleEventView }}
+                localizer={Utils.localizer}
+                minDate={Utils.minDate}
+                maxDate={Utils.maxDate}
+                step={Utils.step}
+                timeSlots={Utils.timeSlots}
+                date={this.state.focusDate}
+              />
 
-          <DraggingCalendar
-            coordinates={this.state.coordinates}
-            appointmentInfo={this.state.appointmentInfo}
-            onChange={this.handleChangeReasonAppointment}
-            onClick={this.handleClickCreateBookingDraggingCalendar}
-          />
+              <DraggingCalendar
+                coordinates={this.state.coordinates}
+                appointmentInfo={this.state.appointmentInfo}
+                onChange={this.handleChangeReasonAppointment}
+                onClick={this.handleClickCreateBookingDraggingCalendar}
+              />
 
-          <FooterView
-            {...Utils.footerChangeButtonLabels(this.state.selector)}
-            currentDateLabel={"Today"}
-            onClickButton={this.handlerOnCLickTimeButton}
-          />
-        </div>
-      </div>
+              <FooterView
+                {...Utils.footerChangeButtonLabels(this.state.selector)}
+                currentDateLabel={"Today"}
+                onClickButton={this.handlerOnCLickTimeButton}
+              />
+            </div>
+          </Grid>
+        </Grid>
+      </Fragment>
     );
   }
 }
