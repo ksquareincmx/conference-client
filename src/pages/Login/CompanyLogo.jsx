@@ -13,9 +13,9 @@ const style = theme => ({
   }
 });
 
-function CompanyLogoComponent({ classes: styleClasses }) {
+const CompanyLogoComponent = ({ classes: styleClasses }) => {
   const { companyLogo } = styleClasses;
   return <img className={companyLogo} src={Logo} alt="Ksquare-Inc!" />;
-}
+};
 
 export const CompanyLogo = withStyles(style)(CompanyLogoComponent);

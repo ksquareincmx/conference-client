@@ -22,7 +22,7 @@ const style = theme => ({
   }
 });
 
-function LoginCardComponent({ classes: { card }, children }) {
+const LoginCardComponent = ({ classes: { card }, children }) => {
   return (
     <Grid container justify="center">
       <Card className={card}>
@@ -30,6 +30,6 @@ function LoginCardComponent({ classes: { card }, children }) {
       </Card>
     </Grid>
   );
-}
+};
 
 export const LoginCard = withStyles(style)(LoginCardComponent);

@@ -30,7 +30,7 @@ const style = theme => ({
   }
 });
 
-export function LoginButtonComponent({ classes: styleClasses, onLogin }) {
+export const LoginButtonComponent = ({ classes: styleClasses, onLogin }) => {
   const { loginButton, buttonText, leftIcon } = styleClasses;
   return (
     <GoogleLogin
@@ -48,6 +48,6 @@ export function LoginButtonComponent({ classes: styleClasses, onLogin }) {
       <span className={buttonText}> Sign in with Google </span>
     </GoogleLogin>
   );
-}
+};
 
 export const LoginButton = withStyles(style)(LoginButtonComponent);

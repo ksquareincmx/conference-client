@@ -11,7 +11,7 @@ const style = theme => ({
   }
 });
 
-function WelcomeMessageComponent({ classes: styleClasses }) {
+const WelcomeMessageComponent = ({ classes: styleClasses }) => {
   const { welcomeMessage } = styleClasses;
   return (
     <div className={welcomeMessage}>
@@ -20,6 +20,6 @@ function WelcomeMessageComponent({ classes: styleClasses }) {
       Ksquarians!
     </div>
   );
-}
+};
 
 export const WelcomeMessage = withStyles(style)(WelcomeMessageComponent);

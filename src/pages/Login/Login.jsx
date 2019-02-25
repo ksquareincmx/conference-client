@@ -22,7 +22,7 @@ const style = theme => ({
   }
 });
 
-function Login({ context: { isAuth, onLogin }, classes: { loginPage } }) {
+const Login = ({ context: { isAuth, onLogin }, classes: { loginPage } }) => {
   if (isAuth) {
     return <Redirect to="/dashboard" />;
   }
@@ -36,6 +36,6 @@ function Login({ context: { isAuth, onLogin }, classes: { loginPage } }) {
       </LoginCard>
     </div>
   );
-}
+};
 
 export const LoginWithAuthContext = withStyles(style)(withAuthContext(Login));
