@@ -53,7 +53,9 @@ class BookingListComponent extends React.Component {
         this.setState({ bookingItems: items });
       }
     } catch (err) {
-      alert(err);
+      this.setState({ bookingItems: [] });
+      //Temporal solution, here should be called the Norification system
+      alert("Something went wrong with the server");
     }
   };
 
@@ -62,7 +64,9 @@ class BookingListComponent extends React.Component {
       const data = await this.props.booking.getDetailedListOfBooking();
       this.setState({ bookingItems: data }, () => this.getBookings());
     } catch (err) {
-      alert(err);
+      this.setState({ bookingItems: [] });
+      //Temporal solution, here should be called the Norification system
+      alert("Something went wrong with the server");
     }
   }
 

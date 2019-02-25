@@ -39,7 +39,7 @@ const styles = theme => ({
   }
 });
 
-function BookingItemComponent({ classes: styleClasses, booking }) {
+const BookingItemComponent = ({ classes: styleClasses, booking }) => {
   const {
     itemCard,
     container,
@@ -76,6 +76,6 @@ function BookingItemComponent({ classes: styleClasses, booking }) {
       </Grid>
     </Card>
   );
-}
+};
 
 export const BookingItem = withStyles(styles)(BookingItemComponent);

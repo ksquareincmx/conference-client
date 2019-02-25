@@ -36,8 +36,9 @@ class BookingsSideBarComponent extends React.Component {
     searchTerm: ""
   };
 
-  handleOnChangeSearch = event =>
+  handleOnChangeSearch = event => {
     this.setState({ searchTerm: event.target.value });
+  };
 
   render() {
     const { sideBar, headerCard, title } = this.props.classes;
