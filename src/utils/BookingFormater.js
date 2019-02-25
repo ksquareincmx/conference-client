@@ -24,3 +24,6 @@ export const getDateText = date => {
 export const formatDate = date => moment(normaliceTZ(date));
 
 export const formatTime = time => time.format("LT");
+
+export const abbreviateName = name =>
+  `${name.substring(0, 1)}${name.substring(name.length - 1)}`;

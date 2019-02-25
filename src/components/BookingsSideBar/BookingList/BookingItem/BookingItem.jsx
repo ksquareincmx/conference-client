@@ -3,7 +3,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { Card, withStyles, IconButton, Grid } from "@material-ui/core";
 import { RoomSticker } from "./RoomSticker";
 import { BookingDetails } from "./BookingDetails";
-import { getDateText, formatDate, formatTime } from "./BookingItemFormater";
+import { formatDate, formatTime } from "../../../../utils/BookingFormater";
 
 const styles = theme => ({
   itemCard: {
@@ -39,30 +39,36 @@ const styles = theme => ({
   }
 });
 
-function BookingItemComponent(props) {
-  const { classes } = props;
-  const { roomColor, roomName, userName, start, end } = props.booking;
-  const startDate = formatDate(start);
-  const startTime = formatTime(startDate);
+const BookingItemComponent = ({ classes: styleClasses, booking }) => {
+  const {
+    itemCard,
+    container,
+    gridRoomSticker,
+    gridInfo,
+    gridDate,
+    menuIcon
+  } = styleClasses;
+  const { roomColor, roomNameAbbrev, userName, start, end, dateText } = booking;
+  const startTime = formatTime(formatDate(start));
   const endTime = formatTime(formatDate(end));
 
   return (
-    <Card elevation={1} square className={classes.itemCard}>
-      <Grid container direction={"row"} className={classes.container}>
-        <Grid item xs={3} className={classes.gridRoomSticker}>
-          <RoomSticker roomColor={roomColor} roomName={roomName} />
+    <Card elevation={1} square className={itemCard}>
+      <Grid container direction={"row"} className={container}>
+        <Grid item xs={3} className={gridRoomSticker}>
+          <RoomSticker roomColor={roomColor} roomName={roomNameAbbrev} />
         </Grid>
-        <Grid item xs={6} className={classes.gridInfo}>
+        <Grid item xs={6} className={gridInfo}>
           <BookingDetails
             userName={userName}
             startTime={startTime}
             endTime={endTime}
           />
         </Grid>
-        <Grid item xs={3} className={classes.gridDate}>
-          <div> {getDateText(startDate)}</div>
+        <Grid item xs={3} className={gridDate}>
+          <div> {dateText}</div>
           <div>
-            <IconButton className={classes.menuIcon}>
+            <IconButton className={menuIcon}>
               <MoreVertIcon />
             </IconButton>
           </div>
@@ -70,6 +76,6 @@ function BookingItemComponent(props) {
       </Grid>
     </Card>
   );
-}
+};
 
 export const BookingItem = withStyles(styles)(BookingItemComponent);
