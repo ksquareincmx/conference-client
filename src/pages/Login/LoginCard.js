@@ -1,49 +1,35 @@
 import React from "react";
-import { Card, Grid } from "@material-ui/core/";
+import { Card, Grid, withStyles } from "@material-ui/core/";
 import CardContent from "@material-ui/core/CardContent";
 
-export function LoginCard(props) {
-  const styles = {
-    card: {
-      width: 500,
-      height: 300,
-      marginRight: 100,
-      marginTop: 100,
-      marginLeft: 100,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      textAlign: "center",
-      borderRadius: 20
-    },
+const style = theme => ({
+  card: {
+    width: 375,
+    height: 340,
+    marginRight: 100,
+    marginTop: 200,
+    marginLeft: 100,
+    marginBottom: 100,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    textAlign: "center",
+    borderRadius: 10,
+    position: "absolute",
+    top: 10,
+    left: 715,
+    overflow: "visible"
+  }
+});
 
-    header: {
-      backgroundColor: "#DEE8F5",
-      color: "#4A90E2",
-      fontSize: 40,
-      height: 50,
-      fontFamily: "roboto",
-      fontWeight: "bold",
-      paddingTop: 20
-    },
-
-    footer: {
-      backgroundColor: "#DEE8F5",
-      height: 30
-    }
-  };
-
+function LoginCardComponent({ classes: { card }, children }) {
   return (
     <Grid container justify="center">
-      <Card style={styles.card}>
-        <header style={styles.header}>
-          <span> Welcome!</span>
-        </header>
-
-        <CardContent>{props.children}</CardContent>
-
-        <div style={styles.footer} />
+      <Card className={card}>
+        <CardContent>{children}</CardContent>
       </Card>
     </Grid>
   );
 }
+
+export const LoginCard = withStyles(style)(LoginCardComponent);
