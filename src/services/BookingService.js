@@ -140,7 +140,7 @@ const BookingService = (bookingUri, token) => {
     })
       .then(res => res.json())
       .catch(err => {
-        return new Error("An error occurred whith the request");
+        throw err;
       });
   };
 

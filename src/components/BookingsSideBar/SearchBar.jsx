@@ -18,16 +18,17 @@ const styles = theme => ({
   }
 });
 
-const SearchBarComponent = props => {
-  const { classes } = props;
+const SearchBarComponent = ({ classes: styleClasses, onChange }) => {
+  const { searchBar, iconButton, input } = styleClasses;
   return (
-    <Paper className={classes.searchBar} elevation={0}>
-      <IconButton className={classes.iconButton}>
+    <Paper className={searchBar} elevation={0}>
+      <IconButton className={iconButton}>
         <SearchIcon />
       </IconButton>
       <InputBase
-        className={classes.input}
+        className={input}
         placeholder="Search within results"
+        onChange={onChange}
       />
     </Paper>
   );

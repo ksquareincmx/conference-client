@@ -31,41 +31,51 @@ const styles = theme => ({
   }
 });
 
-const BookingsSideBarComponent = props => {
-  const { classes } = props;
-  const { auth } = props;
-  return (
-    <Grid container className={classes.sideBar}>
-      <Card className={classes.headerCard} square elevation={1}>
-        <Typography className={classes.title}>Appointments Made</Typography>
-        <SearchBar />
-      </Card>
-      <BookingProvider auth={auth}>
-        <BookingConsumer>
-          {booking => (
-            <RoomProvider auth={auth}>
-              <RoomConsumer>
-                {roomService => (
-                  <UserProvider auth={auth}>
-                    <UserConsumer>
-                      {userService => (
-                        <BookingList
-                          booking={booking}
-                          auth={auth}
-                          roomService={roomService}
-                          userService={userService}
-                        />
-                      )}
-                    </UserConsumer>
-                  </UserProvider>
-                )}
-              </RoomConsumer>
-            </RoomProvider>
-          )}
-        </BookingConsumer>
-      </BookingProvider>
-    </Grid>
-  );
-};
+class BookingsSideBarComponent extends React.Component {
+  state = {
+    searchTerm: ""
+  };
+
+  handleOnChangeSearch = event =>
+    this.setState({ searchTerm: event.target.value });
+
+  render() {
+    const { sideBar, headerCard, title } = this.props.classes;
+    const { auth } = this.props;
+    return (
+      <Grid container className={sideBar}>
+        <Card className={headerCard} square elevation={1}>
+          <Typography className={title}>Appointments Made</Typography>
+          <SearchBar onChange={this.handleOnChangeSearch} />
+        </Card>
+        <BookingProvider auth={auth}>
+          <BookingConsumer>
+            {booking => (
+              <RoomProvider auth={auth}>
+                <RoomConsumer>
+                  {roomService => (
+                    <UserProvider auth={auth}>
+                      <UserConsumer>
+                        {userService => (
+                          <BookingList
+                            booking={booking}
+                            auth={auth}
+                            roomService={roomService}
+                            userService={userService}
+                            searchTerm={this.state.searchTerm}
+                          />
+                        )}
+                      </UserConsumer>
+                    </UserProvider>
+                  )}
+                </RoomConsumer>
+              </RoomProvider>
+            )}
+          </BookingConsumer>
+        </BookingProvider>
+      </Grid>
+    );
+  }
+}
 
 export const BookingsSideBar = withStyles(styles)(BookingsSideBarComponent);

@@ -2,6 +2,15 @@ import React from "react";
 import { GridList, withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem/BookingItem";
 import cuid from "cuid";
+import {
+  getDateText,
+  formatDate,
+  abbreviateName
+} from "../../../utils/BookingFormater";
+import {
+  filterNSortedByDate,
+  filterBySearchTerm
+} from "../../../utils/BookingFilters";
 
 const styles = theme => ({
   gridList: {
@@ -20,35 +29,66 @@ class BookingListComponent extends React.Component {
   };
 
   getBookings = async () => {
-    let bookingItems = this.state.bookingItems.map(async book => {
+    const stateBookings = this.state.bookingItems;
+    let bookingItems = stateBookings.map(async book => {
       const user = this.props.userService.getUser(book.user_id);
       const room = this.props.roomService.getRoom(book.room_id);
       const data = await Promise.all([user, room]);
+      const { name: roomName, color } = data[1];
 
       return {
         ...book,
         userName: data[0].name,
-        roomName: data[1].name,
-        roomColor: data[1].color
+        roomName: roomName,
+        roomNameAbbrev: abbreviateName(roomName),
+        roomColor: color,
+        dateText: getDateText(formatDate(book.start))
       };
     });
 
-    const items = await Promise.all(bookingItems);
-    this.setState({ bookingItems: items });
+    try {
+      const items =
+        stateBookings.length > 0 ? await Promise.all(bookingItems) : null;
+      if (items) {
+        this.setState({ bookingItems: items });
+      }
+    } catch (err) {
+      alert(err);
+    }
   };
 
   async componentDidMount() {
-    const data = await this.props.booking.getDetailedListOfBooking();
-    this.setState({ bookingItems: data }, () => this.getBookings());
+    try {
+      const data = await this.props.booking.getDetailedListOfBooking();
+      this.setState({ bookingItems: data }, () => this.getBookings());
+    } catch (err) {
+      alert(err);
+    }
   }
 
   render() {
-    const { classes } = this.props;
+    const stateBookings = this.state.bookingItems;
+
+    const {
+      classes: { gridList },
+      searchTerm
+    } = this.props;
+
+    const bookingItems =
+      stateBookings.length > 0
+        ? filterBySearchTerm(
+            filterNSortedByDate(this.state.bookingItems),
+            searchTerm
+          )
+        : null;
+
     return (
-      <GridList className={classes.gridList}>
-        {this.state.bookingItems.map(data => (
-          <BookingItem key={cuid()} booking={data} />
-        ))}
+      <GridList className={gridList}>
+        {bookingItems
+          ? bookingItems.map(data => (
+              <BookingItem key={cuid()} booking={data} />
+            ))
+          : "" /*Change for empty component;*/}
       </GridList>
     );
   }
