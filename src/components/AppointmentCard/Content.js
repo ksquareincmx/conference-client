@@ -4,10 +4,10 @@ import RoomList from "./RoomList/";
 import Button from "../../components/MaterialButton";
 import BookingList from "./BookingList/";
 import Modal from "@material-ui/core/Modal";
-import AppointmentList from "../Modals/CreateMeeting/";
 import "./AppointmentCard.css";
 import { Grid } from "@material-ui/core/";
 import { withRouter } from "react-router-dom";
+import { BookingForm } from "../Modals/CreateMeeting/BookingForm";
 
 class Content extends React.Component {
   state = {
@@ -19,11 +19,11 @@ class Content extends React.Component {
   };
 
   handleOnClickCreateMeeting = event => {
-    this.setState({ 
-      openModal: true, 
+    this.setState({
+      openModal: true,
       room: null,
       quickAppointment: false,
-      roomId: null,
+      roomId: null
     });
   };
 
@@ -76,7 +76,7 @@ class Content extends React.Component {
               disableAutoFocus={true}
               style={styles.modal}
             >
-              <AppointmentList
+              <BookingForm
                 handleOnCloseModal={this.handleOnCloseModal}
                 booking={this.props.booking}
                 bookingClicked={this.state.bookingClicked}

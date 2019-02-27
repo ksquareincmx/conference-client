@@ -65,11 +65,12 @@ const BookingService = (bookingUri, token) => {
    */
 
   const createOne = booking => {
+    console.log("BOOK: ", booking);
     return fetch(bookingUri, {
       method: "POST",
       body: JSON.stringify({
         description: booking.description,
-        roomId: booking.roomId,
+        room_id: booking.roomId,
         start: booking.start,
         end: booking.end,
         attendees: booking.attendees
