@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const normaliceTZ = date => date.substring(0, date.length - 1);
+export const normaliceTZ = date => moment(date).local();
 
 const isCurrentMonth = (date, today) =>
   date.year() === today.year() && date.month() === today.month();
@@ -21,7 +21,7 @@ export const getDateText = date => {
   return "";
 };
 
-export const formatDate = date => moment(normaliceTZ(date));
+export const formatDate = date => normaliceTZ(date);
 
 export const formatTime = time => time.format("LT");
 

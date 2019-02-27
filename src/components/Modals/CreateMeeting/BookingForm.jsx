@@ -4,13 +4,13 @@ import {
   CardContent,
   CardActions,
   CardHeader,
-  Collapse
+  Collapse,
+  Divider,
+  Grid,
+  TextField,
+  Typography,
+  withStyles
 } from "@material-ui/core/";
-import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList/";
 import DatePicker from "./DatePicker";
@@ -43,10 +43,15 @@ const styles = theme => ({
   },
   alertMessage: {
     color: "red"
+  },
+  helpText: {
+    color: "#636363",
+    fontWeight: "bold",
+    fontSize: 15
   }
 });
 
-class AppointmentList extends React.Component {
+class BookingFormComponent extends React.Component {
   state = {
     disabledEndTimeSelect: true,
     disabledStartTimeSelect: true,
@@ -237,7 +242,16 @@ class AppointmentList extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const {
+      card,
+      root,
+      header,
+      content,
+      subtitle,
+      alertMessage,
+      helpText
+    } = this.props.classes;
+
     let date = (
       <DatePicker
         setDate={this.setDate}
@@ -246,10 +260,12 @@ class AppointmentList extends React.Component {
         isInvalidDate={this.state.isInvalidDate}
       />
     );
+
     let room = this.props.room;
     if (this.state.bookingClicked) {
       room = this.props.bookingClickedObj.roomName;
     }
+
     return (
       <Grid
         container
@@ -257,22 +273,17 @@ class AppointmentList extends React.Component {
         alignItems="center"
         style={{ height: "100%" }}
       >
-        <Card className={classes.card}>
-          <CardHeader classes={{ title: classes.header }} title="New Meeting" />
+        <Card className={card}>
+          <CardHeader classes={{ title: header }} title="New Meeting" />
           <Divider />
-          <CardContent xs={12} className={classes.root}>
-            <Grid
-              xs={12}
-              container
-              direction="column"
-              className={classes.content}
-            >
-              <Typography className={classes.subtitle} variant="subtitle1">
+          <CardContent className={root}>
+            <Grid container direction="column" className={content}>
+              <Typography className={subtitle} variant="subtitle1">
                 Reservation Date
               </Typography>
               {date}
               <Collapse in={this.state.isInvalidDate}>
-                <small className={classes.alertMessage}>
+                <small className={alertMessage}>
                   {this.state.invalidWeekendMessage !== "" ? (
                     <Fragment>
                       {this.state.invalidWeekendMessage}
@@ -285,42 +296,38 @@ class AppointmentList extends React.Component {
                 </small>
               </Collapse>
             </Grid>
-            <Grid
-              xs={12}
-              container
-              direction="column"
-              className={classes.content}
-            >
-              <Typography className={classes.subtitle} variant="subtitle1">
+            <Grid container direction="column" className={content}>
+              <Typography className={subtitle} variant="subtitle1">
                 Reservation Time
               </Typography>
               <Grid container direction="row">
-                <TimeSelect
-                  disabledHour={this.state.disabledStartTimeSelect}
-                  setTime={this.setBookingStartTime}
-                  startTime={this.state.startTime}
-                  isInvalidHour={this.state.isInvalidHour}
-                />
-                <TimeSelect
-                  disabledHour={this.state.disabledEndTimeSelect}
-                  setTime={this.setBookingEndTime}
-                  endTime={this.state.endTime}
-                  isInvalidHour={this.state.isInvalidHour}
-                />
+                <Grid item xs={6}>
+                  <span className={helpText}>From</span>
+                  <TimeSelect
+                    disabledHour={this.state.disabledStartTimeSelect}
+                    setTime={this.setBookingStartTime}
+                    startTime={this.state.startTime}
+                    isInvalidHour={this.state.isInvalidHour}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <span className={helpText}>To</span>
+                  <TimeSelect
+                    disabledHour={this.state.disabledEndTimeSelect}
+                    setTime={this.setBookingEndTime}
+                    endTime={this.state.endTime}
+                    isInvalidHour={this.state.isInvalidHour}
+                  />
+                </Grid>
               </Grid>
               <Collapse in={this.state.isInvalidHour}>
-                <small className={classes.alertMessage}>
+                <small className={alertMessage}>
                   {this.state.invalidHourMessage}
                 </small>
               </Collapse>
             </Grid>
-            <Grid
-              xs={12}
-              container
-              direction="column"
-              className={classes.content}
-            >
-              <Typography className={classes.subtitle} variant="subtitle1">
+            <Grid container direction="column" className={content}>
+              <Typography className={subtitle} variant="subtitle1">
                 Conference Room
               </Typography>
               <RoomSelect
@@ -330,13 +337,8 @@ class AppointmentList extends React.Component {
                 roomService={this.props.roomService}
               />
             </Grid>
-            <Grid
-              xs={12}
-              container
-              direction="column"
-              className={classes.content}
-            >
-              <Typography className={classes.subtitle} variant="subtitle1">
+            <Grid container direction="column" className={content}>
+              <Typography className={subtitle} variant="subtitle1">
                 Reason for the Appointment
               </Typography>
               <TextField
@@ -350,18 +352,11 @@ class AppointmentList extends React.Component {
                 error={this.state.isInvalidReason}
               />
               <Collapse in={this.state.isInvalidReason}>
-                <small className={classes.alertMessage}>
-                  Reason can not be empty
-                </small>
+                <small className={alertMessage}>Reason can not be empty</small>
               </Collapse>
             </Grid>
-            <Grid
-              xs={12}
-              container
-              direction="column"
-              className={classes.content}
-            >
-              <Typography className={classes.subtitle} variant="subtitle1">
+            <Grid container direction="column" className={content}>
+              <Typography className={subtitle} variant="subtitle1">
                 Invite People
               </Typography>
               <ChipList
@@ -370,7 +365,7 @@ class AppointmentList extends React.Component {
               />
               <Fragment>
                 <Collapse in={this.state.isInvalidInvite}>
-                  <small className={classes.alertMessage}>
+                  <small className={alertMessage}>
                     You need to invite at least one person
                   </small>
                 </Collapse>
@@ -409,7 +404,7 @@ function postDto(state) {
       ":" +
       state.startTime.minute +
       ":" +
-      "00.000Z",
+      "00.000-06:00",
     end:
       state.date +
       "T" +
@@ -417,9 +412,9 @@ function postDto(state) {
       ":" +
       state.endTime.minute +
       ":" +
-      "00.000Z",
+      "00.000-06:00",
     attendees: [...state.attendees]
   };
 }
 
-export default withStyles(styles)(AppointmentList);
+export const BookingForm = withStyles(styles)(BookingFormComponent);

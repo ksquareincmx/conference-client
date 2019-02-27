@@ -112,33 +112,36 @@ class TimeSelect extends React.Component {
     ));
 
     return (
-      <Grid xs={6} container direction="row">
-        <FormControl className={classes.form}>
-          <InputLabel>Hour</InputLabel>
-          <Select
-            value={this.state.hourSelected}
-            onChange={this.hourChangedHandler}
-            className={classes.select}
-            MenuProps={this.MenuProps}
-            disabled={this.props.disabledHour}
-            error={this.props.isInvalidHour}
-          >
-            {hours}
-          </Select>
-        </FormControl>
-
-        <FormControl className={classes.form}>
-          <InputLabel>Minutes</InputLabel>
-          <Select
-            value={this.state.minuteSelected}
-            onChange={this.minuteChangedHandler}
-            className={classes.select}
-            disabled={this.state.disabledMinutes}
-            error={this.props.isInvalidHour}
-          >
-            {minutes}
-          </Select>
-        </FormControl>
+      <Grid container direction="row">
+        <Grid item xs={6}>
+          <FormControl className={classes.form}>
+            <InputLabel>Hour</InputLabel>
+            <Select
+              value={this.state.hourSelected}
+              onChange={this.hourChangedHandler}
+              className={classes.select}
+              MenuProps={this.MenuProps}
+              disabled={this.props.disabledHour}
+              error={this.props.isInvalidHour}
+            >
+              {hours}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={6}>
+          <FormControl className={classes.form}>
+            <InputLabel>Minutes</InputLabel>
+            <Select
+              value={this.state.minuteSelected}
+              onChange={this.minuteChangedHandler}
+              className={classes.select}
+              disabled={this.state.disabledMinutes}
+              error={this.props.isInvalidHour}
+            >
+              {minutes}
+            </Select>
+          </FormControl>
+        </Grid>
       </Grid>
     );
   }
