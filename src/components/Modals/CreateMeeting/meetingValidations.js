@@ -6,11 +6,23 @@ const validateInvite = attendeesList => attendeesList.length > 0;
 
 const validateIsWeekDay = day => day > 0 && day < 6;
 
+const validateYear = (date, today) => date.year() >= today.year();
+
+const isCurrentYear = (date, today) => date.year() === today.year();
+
+const isWorkingHour = (time, isStart) => {
+  return isStart
+    ? time.hours() < 18
+    : time.hours() < 18
+    ? true
+    : time.minutes() === 0;
+};
+
 const validateIsCoherentDate = date => {
   const today = moment();
 
-  const isValidY = date.year() >= today.year();
-  const isCurrentY = date.year() === today.year();
+  const isValidY = validateYear(date, today);
+  const isCurrentY = isCurrentYear(date, today);
   const isValidM = isValidY
     ? isCurrentY
       ? date.month() >= today.month()
@@ -31,8 +43,9 @@ const validateIsDiferentHour = (timeStart, timeEnd) => timeStart !== timeEnd;
 const validateIsCoherentHour = (timeStart, timeEnd) => timeStart <= timeEnd;
 
 const validateWorkingHours = (timeStart, timeEnd) => {
-  const startIsWH = timeStart.hours() < 18;
-  const endIsWH = timeEnd.hours() < 18 ? true : timeEnd.minutes() === 0;
+  const isStart = true;
+  const startIsWH = isWorkingHour(timeStart, isStart);
+  const endIsWH = isWorkingHour(timeEnd, !isStart);
 
   return startIsWH && endIsWH;
 };
@@ -40,10 +53,6 @@ const validateWorkingHours = (timeStart, timeEnd) => {
 const validateBooking = bookingObj => {
   const isValidReason = validateReason(bookingObj.description);
   const isValidInvite = validateInvite(bookingObj.attendees);
-
-  //Use this for Zulu UTC +00:00
-  // const startDate = moment.utc(bookingObj.start).add(6, "hours")._d;
-  // const endDate = moment.utc(bookingObj.end).add(6, "hours")._d;
 
   const startDate = moment(bookingObj.start);
   const endDate = moment(bookingObj.end);
