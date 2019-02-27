@@ -2,24 +2,21 @@ import React from "react";
 import { withStyles } from "@material-ui/core/";
 
 const style = theme => ({
-  welcomeMessage: {
-    fontSize: 40,
+  cardMessage: {
     marginTop: 60,
-    color: "#747474",
+    fontSize: 40,
     fontWeight: "bold",
-    fontFamily: "helvetica"
+    fontFamily: "helvetica",
+    color: "#747474"
   }
 });
 
-const WelcomeMessageComponent = ({ classes: styleClasses }) => {
-  const { welcomeMessage } = styleClasses;
-  return (
-    <div className={welcomeMessage}>
-      Welcome,
-      <br />
-      Ksquarians!
-    </div>
-  );
-};
+const CardMessageComponent = ({ classes: { cardMessage } }) => (
+  <div className={cardMessage}>
+    Welcome,
+    <br />
+    Ksquarians!
+  </div>
+);
 
-export const WelcomeMessage = withStyles(style)(WelcomeMessageComponent);
+export const CardMessage = withStyles(style)(CardMessageComponent);

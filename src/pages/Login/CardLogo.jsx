@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/";
 import Logo from "./Logo1.png";
 
 const style = theme => ({
-  companyLogo: {
+  cardLogo: {
     width: 65,
     height: 65,
     left: 150,
@@ -13,9 +13,8 @@ const style = theme => ({
   }
 });
 
-const CompanyLogoComponent = ({ classes: styleClasses }) => {
-  const { companyLogo } = styleClasses;
-  return <img className={companyLogo} src={Logo} alt="Ksquare-Inc!" />;
-};
+const cardLogoComponent = ({ classes: { cardLogo } }) => (
+  <img className={cardLogo} src={Logo} alt="Ksquare-Inc!" />
+);
 
-export const CompanyLogo = withStyles(style)(CompanyLogoComponent);
+export const CardLogo = withStyles(style)(cardLogoComponent);
