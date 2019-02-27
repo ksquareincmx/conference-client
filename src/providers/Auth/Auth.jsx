@@ -1,7 +1,6 @@
 import React from "react";
 import AuthService from "services/AuthService";
 import { StorageService } from "services/StorageService";
-import baseUri from "../../config/baseUri";
 
 // Context object template
 const AuthContext = React.createContext({
@@ -20,7 +19,9 @@ class AuthProvider extends React.Component {
     isAuth: false
   };
 
-  authService = AuthService(baseUri + "auth/googlelogin");
+  authService = AuthService(
+    process.env.REACT_APP_SERVER_URI + "auth/googlelogin"
+  );
   storageService = StorageService();
 
   componentDidMount() {
@@ -38,11 +39,12 @@ class AuthProvider extends React.Component {
     const idToken = googleUser.getAuthResponse().id_token;
     try {
       const res = await this.authService.onLogin(idToken);
+      const { token, expires, refresh_token: refreshToken, user } = res;
       const sessionInfo = {
         jwt: {
-          token: res.token,
-          expires: res.expires,
-          refreshToken: res.refresh_token
+          token,
+          expires,
+          refreshToken
         },
         /**
          * {
@@ -53,7 +55,7 @@ class AuthProvider extends React.Component {
          *  picture: string
          * }
          */
-        user: res.user
+        user
       };
       this.setState({ sessionInfo, isAuth: true }, () => {
         const { sessionInfo } = this.state;
@@ -76,16 +78,18 @@ class AuthProvider extends React.Component {
   };
 
   render() {
+    const { children } = this.props;
+    const { isAuth, sessionInfo } = this.state;
     return (
       <AuthContext.Provider
         value={{
-          isAuth: this.state.isAuth,
-          sessionInfo: this.state.sessionInfo,
+          isAuth,
+          sessionInfo,
           onLogin: this.onLogin,
           onLogout: this.onLogout
         }}
       >
-        {this.props.children}
+        {children}
       </AuthContext.Provider>
     );
   }

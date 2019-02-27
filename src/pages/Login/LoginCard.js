@@ -1,9 +1,12 @@
 import React from "react";
 import { Card, Grid, withStyles } from "@material-ui/core/";
 import CardContent from "@material-ui/core/CardContent";
+import { LoginButton } from "./LoginButton";
+import { CardMessage } from "./CardMessage";
+import { CardLogo } from "./CardLogo";
 
 const style = theme => ({
-  card: {
+  loginCard: {
     width: 375,
     height: 340,
     marginRight: 100,
@@ -22,14 +25,16 @@ const style = theme => ({
   }
 });
 
-const LoginCardComponent = ({ classes: { card }, children }) => {
-  return (
-    <Grid container justify="center">
-      <Card className={card}>
-        <CardContent>{children}</CardContent>
-      </Card>
-    </Grid>
-  );
-};
+const LoginCardComponent = ({ classes: { loginCard }, onLogin }) => (
+  <Grid container justify="center">
+    <Card className={loginCard}>
+      <CardContent>
+        <CardLogo />
+        <CardMessage />
+        <LoginButton onClick={onLogin} />
+      </CardContent>
+    </Card>
+  </Grid>
+);
 
 export const LoginCard = withStyles(style)(LoginCardComponent);

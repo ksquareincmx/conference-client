@@ -12,9 +12,9 @@ import { Redirect } from "react-router-dom";
 
 function Dashboard({ context: { isAuth, sessionInfo } }) {
   if (!isAuth) {
-    return <Redirect to="/Login" />;
+    return <Redirect to="/login" />;
   }
-  
+
   return (
     <div>
       <NavBar auth={sessionInfo} />

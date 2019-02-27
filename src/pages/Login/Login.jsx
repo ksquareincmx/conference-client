@@ -1,14 +1,8 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-
-import { LoginCard } from "./LoginCard";
-import { LoginButton } from "./LoginButton";
-import { WelcomeMessage } from "./WelcomeMessage";
-import { CompanyLogo } from "./CompanyLogo";
-
-import { withAuthContext } from "../../hocs/Auth";
 import { withStyles } from "@material-ui/core/";
-
+import { LoginCard } from "./LoginCard";
+import { withAuthContext } from "../../hocs/Auth";
 import background from "./login.jpg";
 
 const style = theme => ({
@@ -17,7 +11,6 @@ const style = theme => ({
     height: "100vh",
     width: "100vw",
     backgroundPosition: "center",
-    // backgroundRepeat: "no-repeat",
     backgroundSize: "cover"
   }
 });
@@ -29,11 +22,7 @@ const Login = ({ context: { isAuth, onLogin }, classes: { loginPage } }) => {
 
   return (
     <div className={loginPage}>
-      <LoginCard>
-        <CompanyLogo />
-        <WelcomeMessage />
-        <LoginButton onLogin={onLogin} />
-      </LoginCard>
+      <LoginCard onLogin={onLogin} />
     </div>
   );
 };
