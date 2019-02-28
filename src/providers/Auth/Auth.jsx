@@ -1,5 +1,5 @@
 import React from "react";
-import AuthService from "services/AuthService";
+import { AuthService } from "services/AuthService";
 import { StorageService } from "services/StorageService";
 
 // Context object template
