@@ -1,4 +1,3 @@
-import { reject } from "bluebird";
 /**
  * @typedef {Object} Profile
  * @property {number} id - profile id
@@ -28,32 +27,32 @@ import { reject } from "bluebird";
  * @version 1.0
  * @exports AuthService
  * @namespace AuthService
- * @property {string} authUri - auth uri
+ * @property {string} authServiceURL - auth uri
  */
 
-const AuthService = authUri => {
+export const AuthService = authServiceURL => {
   /**
    * Return credentials
    * @param {string} idToken - id token
    * @returns {Credentials}
    */
-  const onLogin = idToken => {
-    return fetch(authUri, {
-      method: "POST",
-      body: JSON.stringify({
-        idToken
-      }),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
+  const onLogin = async idToken => {
+    try {
+      const res = await fetch(authServiceURL, {
+        method: "POST",
+        body: JSON.stringify({
+          idToken
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   return { onLogin };
 };
-
-export default AuthService;
