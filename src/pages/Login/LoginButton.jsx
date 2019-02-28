@@ -14,38 +14,38 @@ const style = theme => ({
     background: "#F92200",
     boxShadow: "0px 4px 4px #888888"
   },
-  buttonText: {
+  loginButtonText: {
     width: 200,
     height: 50,
-    left: 10,
+    color: "white",
     fontSize: 15,
     fontWeight: "bold",
     fontFamily: "helvetica",
-    color: "white",
     position: "relative",
-    top: -5
+    top: -5,
+    left: 10
   },
-  leftIcon: {
+  loginButtonIcon: {
     color: "#FFFFFF"
   }
 });
 
-export const LoginButtonComponent = ({ classes: styleClasses, onLogin }) => {
-  const { loginButton, buttonText, leftIcon } = styleClasses;
+export const LoginButtonComponent = ({ classes: styleClasses, onClick }) => {
+  const { loginButton, loginButtonText, loginButtonIcon } = styleClasses;
   return (
     <GoogleLogin
       clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
       className={loginButton}
-      onSuccess={onLogin}
+      onSuccess={onClick}
       onFailure={e => console.log(e)}
     >
       <FontAwesomeIcon
-        className={leftIcon}
+        className={loginButtonIcon}
         icon={faGoogle}
         size="2x"
         transform="left-1"
       />
-      <span className={buttonText}> Sign in with Google </span>
+      <span className={loginButtonText}> Sign in with Google </span>
     </GoogleLogin>
   );
 };
