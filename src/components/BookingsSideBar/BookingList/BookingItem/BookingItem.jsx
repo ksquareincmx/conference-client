@@ -1,9 +1,9 @@
 import React from "react";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Card, withStyles, IconButton, Grid } from "@material-ui/core";
+import { Card, withStyles, Grid } from "@material-ui/core";
 import { RoomSticker } from "./RoomSticker";
 import { BookingDetails } from "./BookingDetails";
 import { formatDate, formatTime } from "../../../../utils/BookingFormater";
+import { BookingItemMenu } from "./BookingItemMenu";
 
 const styles = theme => ({
   itemCard: {
@@ -31,26 +31,40 @@ const styles = theme => ({
     marginBottom: 30,
     color: "#A7A7A7",
     fontSize: 15
-  },
-  menuIcon: {
-    height: 50,
-    width: 20,
-    borderRadius: 5
   }
 });
 
-const BookingItemComponent = ({ classes: styleClasses, booking }) => {
+const BookingItemComponent = ({
+  classes: styleClasses,
+  booking,
+  bookingService
+}) => {
   const {
     itemCard,
     container,
     gridRoomSticker,
     gridInfo,
-    gridDate,
-    menuIcon
+    gridDate
   } = styleClasses;
   const { roomColor, roomNameAbbrev, userName, start, end, dateText } = booking;
   const startTime = formatTime(formatDate(start));
   const endTime = formatTime(formatDate(end));
+
+  const handleOnDelete = async () => {
+    try {
+      const res = await bookingService.removeBooking(booking.id);
+      if (res.ok) {
+        //Temporal solution, call notification system
+        alert("Appointment successfully deleted");
+        return window.location.reload();
+      }
+      //Temporal solution, call notification system
+      return alert("The deletion of the appointmen failed");
+    } catch (error) {
+      //Temporal solution, call notification system
+      alert("There was an error with the server");
+    }
+  };
 
   return (
     <Card elevation={1} square className={itemCard}>
@@ -68,9 +82,7 @@ const BookingItemComponent = ({ classes: styleClasses, booking }) => {
         <Grid item xs={3} className={gridDate}>
           <div> {dateText}</div>
           <div>
-            <IconButton className={menuIcon}>
-              <MoreVertIcon />
-            </IconButton>
+            <BookingItemMenu handleOnDelete={handleOnDelete} />
           </div>
         </Grid>
       </Grid>
