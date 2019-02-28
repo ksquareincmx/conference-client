@@ -11,6 +11,7 @@ import {
   filterNSortedByDate,
   filterBySearchTerm
 } from "../../../utils/BookingFilters";
+import { BookingConsumer } from "../../../providers/Booking/Booking";
 
 const styles = theme => ({
   gridList: {
@@ -90,7 +91,15 @@ class BookingListComponent extends React.Component {
       <GridList className={gridList}>
         {bookingItems
           ? bookingItems.map(data => (
-              <BookingItem key={cuid()} booking={data} />
+              <BookingConsumer key={cuid()}>
+                {bookingService => (
+                  <BookingItem
+                    key={cuid()}
+                    booking={data}
+                    bookingService={bookingService}
+                  />
+                )}
+              </BookingConsumer>
             ))
           : "" /*Change for empty component;*/}
       </GridList>

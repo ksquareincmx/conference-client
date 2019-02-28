@@ -22,6 +22,15 @@
  */
 
 /**
+ * @typedef {object} Response
+ * @property {string} type - type response cors.
+ * @property {string} url - request url.
+ * @property {boolean} redirected - redirection of the request.
+ * @property {number} status - status code of the request.
+ * @property {boolean} ok - errors on the request.
+ */
+
+/**
  * @typedef {Object} Room
  * @property {number} id - Room id.
  * @property {string} name - Room name.
@@ -177,6 +186,7 @@ const BookingService = (bookingUri, token) => {
    *  Delete a booking by id
    *  @memberof BookingService
    *  @param {number} id - booking id.
+   * @returns {Response}
    */
 
   const deleteOne = id => {
@@ -187,9 +197,9 @@ const BookingService = (bookingUri, token) => {
         Authorization: "Bearer " + token
       }
     })
-      .then(res => res.json())
+      .then(res => res)
       .catch(err => {
-        return new Error("An error occurred whith the request");
+        throw err;
       });
   };
 
