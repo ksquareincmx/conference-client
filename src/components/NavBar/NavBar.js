@@ -4,8 +4,7 @@ import NavBarContainer from "./NavBarContainer";
 import { AvatarButton } from "./AvatarButton";
 import { UsernameLabel } from "./UsernameLabel";
 import { NavBarMenu } from "./NavBarMenu";
-import { compose, prop, defaultTo } from "lodash/fp";
-
+import { getUserName } from "../../utils/propertiesGetters";
 import { withAuthContext } from "../../hocs/Auth";
 
 class NavBar extends React.Component {
@@ -24,12 +23,6 @@ class NavBar extends React.Component {
   render() {
     const { anchorEl } = this.state;
     const { context } = this.props;
-    const getUserName = compose(
-      defaultTo(""),
-      prop("name"),
-      prop("user"),
-      prop("sessionInfo")
-    );
     const username = getUserName(context);
     const { onLogout } = context;
 
@@ -38,7 +31,6 @@ class NavBar extends React.Component {
         <NavRightSide>
           <UsernameLabel username={username} />
           <AvatarButton onClick={this.handleClick} />
-
           <NavBarMenu
             anchorEl={anchorEl}
             onClose={this.handleClose}
