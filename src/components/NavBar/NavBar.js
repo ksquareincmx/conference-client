@@ -4,7 +4,7 @@ import NavBarContainer from "./NavBarContainer";
 import { AvatarButton } from "./AvatarButton";
 import { UsernameLabel } from "./UsernameLabel";
 import { NavBarMenu } from "./NavBarMenu";
-import { getUserName } from "../../utils/propertiesGetters";
+import { getUserName } from "../../utils/sessionInfo";
 import { withAuthContext } from "../../hocs/Auth";
 
 class NavBar extends React.Component {
