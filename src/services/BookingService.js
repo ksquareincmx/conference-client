@@ -166,7 +166,7 @@ const BookingService = (bookingUri, token) => {
       method: "PUT",
       body: JSON.stringify({
         description: booking.description,
-        roomId: booking.roomId,
+        room_id: booking.roomId,
         start: booking.start,
         end: booking.end,
         attendees: booking.attendees
@@ -178,7 +178,7 @@ const BookingService = (bookingUri, token) => {
     })
       .then(res => res.json())
       .catch(err => {
-        return new Error("An error occurred whith the request");
+        throw new Error("An error occurred whith the request");
       });
   };
 

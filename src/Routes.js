@@ -6,13 +6,13 @@ import {
   Switch
 } from "react-router-dom";
 import { Login } from "pages/Login";
-import { Dashboard } from "pages/Dashboard";
+import { Calendar } from "pages/Calendar";
 
 export const Routes = () => (
   <Router>
     <Switch>
       <Route path="/login" component={Login} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/dashboard" component={Calendar} />
       <Route path="/">
         <Redirect to="/login" />
       </Route>

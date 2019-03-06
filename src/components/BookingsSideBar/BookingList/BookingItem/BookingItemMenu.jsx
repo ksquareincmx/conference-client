@@ -39,6 +39,11 @@ class BookingItemMenuComponent extends React.Component {
     this.props.handleOnDelete();
   };
 
+  handleOnClickEdit = () => {
+    this.handleOnClose();
+    this.props.handleOnEdit();
+  };
+
   render() {
     const {
       classes: { menuIcon, menuItem }
@@ -61,7 +66,7 @@ class BookingItemMenuComponent extends React.Component {
             View Meeting
           </MenuItem>
           <Divider />
-          <MenuItem onClick={this.handleOnClose} className={menuItem}>
+          <MenuItem onClick={this.handleOnClickEdit} className={menuItem}>
             Edit Meeting
           </MenuItem>
           <Divider />

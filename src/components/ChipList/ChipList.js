@@ -80,31 +80,44 @@ class ChipList extends React.Component {
     });
   };
 
+  componentWillReceiveProps(props) {
+    const { refresh } = this.props;
+    if (props.refresh !== refresh) {
+      const list = props.attendeesList.map(attendeeMail => ({
+        key: cuid(),
+        email: attendeeMail
+      }));
+      this.setState({ chipData: list });
+    }
+  }
+
   render() {
-    const { classes } = this.props;
+    const { value, isFocused, isInvalidMail, chipData } = this.state;
+    const { classes: styleClasses, isInvalidInvite } = this.props;
+    const { root, chips, chip, invalid } = styleClasses;
     return (
-      <Grid className={classes.root}>
+      <Grid className={root}>
         <TextField
           fullWidth
-          value={this.state.value}
+          value={value}
           placeholder="Enter Email"
-          className={classes.chips}
+          className={chips}
           onKeyPress={this.handleEnterPress}
           onChange={this.handleChangeValue}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
-          error={this.props.isInvalidInvite}
+          error={isInvalidInvite}
         />
-        <Collapse in={this.state.isFocused}>
+        <Collapse in={isFocused}>
           <small>Press enter to add.</small>
         </Collapse>
-        <Collapse in={this.state.isInvalidMail}>
-          <small className={classes.invalid}>Invalid email</small>
+        <Collapse in={isInvalidMail}>
+          <small className={invalid}>Invalid email</small>
         </Collapse>
         <div>
-          {this.state.chipData.map(data => (
+          {chipData.map(data => (
             <Chip
-              className={classes.chip}
+              className={chip}
               key={data.key}
               label={data.email}
               onDelete={this.handleDelete(data)}
