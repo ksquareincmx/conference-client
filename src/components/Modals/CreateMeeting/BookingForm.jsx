@@ -11,6 +11,7 @@ import {
   Typography,
   withStyles
 } from "@material-ui/core/";
+import { withRouter } from "react-router-dom";
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList/";
 import DatePicker from "./DatePicker";
@@ -148,12 +149,11 @@ class BookingFormComponent extends React.Component {
             post,
             this.props.bookingClickedObj.id
           );
-          console.log(res);
           if (res.id) {
             this.props.handleOnCloseModal();
-            window.location.href = "/calendar";
             // Temporal solution, should be handled by notification system
-            return alert("Appointment edited successfully");
+            alert("Appointment edited successfully");
+            return this.props.history.push("/calendar");
           }
           return alert(res);
         } catch (error) {
@@ -443,4 +443,4 @@ function postDto(state) {
   };
 }
 
-export const BookingForm = withStyles(styles)(BookingFormComponent);
+export const BookingForm = withStyles(styles)(withRouter(BookingFormComponent));
