@@ -1,78 +1,91 @@
 /**
- * @typedef {Object} ProfileRequest
- * @property {string} time_zone
- * @property {string} locale
+ * @typedef {Object} Profile
+ * @property {string} time_zone - profile time zone.
+ * @property {string} locale - profile language.
+ */
+
+/**
+ * @typedef {Object} ProfileResponse
+ * @property {number} id - profile id.
+ * @property {string} time_zone - profile time zone.
+ * @property {string} locale - profile language.
  */
 
 /**
  * @version 1.0
  * @exports ProfileService
  * @namespace ProfileService
- * @property {string} profileUri - profile uri
- * @property {string} token - user token
  */
-const ProfileService = (profileUri, token) => {
+export const ProfileService = () => {
   /**
-   * Return a profile finded by id
+   * Return URL for consuming the Profile API.
    * @memberof ProfileService
-   * @param {number} id - profile id
-   * @returns {Profile}
+   * @return {string} - Base URL for all related Profiles requests.
    */
-  const getOne = id => {
-    return fetch(profileUri + id, {
+  const getProfileApiURL = () => `${process.env.REACT_APP_SERVER_URI}Profile/`;
+  /**
+   * Return the found profile information.
+   * @memberof ProfileService
+   * @param {number} id - profile id.
+   * @param {string} authToken - authorization token.
+   * @returns {ProfileResponse} - found profile information.
+   */
+  const getOne = (id, authToken) => {
+    const baseURL = getProfileApiURL();
+    const url = `${baseURL}${id}`;
+    return fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   * Returns all Profiles
+   * Returns all Profiles information.
    * @memberof ProfileService
-   * @returns {Profile[]}
+   * @param {string} authToken - authorization token.
+   * @returns {ProfileResponse[]} - found profiles information.
    */
-  const getAll = () => {
-    return fetch(profileUri, {
+  const getAll = authToken => {
+    const baseURL = getProfileApiURL();
+    return fetch(baseURL, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   * Update a Profile and return it
-   * @param {number} id - profile id
-   * @param {ProfileRequest} profile - profile information
-   * @returns {Profile}
+   * Update the Profile information and return it.
+   * @param {Profile} profile - profile information.
+   * @param {number} id - profile id.
+   * @param {string} authToken - authorization token.
+   * @returns {ProfileResponse} - profile updated information.
    */
-  const updateOne = (profile, id) => {
-    return fetch(profileUri + id, {
+  const updateOne = ({ time_zone, locale }, id, authToken) => {
+    const baseURL = getProfileApiURL();
+    const url = `${baseURL}${id}`;
+    return fetch(url, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       },
       body: {
-        time_zone: profile.time_zone,
-        locale: profile.locale
+        time_zone,
+        locale
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   return {
@@ -81,5 +94,3 @@ const ProfileService = (profileUri, token) => {
     updateOne
   };
 };
-
-export default ProfileService;

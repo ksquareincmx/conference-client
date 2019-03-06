@@ -21,8 +21,9 @@
  * @property {string[]} attendees - Emails from users who will attend the event.
  */
 
+// TODO: Review the use of this typoe definition
 /**
- * @typedef {object} Response
+ * @typedef {object} NotContentResponse
  * @property {string} type - type response cors.
  * @property {string} url - request url.
  * @property {boolean} redirected - redirection of the request.
@@ -32,13 +33,13 @@
 
 /**
  * @typedef {Object} Room
- * @property {number} id - Room id.
- * @property {string} name - Room name.
- * @property {string} color - Room color.
- * @property {boolean} presence - Room presence (for future sensor integration).
- * @property {Date} created_at - Room creation date.
- * @property {Date} update_at - Room update date.
- * @property {number} booking_id_actual - Booking id that currently occupies the room, null if its not.
+ * @property {number} id - room id.
+ * @property {string} name - room name.
+ * @property {string} color - room color.
+ * @property {boolean} presence - room presence (for future sensor integration).
+ * @property {Date} created_at - room creation date.
+ * @property {Date} update_at - room update date.
+ * @property {number} booking_id_actual - booking id that currently occupies the room, null if its not.
  * @property {string} status - Booking status ("Available" or "Not Available").
  */
 
@@ -53,154 +54,164 @@
 
 /**
  * @typedef {Object} BookingWithDetails
- * @property {BookingResponse} - Booking information
- * @property {User} - User information.
- * @property {Room} - Room information.
+ * @property {BookingResponse[]} - booking information.
+ * @property {User} - user information.
+ * @property {Room} - room information.
  */
 
 /**
  * @version 1.0
  * @exports BookingService
  * @namespace BookingService
- * @property {string} bookingUri - booking uri
- * @property {string} token - user token
  */
-const BookingService = (bookingUri, token) => {
+export const BookingService = () => {
   /**
-   * Return the new Booking information thats created.
+   * Return URL for consuming the Booking API.
+   * @memberof BookingService
+   * @return {string} - Base URL for all related Bookings requests.
+   */
+  const getBookingApiURL = () => `${process.env.REACT_APP_SERVER_URI}Booking/`;
+
+  /**
+   * Return the new Booking information.
    * @memberof BookingService
    * @param {BookingRequest} booking - booking information.
-   * @return {BookingResponse} - booking created information.
+   * @param {string} authToken - authorization token.
+   * @return {BookingResponse} - created booking information.
    */
-
-  const createOne = booking => {
-    console.log("BOOK: ", booking);
-    return fetch(bookingUri, {
+  const createOne = (
+    { description, roomId, start, end, attendees },
+    authToken
+  ) => {
+    const baseURL = getBookingApiURL();
+    return fetch(baseURL, {
       method: "POST",
       body: JSON.stringify({
-        description: booking.description,
-        room_id: booking.roomId,
-        start: booking.start,
-        end: booking.end,
-        attendees: booking.attendees
+        description,
+        start,
+        end,
+        attendees,
+        room_id: roomId
       }),
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   *  Return a booking finded by id
-   *  @memberof BookingService
-   *  @param {number} id - booking id.
-   *  @return {BookingResponse} - booking finded information
-   */
-  const getOne = id => {
-    return fetch(bookingUri + id, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      }
-    })
-      .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
-  };
-
-  /**
-   *  Return all Booking
-   *  @memberof BookingService
-   *  @return {BookingResponse[]} - bookings finded information
-   */
-  const getAll = () => {
-    return fetch(bookingUri, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      }
-    })
-      .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
-  };
-
-  /**
-   * Return all the bookings with his details (Room and User information)
+   * Return the found booking information using the id.
    * @memberof BookingService
-   * @return {BookingWithDetails}
+   * @param {number} id - booking id.
+   * @param {string} authToken - authorization token.
+   * @return {BookingResponse} - found booking information.
    */
-  const getAllWithDetails = () => {
-    const NewbookingUri = bookingUri + '?include=["Room","User"]';
-    return fetch(NewbookingUri, {
+  const getOne = (id, authToken) => {
+    const baseURL = getBookingApiURL();
+    const url = `${baseURL}${id}`;
+    return fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        throw err;
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   *  Returns a booking updated by id
-   *  @memberof BookingService
-   *  @param {BookingRequest} booking - booking information.
-   *  @param {number} id - booking id.
-   *  @return {BookingResponse} - booking updated information
+   * Return all Bookings information.
+   * @memberof BookingService
+   * @param {string} authToken - authorization token.
+   * @return {BookingResponse[]} - found bookings information.
    */
-  const updateOne = (booking, id) => {
-    return fetch(bookingUri + id, {
+  const getAll = authToken => {
+    const baseURL = getBookingApiURL();
+    return fetch(baseURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer${authToken}`
+      }
+    })
+      .then(res => res.json())
+      .catch(err => new Error("An error occurred whith the request"));
+  };
+
+  /**
+   * Return all the bookings with all their details (Room and User information).
+   * @memberof BookingService
+   * @param {string} authToken - authorization token.
+   * @return {BookingWithDetails} - found bookigs and, room and user information.
+   */
+  const getAllWithDetails = authToken => {
+    const baseURL = getBookingApiURL();
+    const url = `${baseURL}?include=["Room","User"]`;
+    return fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer${authToken}`
+      }
+    })
+      .then(res => res.json())
+      .catch(err => new Error("An error occurred whith the request"));
+  };
+
+  /**
+   * Update the booking information and return it.
+   * @memberof BookingService
+   * @param {BookingRequest} booking - booking new information.
+   * @param {number} id - booking id.
+   * @param {string} authToken - authorization token.
+   * @return {BookingResponse} - booking updated information.
+   */
+  // TODO: Change id param as the first one in the function signature
+  const updateOne = (booking, id, authToken) => {
+    const baseURL = getBookingApiURL();
+    const url = `${baseURL}${id}`;
+    const { description, roomId, start, end, attendees } = booking;
+    return fetch(url, {
       method: "PUT",
       body: JSON.stringify({
-        description: booking.description,
-        roomId: booking.roomId,
-        start: booking.start,
-        end: booking.end,
-        attendees: booking.attendees
+        description,
+        roomId,
+        start,
+        end,
+        attendees
       }),
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   *  Delete a booking by id
-   *  @memberof BookingService
-   *  @param {number} id - booking id.
-   * @returns {Response}
+   * Delete a booking by id.
+   * @memberof BookingService
+   * @param {number} id - booking id.
+   * @param {string} authToken - authorization token.
+   * @returns {NotContentResponse} - request response.
    */
-
-  const deleteOne = id => {
-    return fetch(bookingUri + id, {
+  const deleteOne = (id, authToken) => {
+    const baseURL = getBookingApiURL();
+    const url = `${baseURL}${id}`;
+    return fetch(url, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res)
-      .catch(err => {
-        throw err;
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   return {
@@ -212,5 +223,3 @@ const BookingService = (bookingUri, token) => {
     deleteOne
   };
 };
-
-export default BookingService;

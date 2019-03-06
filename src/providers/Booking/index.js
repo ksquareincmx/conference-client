@@ -1,1 +1,1 @@
-export * from "providers/Booking/Booking";
+export { BookingProvider, BookingConsumer } from "./Booking";

@@ -27,18 +27,18 @@
  * @version 1.0
  * @exports AuthService
  * @namespace AuthService
- * @property {string} authServiceURL - auth uri
  */
 
-export const AuthService = authServiceURL => {
+export const AuthService = () => {
   /**
    * Return credentials
    * @param {string} idToken - id token
    * @returns {Credentials}
    */
-  const onLogin = async idToken => {
+  const login = async idToken => {
+    const url = `${process.env.REACT_APP_SERVER_URI}auth/googlelogin`;
     try {
-      const res = await fetch(authServiceURL, {
+      const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
           idToken
@@ -54,5 +54,5 @@ export const AuthService = authServiceURL => {
     }
   };
 
-  return { onLogin };
+  return { login };
 };

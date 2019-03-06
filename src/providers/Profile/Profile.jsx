@@ -1,6 +1,6 @@
 import React from "react";
-import ProfileService from "services/ProfileService";
-import baseUri from "../../config/baseUri";
+import { profileService } from "services";
+import { withAuthContext } from "../../hocs/Auth";
 
 const ProfileContext = React.createContext({
   getProfile: () => {},
@@ -8,25 +8,24 @@ const ProfileContext = React.createContext({
   modifyProfile: () => {}
 });
 
-export const ProfileConsumer = ProfileContext.Consumer;
-export class ProfileProvider extends React.Component {
-  profileService = ProfileService(
-    baseUri + "Profile/",
-    this.props.auth.jwt.token
-  );
+class ProfileProvider extends React.Component {
   getProfile = id => {
-    return this.profileService.getOne(id);
+    const { token: authToken } = this.props.context.jwt;
+    return profileService.getOne(id, authToken);
   };
 
   getProfiles = () => {
-    return this.profileService.getAll();
+    const { token: authToken } = this.props.context.jwt;
+    return profileService.getAll(authToken);
   };
 
   modifyProfile = (profile, id) => {
-    return this.profileService.modifyOne(profile, id);
+    const { token: authToken } = this.props.context.jwt;
+    return this.profileService.modifyOne(profile, id, authToken);
   };
 
   render() {
+    const { children } = this.props;
     return (
       <ProfileContext.Provider
         value={{
@@ -35,8 +34,12 @@ export class ProfileProvider extends React.Component {
           modifyProfile: this.modifyProfile
         }}
       >
-        {this.props.children}
+        {children}
       </ProfileContext.Provider>
     );
   }
 }
+
+const ProfileConsumer = ProfileContext.Consumer;
+const ProfileProviderWithAuth = withAuthContext(ProfileProvider);
+export { ProfileProviderWithAuth as ProfileProvider, ProfileConsumer };

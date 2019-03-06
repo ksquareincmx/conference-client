@@ -1,136 +1,143 @@
 /**
- * RoomResponse object
- * @typedef {Object} RoomResponse
- * @property {number} id - Room id
- * @property {string} name - Room name
- * @property {string} color - Room color
- * @property {boolean} presence - Room presence (for future sensor integration)
- * @property {Date} created_at - Room creation date
- * @property {Date} update_at - Room update date
- * @property {number} booking_id_actual - Booking id that currently occupies the room, null if its not
- * @property {string} status - Room status ("Available" or "Not Available")
+ * @typedef {Object} Room
+ * @property {string} name - room name.
+ * @property {string} color - room color.
  */
 
 /**
- * Room object
- * @typedef {Object} Room
- * @property {string} name - room name
- * @property {string} color - room color
+ * @typedef {Object} RoomResponse
+ * @property {number} id - room id.
+ * @property {string} name - room name.
+ * @property {string} color - room color.
+ * @property {boolean} presence - room presence (for future sensor integration).
+ * @property {Date} created_at - room creation date.
+ * @property {Date} update_at - room update date.
+ * @property {number} booking_id_actual - Booking id that currently occupies the room, null if its not.
+ * @property {string} status - room status ("Available" or "Not Available").
  */
 
 /**
  * @version 1.0
  * @exports RoomService
  * @namespace RoomService
- * @property {string} roomUri - room uri
- * @property {string} token - user token
  */
-const RoomService = (roomUri, token) => {
+export const RoomService = () => {
   /**
-   * Create a room and return it
+   * Return URL for consuming the Room API.
    * @memberof RoomService
-   * @param {Room} room - Room object
-   * @returns {RoomResponse}
+   * @return {string} - Base URL for all related Rooms requests.
    */
-  const createOne = room => {
-    return fetch(roomUri, {
+  const getRoomApiURL = () => `${process.env.REACT_APP_SERVER_URI}Room/`;
+  /**
+   * Create a new room and return it.
+   * @memberof RoomService
+   * @param {Room} room - room object.
+   * @param {string} authToken - authorization token.
+   * @returns {RoomResponse} - created room information.
+   */
+  const createOne = (room, authToken) => {
+    const baseURL = getRoomApiURL();
+    const { name, color } = room;
+    return fetch(baseURL, {
       method: "POST",
       body: {
-        name: room.name,
-        color: room.color
+        name,
+        color
       },
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   * Return a Room finded by id
+   * Return the found Room information using the id.
    * @memberof RoomService
-   * @param {number} id - room id
-   * @returns {RoomResponse}
+   * @param {number} id - room id.
+   * @param {string} authToken - authorization token.
+   * @returns {RoomResponse} - found room information.
    */
-  const getOne = id => {
-    return fetch(roomUri + id, {
+  const getOne = (id, authToken) => {
+    const baseURL = getRoomApiURL();
+    const url = `${baseURL}${id}`;
+    return fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   * Return all Rooms
+   * Return all Rooms information.
    * @memberof RoomService
-   * @returns {RoomResponse[]}
+   * @param {string} authToken - authorization token.
+   * @returns {RoomResponse[]} - found rooms information.
    */
-  const getAll = () => {
-    return fetch(roomUri, {
+  const getAll = authToken => {
+    const baseURL = getRoomApiURL();
+    return fetch(baseURL, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   * Update a room and return it
+   * Update the room information and return it.
    * @memberof RoomService
-   * @param {Room} room - Room object
-   * @param {number} id - room id
-   * @returns {RoomResponse}
+   * @param {Room} room - room object.
+   * @param {number} id - room id.
+   * @param {string} authToken - authorization token.
+   * @returns {RoomResponse} - room updated information.
    */
-  const updateOne = (room, id) => {
-    return fetch(roomUri + id, {
+  const updateOne = ({ name, color }, id, authToken) => {
+    const baseURL = getRoomApiURL();
+    const url = `${baseURL}${id}`;
+    return fetch(url, {
       method: "PUT",
       body: {
-        name: room.name,
-        color: room.color
+        name,
+        color
       },
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   /**
-   * Delete a room by id
+   * Delete a room by id.
    * @memberof RoomService
-   * @param {number} id - room id
+   * @param {number} id - room id.
+   * @param {string} authToken - authorization token.
    */
-  const deleteOne = id => {
-    return fetch(roomUri + id, {
+  //  TODO: @returns {NotContentResponse} - request response.
+  const deleteOne = (id, authToken) => {
+    const baseURL = getRoomApiURL();
+    const url = `${baseURL}${id}`;
+    return fetch(url, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer${authToken}`
       }
     })
       .then(res => res.json())
-      .catch(err => {
-        return new Error("An error occurred whith the request");
-      });
+      .catch(err => new Error("An error occurred whith the request"));
   };
 
   return {
@@ -141,5 +148,3 @@ const RoomService = (roomUri, token) => {
     deleteOne
   };
 };
-
-export default RoomService;
