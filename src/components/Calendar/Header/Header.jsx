@@ -1,6 +1,6 @@
 import React from "react";
 import "./Header.css";
-import { ModalFormConsumer } from "../../../providers/ModalForm";
+import { ModalFormConsumer } from "providers/ModalForm";
 
 const styles = {
   firstButton: {

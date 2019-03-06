@@ -2,9 +2,9 @@ import React from "react";
 import { Card, withStyles, Grid } from "@material-ui/core";
 import { RoomSticker } from "./RoomSticker";
 import { BookingDetails } from "./BookingDetails";
-import { formatDate, formatTime } from "../../../../utils/BookingFormater";
+import { formatDate, formatTime } from "utils/BookingFormater";
 import { BookingItemMenu } from "./BookingItemMenu";
-import { ModalFormConsumer } from "../../../../providers/ModalForm";
+import { ModalFormConsumer } from "providers/ModalForm";
 
 const styles = theme => ({
   itemCard: {

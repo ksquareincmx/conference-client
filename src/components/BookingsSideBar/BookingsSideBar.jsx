@@ -3,9 +3,9 @@ import { Grid, Typography, Card } from "@material-ui/core/";
 import { withStyles } from "@material-ui/core/styles";
 import { SearchBar } from "./SearchBar";
 import { BookingList } from "./BookingList/BookingList";
-import { BookingConsumer } from "../../providers/Booking";
-import { RoomConsumer } from "../../providers/Room";
-import { UserConsumer } from "../../providers/User";
+import { BookingConsumer } from "providers/Booking";
+import { RoomConsumer } from "providers/Room";
+import { UserConsumer } from "providers/User";
 
 const styles = theme => ({
   sideBar: {

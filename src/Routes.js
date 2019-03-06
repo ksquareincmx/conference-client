@@ -5,8 +5,7 @@ import {
   Redirect,
   Switch
 } from "react-router-dom";
-import { Login } from "pages/Login";
-import { Calendar } from "pages/Calendar";
+import { Calendar, Login } from "pages";
 
 export const Routes = () => (
   <Router>
