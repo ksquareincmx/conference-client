@@ -1,6 +1,5 @@
 import React from "react";
-import AuthService from "services/AuthService";
-import { StorageService } from "services/StorageService";
+import { authService, storageService } from "services";
 
 // Context object template
 const AuthContext = React.createContext({
@@ -19,26 +18,24 @@ class AuthProvider extends React.Component {
     isAuth: false
   };
 
-  authService = AuthService(
-    process.env.REACT_APP_SERVER_URI + "auth/googlelogin"
-  );
-  storageService = StorageService();
-
   componentDidMount() {
-    const jwt = this.storageService.getAuthToken();
-    const user = this.storageService.getUserInfo();
+    const { getAuthToken, getUserInfo, updateInfoInStorage } = storageService;
+
+    const jwt = getAuthToken();
+    const user = getUserInfo();
 
     if (jwt && user) {
       const sessionInfo = { jwt, user };
       this.setState({ sessionInfo, isAuth: true });
-      this.storageService.updateInfoInStorage(sessionInfo);
+      updateInfoInStorage(sessionInfo);
     }
   }
 
   onLogin = async googleUser => {
     const idToken = googleUser.getAuthResponse().id_token;
     try {
-      const res = await this.authService.onLogin(idToken);
+      const { login } = authService;
+      const res = await login(idToken);
       const { token, expires, refresh_token: refreshToken, user } = res;
       const sessionInfo = {
         jwt: {
@@ -46,20 +43,12 @@ class AuthProvider extends React.Component {
           expires,
           refreshToken
         },
-        /**
-         * {
-         *  id: number,
-         *  email: string,
-         *  name: string,
-         *  role: string,
-         *  picture: string
-         * }
-         */
         user
       };
       this.setState({ sessionInfo, isAuth: true }, () => {
         const { sessionInfo } = this.state;
-        this.storageService.updateInfoInStorage(sessionInfo);
+        const { updateInfoInStorage } = storageService;
+        updateInfoInStorage(sessionInfo);
       });
     } catch (err) {
       console.log(err);
@@ -73,7 +62,8 @@ class AuthProvider extends React.Component {
     };
     this.setState({ sessionInfo, isAuth: false }, () => {
       const { sessionInfo } = this.state;
-      this.storageService.updateInfoInStorage(sessionInfo);
+      const { updateInfoInStorage } = storageService;
+      updateInfoInStorage(sessionInfo);
     });
   };
 

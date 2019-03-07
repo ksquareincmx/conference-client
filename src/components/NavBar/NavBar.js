@@ -4,7 +4,7 @@ import NavBarContainer from "./NavBarContainer";
 import { AvatarButton } from "./AvatarButton";
 import { UsernameLabel } from "./UsernameLabel";
 import { NavBarMenu } from "./NavBarMenu";
-
+import { getUserName } from "../../utils/sessionInfo";
 import { withAuthContext } from "../../hocs/Auth";
 
 class NavBar extends React.Component {
@@ -22,21 +22,15 @@ class NavBar extends React.Component {
 
   render() {
     const { anchorEl } = this.state;
-    const {
-      context: {
-        sessionInfo: {
-          user: { name }
-        },
-        onLogout
-      }
-    } = this.props;
+    const { context } = this.props;
+    const username = getUserName(context);
+    const { onLogout } = context;
 
     return (
       <NavBarContainer>
         <NavRightSide>
-          <UsernameLabel username={name} />
+          <UsernameLabel username={username} />
           <AvatarButton onClick={this.handleClick} />
-
           <NavBarMenu
             anchorEl={anchorEl}
             onClose={this.handleClose}

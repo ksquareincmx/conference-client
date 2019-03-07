@@ -1,6 +1,6 @@
 import React from "react";
-import RoomService from "services/RoomService";
-import baseUri from "../../config/baseUri";
+import { roomService } from "services";
+import { withAuthContext } from "../../hocs/Auth";
 
 const RoomContext = React.createContext({
   createNewRoom: () => {},
@@ -10,30 +10,34 @@ const RoomContext = React.createContext({
   removeRoom: () => {}
 });
 
-export const RoomConsumer = RoomContext.Consumer;
-export class RoomProvider extends React.Component {
-  roomService = RoomService(baseUri + "Room/", this.props.auth.jwt.token);
+class RoomProvider extends React.Component {
   createNewRoom = room => {
-    return this.roomService.createOne(room);
+    const { token: authToken } = this.props.context.jwt;
+    return roomService.createOne(room, authToken);
   };
 
   getRoom = id => {
-    return this.roomService.getOne(id);
+    const { token: authToken } = this.props.context.jwt;
+    return roomService.getOne(id, authToken);
   };
 
   getsListOfRoom = () => {
-    return this.roomService.getAll();
+    const { token: authToken } = this.props.context.jwt;
+    return roomService.getAll(authToken);
   };
 
   modifyRoom = (room, id) => {
-    return this.roomService.updateOne(room, id);
+    const { token: authToken } = this.props.context.jwt;
+    return roomService.updateOne(room, id, authToken);
   };
 
   removeRoom = id => {
-    return this.roomService.deleteOne(id);
+    const { token: authToken } = this.props.context.jwt;
+    return roomService.deleteOne(id, authToken);
   };
 
   render() {
+    const { children } = this.props;
     return (
       <RoomContext.Provider
         value={{
@@ -44,8 +48,12 @@ export class RoomProvider extends React.Component {
           removeRoom: this.removeRoom
         }}
       >
-        {this.props.children}
+        {children}
       </RoomContext.Provider>
     );
   }
 }
+
+const RoomConsumer = RoomContext.Consumer;
+const RoomProviderWithAuth = withAuthContext(RoomProvider);
+export { RoomProviderWithAuth as RoomProvider, RoomConsumer };
