@@ -11,13 +11,20 @@ import {
   Typography,
   withStyles
 } from "@material-ui/core/";
+import { withRouter } from "react-router-dom";
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList/";
 import DatePicker from "./DatePicker";
 import TimeSelect from "./TimeSelect";
 import RoomSelect from "./RoomSelect";
-import addZeros from "../../../utils/AddZeros";
+import addZeros from "utils/AddZeros";
 import { validateBooking } from "./meetingValidations";
+import {
+  formatDate,
+  formatDashedDate,
+  formatHours,
+  formatMinutes
+} from "utils/BookingFormater";
 
 const styles = theme => ({
   card: {
@@ -66,6 +73,7 @@ class BookingFormComponent extends React.Component {
     room: "",
     reasonAppointmentText: "",
     attendees: [],
+    refreshChipList: false,
     isInvalidDate: false,
     isInvalidHour: false,
     isInvalidReason: false,
@@ -116,6 +124,10 @@ class BookingFormComponent extends React.Component {
     );
   };
 
+  refreshChipList = () => {
+    this.setState({ refreshChipList: !this.state.refreshChipList });
+  };
+
   validate = bookingObj => {
     const bookingValidated = validateBooking(bookingObj);
 
@@ -132,12 +144,21 @@ class BookingFormComponent extends React.Component {
 
     if (isBookingValid) {
       if (this.state.bookingClicked) {
-        const res = await this.props.booking.modifyBooking(
-          post,
-          this.props.bookingClickedObj.bookingId
-        );
-        window.location.href = "/calendar";
-        return 0;
+        try {
+          const res = await this.props.booking.modifyBooking(
+            post,
+            this.props.bookingClickedObj.id
+          );
+          if (res.id) {
+            this.props.handleOnCloseModal();
+            // Temporal solution, should be handled by notification system
+            alert("Appointment edited successfully");
+            return this.props.history.push("/calendar");
+          }
+          return alert(res);
+        } catch (error) {
+          return alert(error.message);
+        }
       }
       try {
         const res = await this.props.booking.createNewBooking(post);
@@ -199,44 +220,40 @@ class BookingFormComponent extends React.Component {
       }
     } else if (this.props.bookingClicked) {
       if (!this.state.bookingClicked) {
-        const startDateFormat = this.props.bookingClickedObj.start.slice(
-          0,
-          this.props.bookingClickedObj.start.length - 1
-        );
-        const startDate = new Date(startDateFormat);
+        const {
+          start,
+          end,
+          roomName,
+          room_id: roomId,
+          description,
+          attendees
+        } = this.props.bookingClickedObj;
 
-        const endDateFormat = this.props.bookingClickedObj.end.slice(
-          0,
-          this.props.bookingClickedObj.end.length - 1
-        );
-        const endDate = new Date(endDateFormat);
-
-        let date =
-          startDate.getFullYear() +
-          "-" +
-          addZeros(startDate.getMonth() + 1) +
-          "-" +
-          addZeros(startDate.getDate());
+        const startDate = formatDate(start);
+        const endDate = formatDate(end);
 
         this.setState({
-          room: this.props.bookingClickedObj.roomName,
-          roomId: this.props.bookingClickedObj.roomId,
+          room: roomName,
+          roomId: roomId,
           bookingClicked: true,
-          date: date,
+          date: formatDashedDate(startDate),
           startTime: {
-            hour: addZeros(startDate.getHours()),
-            minute: addZeros(startDate.getMinutes())
+            hour: formatHours(startDate),
+            minute: formatMinutes(startDate)
           },
-
           endTime: {
-            hour: addZeros(endDate.getHours()),
-            minute: addZeros(endDate.getMinutes())
+            hour: formatHours(endDate),
+            minute: formatMinutes(endDate)
           },
+          reasonAppointmentText: description,
+          attendees: attendees,
           disabledStartTimeSelect: false,
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
           disabledNextButton: false
         });
+
+        this.refreshChipList();
       }
     }
   }
@@ -266,6 +283,12 @@ class BookingFormComponent extends React.Component {
       room = this.props.bookingClickedObj.roomName;
     }
 
+    const formTitle = this.props.bookingClicked
+      ? "Edit Meeting"
+      : "New Meeting";
+
+    const buttonSaveTxt = this.props.bookingClicked ? "Edit" : "Create";
+
     return (
       <Grid
         container
@@ -274,7 +297,7 @@ class BookingFormComponent extends React.Component {
         style={{ height: "100%" }}
       >
         <Card className={card}>
-          <CardHeader classes={{ title: header }} title="New Meeting" />
+          <CardHeader classes={{ title: header }} title={formTitle} />
           <Divider />
           <CardContent className={root}>
             <Grid container direction="column" className={content}>
@@ -350,6 +373,7 @@ class BookingFormComponent extends React.Component {
                   shrink: true
                 }}
                 error={this.state.isInvalidReason}
+                value={this.state.reasonAppointmentText}
               />
               <Collapse in={this.state.isInvalidReason}>
                 <small className={alertMessage}>Reason can not be empty</small>
@@ -361,7 +385,9 @@ class BookingFormComponent extends React.Component {
               </Typography>
               <ChipList
                 handleChangeInvite={this.handleChangeInvite}
+                attendeesList={this.state.attendees}
                 isInvalidInvite={this.state.isInvalidInvite}
+                refresh={this.state.refreshChipList}
               />
               <Fragment>
                 <Collapse in={this.state.isInvalidInvite}>
@@ -380,7 +406,7 @@ class BookingFormComponent extends React.Component {
               onClick={this.props.handleOnCloseModal}
             />
             <MaterialButton
-              textButton="Next"
+              textButton={buttonSaveTxt}
               sizeButton="large"
               colorButton="#5094E3"
               onClick={this.handleClickNext}
@@ -417,4 +443,4 @@ function postDto(state) {
   };
 }
 
-export const BookingForm = withStyles(styles)(BookingFormComponent);
+export const BookingForm = withStyles(styles)(withRouter(BookingFormComponent));

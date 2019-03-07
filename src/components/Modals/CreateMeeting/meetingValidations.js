@@ -42,6 +42,9 @@ const validateIsDiferentHour = (timeStart, timeEnd) => timeStart !== timeEnd;
 
 const validateIsCoherentHour = (timeStart, timeEnd) => timeStart <= timeEnd;
 
+const validateIsAfterCurrentHour = (timeStart, currentTime) =>
+  timeStart > currentTime;
+
 const validateWorkingHours = (timeStart, timeEnd) => {
   const isStart = true;
   const startIsWH = isWorkingHour(timeStart, isStart);
@@ -80,7 +83,13 @@ const validateBooking = bookingObj => {
   );
   const isWorkingHours = validateWorkingHours(startDate, endDate);
 
-  const isValidHour = isDiferentHour && isCoherentHour && isWorkingHours;
+  const isAfterCurrentHour = validateIsAfterCurrentHour(
+    startDate.unix(),
+    moment().unix()
+  );
+
+  const isValidHour =
+    isDiferentHour && isCoherentHour && isWorkingHours && isAfterCurrentHour;
 
   let hourMessage = isDiferentHour
     ? ""
@@ -88,6 +97,11 @@ const validateBooking = bookingObj => {
   hourMessage = isCoherentHour
     ? hourMessage
     : "The end time of the meeting can't be set earlier than the start time";
+  hourMessage = isAfterCurrentHour
+    ? hourMessage
+    : `The start time of the meeting need to be set after ${moment().format(
+        "HH:mm"
+      )}`;
   hourMessage = isWorkingHours
     ? hourMessage
     : "A meeting can't start or finish after 18:00";

@@ -3,9 +3,9 @@ import { Grid, Typography, Card } from "@material-ui/core/";
 import { withStyles } from "@material-ui/core/styles";
 import { SearchBar } from "./SearchBar";
 import { BookingList } from "./BookingList/BookingList";
-import { BookingProvider, BookingConsumer } from "../../providers/Booking";
-import { RoomConsumer, RoomProvider } from "../../providers/Room";
-import { UserConsumer, UserProvider } from "../../providers/User";
+import { BookingConsumer } from "providers/Booking";
+import { RoomConsumer } from "providers/Room";
+import { UserConsumer } from "providers/User";
 
 const styles = theme => ({
   sideBar: {
@@ -49,31 +49,25 @@ class BookingsSideBarComponent extends React.Component {
           <Typography className={title}>Appointments Made</Typography>
           <SearchBar onChange={this.handleOnChangeSearch} />
         </Card>
-        <BookingProvider auth={auth}>
-          <BookingConsumer>
-            {booking => (
-              <RoomProvider auth={auth}>
-                <RoomConsumer>
-                  {roomService => (
-                    <UserProvider auth={auth}>
-                      <UserConsumer>
-                        {userService => (
-                          <BookingList
-                            booking={booking}
-                            auth={auth}
-                            roomService={roomService}
-                            userService={userService}
-                            searchTerm={this.state.searchTerm}
-                          />
-                        )}
-                      </UserConsumer>
-                    </UserProvider>
+        <BookingConsumer>
+          {booking => (
+            <RoomConsumer>
+              {roomService => (
+                <UserConsumer>
+                  {userService => (
+                    <BookingList
+                      booking={booking}
+                      auth={auth}
+                      roomService={roomService}
+                      userService={userService}
+                      searchTerm={this.state.searchTerm}
+                    />
                   )}
-                </RoomConsumer>
-              </RoomProvider>
-            )}
-          </BookingConsumer>
-        </BookingProvider>
+                </UserConsumer>
+              )}
+            </RoomConsumer>
+          )}
+        </BookingConsumer>
       </Grid>
     );
   }

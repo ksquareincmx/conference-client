@@ -36,7 +36,6 @@ class TimeSelect extends React.Component {
   };
 
   timeFormat() {
-    //let time = (this.state.hourSelected + ':' + this.state.minuteSelected + ':' + '00.000Z')
     let time = {
       hour: this.state.hourSelected,
       minute: this.state.minuteSelected

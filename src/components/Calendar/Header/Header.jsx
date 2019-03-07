@@ -1,5 +1,6 @@
 import React from "react";
 import "./Header.css";
+import { ModalFormConsumer } from "providers/ModalForm";
 
 const styles = {
   firstButton: {
@@ -47,7 +48,16 @@ const HeaderView = props => {
         {props.headerDateContainer}
         <div className="header-bottom-side-separator"> </div>
         <div className="header-create-meeting">
-          <button className="create-meating-button">CREATE MEETING</button>
+          <ModalFormConsumer>
+            {modalForm => (
+              <button
+                className="create-meating-button"
+                onClick={modalForm.handleOnClickCreateMeeting}
+              >
+                CREATE MEETING
+              </button>
+            )}
+          </ModalFormConsumer>
         </div>
       </div>
     </div>

@@ -2,8 +2,9 @@ import React from "react";
 import { Card, withStyles, Grid } from "@material-ui/core";
 import { RoomSticker } from "./RoomSticker";
 import { BookingDetails } from "./BookingDetails";
-import { formatDate, formatTime } from "../../../../utils/BookingFormater";
+import { formatDate, formatTime } from "utils/BookingFormater";
 import { BookingItemMenu } from "./BookingItemMenu";
+import { ModalFormConsumer } from "providers/ModalForm";
 
 const styles = theme => ({
   itemCard: {
@@ -66,6 +67,8 @@ const BookingItemComponent = ({
     }
   };
 
+  const handleOnEdit = formModalFunction => () => formModalFunction(booking);
+
   return (
     <Card elevation={1} square className={itemCard}>
       <Grid container direction={"row"} className={container}>
@@ -80,10 +83,15 @@ const BookingItemComponent = ({
           />
         </Grid>
         <Grid item xs={3} className={gridDate}>
-          <div> {dateText}</div>
-          <div>
-            <BookingItemMenu handleOnDelete={handleOnDelete} />
-          </div>
+          <div>{dateText}</div>
+          <ModalFormConsumer>
+            {modalForm => (
+              <BookingItemMenu
+                handleOnDelete={handleOnDelete}
+                handleOnEdit={handleOnEdit(modalForm.handleOnClickEditMeeting)}
+              />
+            )}
+          </ModalFormConsumer>
         </Grid>
       </Grid>
     </Card>
