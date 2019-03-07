@@ -1,1 +1,1 @@
-export * from "providers/Room/Room";
+export { RoomProvider, RoomConsumer } from "./Room";

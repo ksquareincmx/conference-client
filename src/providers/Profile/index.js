@@ -1,1 +1,1 @@
-export * from "providers/Profile/Profile";
+export { ProfileProvider, ProfileConsumer } from "./Profile";
