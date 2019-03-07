@@ -17,14 +17,14 @@ import ChipList from "components/ChipList/";
 import DatePicker from "./DatePicker";
 import TimeSelect from "./TimeSelect";
 import RoomSelect from "./RoomSelect";
-import addZeros from "../../../utils/AddZeros";
+import addZeros from "utils/AddZeros";
 import { validateBooking } from "./meetingValidations";
 import {
   formatDate,
   formatDashedDate,
   formatHours,
   formatMinutes
-} from "../../../utils/BookingFormater";
+} from "utils/BookingFormater";
 
 const styles = theme => ({
   card: {

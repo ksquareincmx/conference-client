@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, withStyles } from "@material-ui/core";
-import { BookingForm } from "../../components/Modals/CreateMeeting/BookingForm";
+import { BookingForm } from "components/Modals/CreateMeeting/BookingForm";
 
 const styles = theme => ({
   modal: { width: "100%", height: "100%" }

@@ -1,12 +1,12 @@
 import React from "react";
-import { BookingConsumer, BookingProvider } from "../../providers/Booking";
-import { RoomConsumer, RoomProvider } from "../../providers/Room";
-import { UserConsumer, UserProvider } from "../../providers/User";
+import { BookingConsumer, BookingProvider } from "providers/Booking";
+import { RoomConsumer, RoomProvider } from "providers/Room";
+import { UserConsumer, UserProvider } from "providers/User";
 import CalendarPageLogic from "./CalendarPageLogic";
 
 import { Redirect } from "react-router-dom";
-import { withAuthContext } from "../../hocs/Auth";
-import { ModalFormProvider } from "../../providers/ModalForm";
+import { withAuthContext } from "hocs/Auth";
+import { ModalFormProvider } from "providers/ModalForm";
 
 function Calendar({ context: { isAuth, sessionInfo } }) {
   if (!isAuth) {
