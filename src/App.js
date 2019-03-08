@@ -3,7 +3,7 @@ import "./App.css";
 import { Routes } from "./Routes";
 import { AuthProvider } from "./providers/Auth";
 
-class App extends Component {
+export class App extends Component {
   render() {
     return (
       <AuthProvider>
@@ -12,5 +12,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;

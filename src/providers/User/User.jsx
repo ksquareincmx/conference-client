@@ -10,17 +10,17 @@ const UserContext = React.createContext({
 
 class UserProvider extends React.Component {
   getUser = id => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return userService.getOne(id, authToken);
   };
 
   getUsers = () => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return userService.getAll(authToken);
   };
 
   modifyUser = (user, id) => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return userService.updateOne(user, id, authToken);
   };
 
@@ -41,5 +41,4 @@ class UserProvider extends React.Component {
 }
 
 const UserConsumer = UserContext.Consumer;
-const UserProviderWithAuth = withAuthContext(UserProvider);
-export { UserProviderWithAuth as UserProvider, UserConsumer };
+export { UserProvider, UserConsumer };

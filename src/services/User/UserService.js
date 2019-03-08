@@ -43,7 +43,7 @@ export const UserService = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -64,7 +64,7 @@ export const UserService = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       },
       body: {
         authProviderId,
@@ -93,7 +93,7 @@ export const UserService = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())

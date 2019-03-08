@@ -10,17 +10,17 @@ const ProfileContext = React.createContext({
 
 class ProfileProvider extends React.Component {
   getProfile = id => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return profileService.getOne(id, authToken);
   };
 
   getProfiles = () => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return profileService.getAll(authToken);
   };
 
   modifyProfile = (profile, id) => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return this.profileService.modifyOne(profile, id, authToken);
   };
 
@@ -41,5 +41,4 @@ class ProfileProvider extends React.Component {
 }
 
 const ProfileConsumer = ProfileContext.Consumer;
-const ProfileProviderWithAuth = withAuthContext(ProfileProvider);
-export { ProfileProviderWithAuth as ProfileProvider, ProfileConsumer };
+export { ProfileProvider, ProfileConsumer };

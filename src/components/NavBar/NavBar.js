@@ -5,9 +5,8 @@ import { AvatarButton } from "./AvatarButton";
 import { UsernameLabel } from "./UsernameLabel";
 import { NavBarMenu } from "./NavBarMenu";
 import { getUserName } from "../../utils/sessionInfo";
-import { withAuthContext } from "../../hocs/Auth";
 
-class NavBar extends React.Component {
+export class NavBar extends React.Component {
   state = {
     anchorEl: null
   };
@@ -22,9 +21,8 @@ class NavBar extends React.Component {
 
   render() {
     const { anchorEl } = this.state;
-    const { context } = this.props;
-    const username = getUserName(context);
-    const { onLogout } = context;
+    const { sessionInfo, onLogout } = this.props.auth;
+    const username = getUserName(sessionInfo);
 
     return (
       <NavBarContainer>
@@ -41,5 +39,3 @@ class NavBar extends React.Component {
     );
   }
 }
-
-export const NavBarWithAuthContext = withAuthContext(NavBar);

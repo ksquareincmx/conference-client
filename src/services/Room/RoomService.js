@@ -46,7 +46,7 @@ export const RoomService = () => {
       },
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -67,7 +67,7 @@ export const RoomService = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -86,7 +86,7 @@ export const RoomService = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -112,7 +112,7 @@ export const RoomService = () => {
       },
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -133,7 +133,7 @@ export const RoomService = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())

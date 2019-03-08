@@ -21,7 +21,7 @@
  * @property {string[]} attendees - Emails from users who will attend the event.
  */
 
-// TODO: Review the use of this typoe definition
+// TODO: Review the use of this type definition
 /**
  * @typedef {object} NotContentResponse
  * @property {string} type - type response cors.
@@ -95,7 +95,7 @@ export const BookingService = () => {
       }),
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -116,7 +116,7 @@ export const BookingService = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -135,7 +135,7 @@ export const BookingService = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -155,7 +155,7 @@ export const BookingService = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -186,7 +186,7 @@ export const BookingService = () => {
       }),
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -207,7 +207,7 @@ export const BookingService = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res)

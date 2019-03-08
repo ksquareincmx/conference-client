@@ -26,15 +26,13 @@ const style = theme => ({
 });
 
 const LoginCardComponent = ({ classes: { loginCard }, onLogin }) => (
-  <Grid container justify="center">
-    <Card className={loginCard}>
-      <CardContent>
-        <CardLogo />
-        <CardMessage />
-        <LoginButton onClick={onLogin} />
-      </CardContent>
-    </Card>
-  </Grid>
+  <Card className={loginCard}>
+    <CardContent>
+      <CardLogo />
+      <CardMessage />
+      <LoginButton onClick={onLogin} />
+    </CardContent>
+  </Card>
 );
 
 export const LoginCard = withStyles(style)(LoginCardComponent);
