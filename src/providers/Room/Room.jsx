@@ -12,27 +12,27 @@ const RoomContext = React.createContext({
 
 class RoomProvider extends React.Component {
   createNewRoom = room => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return roomService.createOne(room, authToken);
   };
 
   getRoom = id => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return roomService.getOne(id, authToken);
   };
 
   getsListOfRoom = () => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return roomService.getAll(authToken);
   };
 
   modifyRoom = (room, id) => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return roomService.updateOne(room, id, authToken);
   };
 
   removeRoom = id => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return roomService.deleteOne(id, authToken);
   };
 
@@ -55,5 +55,4 @@ class RoomProvider extends React.Component {
 }
 
 const RoomConsumer = RoomContext.Consumer;
-const RoomProviderWithAuth = withAuthContext(RoomProvider);
-export { RoomProviderWithAuth as RoomProvider, RoomConsumer };
+export { RoomProvider, RoomConsumer };

@@ -1,6 +1,5 @@
 import React from "react";
 import { bookingService } from "services";
-import { withAuthContext } from "../../hocs/Auth";
 
 const BookingContext = React.createContext({
   createNewBooking: () => {},
@@ -13,36 +12,36 @@ const BookingContext = React.createContext({
 
 class BookingProvider extends React.Component {
   createNewBooking = booking => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return bookingService.createOne(booking, authToken);
   };
 
   getBooking = id => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return bookingService.getOne(id, authToken);
   };
 
   getsListOfBooking = () => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return bookingService.getAll(authToken);
   };
 
   getDetailedListOfBooking = () => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return bookingService.getAllWithDetails(authToken);
   };
   modifyBooking = (booking, id) => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return bookingService.updateOne(booking, authToken);
   };
 
   removeBooking = id => {
-    const { token: authToken } = this.props.context.jwt;
+    const { token: authToken } = this.props.auth.jwt;
     return bookingService.deleteOne(id, authToken);
   };
 
   render() {
-    const { children } = this.props.children;
+    const { children } = this.props;
     return (
       <BookingContext.Provider
         value={{
@@ -61,5 +60,4 @@ class BookingProvider extends React.Component {
 }
 
 const BookingConsumer = BookingContext.Consumer;
-const BookingProviderWithAuth = withAuthContext(BookingProvider);
-export { BookingProviderWithAuth as BookingProvider, BookingConsumer };
+export { BookingProvider, BookingConsumer };

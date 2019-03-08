@@ -37,7 +37,7 @@ export const ProfileService = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -56,7 +56,7 @@ export const ProfileService = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       }
     })
       .then(res => res.json())
@@ -77,7 +77,7 @@ export const ProfileService = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer${authToken}`
+        Authorization: `Bearer ${authToken}`
       },
       body: {
         time_zone,

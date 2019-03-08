@@ -1,1 +1,1 @@
-export { NavBarWithAuthContext as NavBar } from "./NavBar";
+export { NavBar } from "./NavBar";
