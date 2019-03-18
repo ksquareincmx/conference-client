@@ -1,41 +1,10 @@
-.days-container {
-  display: flex;
-  flex-direction: row;
-  height: 500px;
-  margin: auto;
+.day .rbc-time-view,
+.rbc-time-content {
+  border: 0px;
 }
 
-.days-container .rbc-toolbar {
-  visibility: hidden;
-  width: 0%;
-  height: 0%;
-}
-
-.days-container .rbc-time-header {
-  visibility: hidden;
-  width: 0%;
-  height: 0%;
-}
-
-.days-container .rbc-calendar {
-  height: 92%;
-}
-
-.days-container .rbc-timeslot-group {
-  min-height: 30px;
-}
-
-.day-agenda {
-  width: 50%;
-}
-
-.day-header {
-  display: flex;
-  flex-direction: row;
-  height: 8%;
-}
-
-.conference-room-name {
-  width: 100%;
-  text-align: center;
+.day .rbc-time-header {
+  margin-right: 0px;
+  border: 0px transparent solid;
+  display: none;
 }

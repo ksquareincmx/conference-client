@@ -3,17 +3,21 @@ import dates from "react-big-calendar/lib/utils/dates";
 import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DraggingCalendar from "components/Modals/DraggingCalendar";
-import HeaderView from "components/Calendar/Header";
-import FooterView from "components/Calendar/Footer";
+import { HeaderView } from "components/Calendar";
 import * as AppointmentMapper from "mappers/AppointmentMapper";
 import * as Utils from "./Utils.js";
-import "./Calendar.css";
 import HeaderStrategy from "./HeaderStrategy";
 import CalendarStrategy from "./CalendarStrategy";
-import { Grid } from "@material-ui/core";
+import { Grid, withStyles } from "@material-ui/core";
 import { BookingsSideBar } from "../../components/BookingsSideBar/BookingsSideBar.jsx";
 
-class CalendarPageLogic extends React.Component {
+const styles = theme => ({
+  calendarContainer: {
+    margin: "0px 5% 0px 5%"
+  }
+});
+
+class CalendarPageLogicComponent extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -151,6 +155,8 @@ class CalendarPageLogic extends React.Component {
   }
 
   render() {
+    const { calendarContainer } = this.props.classes;
+
     return (
       <Fragment>
         <Grid container direction="row">
@@ -158,47 +164,48 @@ class CalendarPageLogic extends React.Component {
             <BookingsSideBar auth={this.props.auth} />
           </Grid>
           <Grid item xs={9}>
-            <div className="calendar-container">
-              <HeaderView
-                onClickViewButton={this.handlerOnClickViewButton}
-                headerDateContainer={
-                  <HeaderStrategy
-                    type={this.state.selector}
-                    numberDayInMonth={this.state.focusDate.getDate()}
-                    fullYear={this.state.focusDate.getFullYear()}
-                    date={this.state.focusDate}
-                    dayName={Utils.getNameDay(this.state.focusDate)}
-                    monthName={Utils.getNameMonth(this.state.focusDate)}
-                    numberWeekInYear={Utils.getWeekOfYear(this.state.focusDate)}
-                  />
-                }
-              />
-              <CalendarStrategy
-                type={this.state.selector}
-                events={this.state.events}
-                handleSelect={this.handleSelect}
-                components={{ event: this.handleEventView }}
-                localizer={Utils.localizer}
-                minDate={Utils.minDate}
-                maxDate={Utils.maxDate}
-                step={Utils.step}
-                timeSlots={Utils.timeSlots}
-                date={this.state.focusDate}
-              />
+            <Grid container direction="column">
+              <div className={calendarContainer}>
+                <HeaderView
+                  onClickViewButton={this.handlerOnClickViewButton}
+                  headerDateContainer={
+                    <HeaderStrategy
+                      type={this.state.selector}
+                      numberDayInMonth={this.state.focusDate.getDate()}
+                      fullYear={this.state.focusDate.getFullYear()}
+                      date={this.state.focusDate}
+                      dayName={Utils.getNameDay(this.state.focusDate)}
+                      monthName={Utils.getNameMonth(this.state.focusDate)}
+                      numberWeekInYear={Utils.getWeekOfYear(
+                        this.state.focusDate
+                      )}
+                      onClickButton={this.handlerOnCLickTimeButton}
+                    />
+                  }
+                />
+                <CalendarStrategy
+                  type={this.state.selector}
+                  events={this.state.events}
+                  handleSelect={this.handleSelect}
+                  components={{
+                    event: this.handleEventView
+                  }}
+                  localizer={Utils.localizer}
+                  minDate={Utils.minDate}
+                  maxDate={Utils.maxDate}
+                  step={Utils.step}
+                  timeSlots={Utils.timeSlots}
+                  date={this.state.focusDate}
+                />
 
-              <DraggingCalendar
-                coordinates={this.state.coordinates}
-                appointmentInfo={this.state.appointmentInfo}
-                onChange={this.handleChangeReasonAppointment}
-                onClick={this.handleClickCreateBookingDraggingCalendar}
-              />
-
-              <FooterView
-                {...Utils.footerChangeButtonLabels(this.state.selector)}
-                currentDateLabel={"Today"}
-                onClickButton={this.handlerOnCLickTimeButton}
-              />
-            </div>
+                <DraggingCalendar
+                  coordinates={this.state.coordinates}
+                  appointmentInfo={this.state.appointmentInfo}
+                  onChange={this.handleChangeReasonAppointment}
+                  onClick={this.handleClickCreateBookingDraggingCalendar}
+                />
+              </div>
+            </Grid>
           </Grid>
         </Grid>
       </Fragment>
@@ -206,4 +213,6 @@ class CalendarPageLogic extends React.Component {
   }
 }
 
-export default withRouter(CalendarPageLogic);
+export const CalendarPageLogic = withStyles(styles)(
+  withRouter(CalendarPageLogicComponent)
+);

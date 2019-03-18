@@ -1,1 +1,1 @@
-export { default } from "./MonthsView";
+export { MonthsView } from "./MonthsView";

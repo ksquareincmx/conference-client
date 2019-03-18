@@ -1,8 +1,5 @@
 import React from "react";
-import WeeksView from "components/Calendar/Weeks";
-import MonthsView from "components/Calendar/Months";
-import YearsView from "components/Calendar/Years";
-import DaysView from "components/Calendar/Days";
+import { WeeksView, MonthsView, DaysView } from "components/Calendar";
 
 export const CalendarStrategy = props => {
   switch (props.type) {
@@ -12,8 +9,6 @@ export const CalendarStrategy = props => {
       return <WeeksView {...props} />;
     case "month":
       return <MonthsView {...props} />;
-    case "year":
-      return <YearsView {...props} />;
     default:
       return <DaysView {...props} />;
   }
