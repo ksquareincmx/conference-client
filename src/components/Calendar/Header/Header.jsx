@@ -118,6 +118,7 @@ const HeaderViewComponent = props => {
         <ModalFormConsumer>
           {modalForm => (
             <Button
+              color="primary"
               className={createButton}
               onClick={modalForm.handleOnClickCreateMeeting}
               variant={"contained"}

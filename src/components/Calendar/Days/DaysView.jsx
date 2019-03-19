@@ -12,19 +12,19 @@ const styles = theme => ({
     margin: "auto"
   },
   grid: {
-    width: "50%"
+    width: "50%",
+    border: "1px solid lightgrey"
   },
   gridHeaderContainer: {
     height: 40,
     backgroundColor: "white",
-    borderRight: "1px solid lightgrey",
     boxShadow: "0px 5px 2px rgba(0,0,0,0.1)",
     position: "relative",
     zIndex: "1"
   },
   gridGutter: {
     height: "100%",
-    width: 79,
+    width: 78,
     borderRight: "1px solid lightgrey"
   },
   gridHeader: {
