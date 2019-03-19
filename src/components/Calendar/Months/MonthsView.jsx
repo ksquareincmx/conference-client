@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core";
 import classNames from "classnames";
 import BigCalendar from "react-big-calendar";
 import "./Months.css";
+import fp from "lodash/fp";
 
 const styles = theme => ({
   gridContainer: {
@@ -56,7 +57,7 @@ const MonthsViewComponent = props => {
           localizer={localizer}
           components={components}
           date={date}
-          onNavigate={() => {}}
+          onNavigate={fp.noop}
         />
       </div>
     </div>

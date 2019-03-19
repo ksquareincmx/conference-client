@@ -3,6 +3,7 @@ import BigCalendar from "react-big-calendar";
 import { withStyles } from "@material-ui/core";
 import "./Days.css";
 import classNames from "classnames";
+import fp from "lodash/fp";
 
 const styles = theme => ({
   gridContainer: {
@@ -103,7 +104,7 @@ const dayGrid = props => idConference => {
         timeslots={timeSlots}
         components={components}
         date={date}
-        onNavigate={() => {}}
+        onNavigate={fp.noop}
       />
     </div>
   );

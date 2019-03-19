@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core";
 import BigCalendar from "react-big-calendar";
 import classNames from "classnames";
 import "./Weeks.css";
+import fp from "lodash/fp";
 
 const styles = theme => ({
   gridContainer: {
@@ -69,7 +70,7 @@ const WeeksViewComponent = props => {
           timeslots={timeSlots}
           components={components}
           date={date}
-          onNavigate={() => {}}
+          onNavigate={fp.noop}
         />
       </div>
     </div>
