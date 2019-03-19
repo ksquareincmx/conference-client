@@ -2,7 +2,7 @@ import React from "react";
 import { BookingConsumer, BookingProvider } from "providers/Booking";
 import { RoomConsumer, RoomProvider } from "providers/Room";
 import { UserConsumer, UserProvider } from "providers/User";
-import CalendarPageLogic from "./CalendarPageLogic";
+import { CalendarPageLogic } from "./CalendarPageLogic";
 import { NavBar } from "components/NavBar";
 import { Redirect } from "react-router-dom";
 import { withAuthContext } from "hocs/Auth";

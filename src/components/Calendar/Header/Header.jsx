@@ -1,67 +1,161 @@
 import React from "react";
-import "./Header.css";
 import { ModalFormConsumer } from "providers/ModalForm";
+import { withStyles, Button } from "@material-ui/core";
+import classNames from "classnames";
 
-const styles = {
-  firstButton: {
-    borderRadius: "20px 0px 0px 20px"
+const styles = theme => ({
+  createBtnContainer: {
+    position: "relative"
   },
-  secondButton: {
-    borderRadius: "0px 20px 20px 0px"
+  createButton: {
+    width: 200,
+    position: "absolute",
+    right: 0,
+    top: -60,
+    backgroundColor: "#5294e5",
+    color: "white",
+    fontSize: 15
+  },
+  optionBar: {
+    height: 65,
+    backgroundColor: "#3049a1",
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    borderRadius: "10px 10px 0px 0px"
+  },
+  optionButtons: {
+    position: "absolute",
+    top: -20
+  },
+  genericBtn: {
+    boxShadow: "0px 2px 2px rgba(0,0,0,0.5)",
+    backgroundColor: "white",
+    fontSize: 20,
+    textTransform: "capitalize",
+    color: "#A7A7A7"
+  },
+  leftBtn: {
+    height: 50,
+    width: 140,
+    borderRadius: "5px 0px 0px 5px",
+    boxShadow: "0px 2px 2px rgba(0,0,0,0.5)",
+    backgroundColor: "white",
+    fontSize: 20,
+    textTransform: "capitalize",
+    color: "#A7A7A7"
+  },
+  middleBtn: {
+    height: 50,
+    width: 140,
+    borderRadius: 0,
+    boxShadow: "0px 2px 2px rgba(0,0,0,0.5)",
+    backgroundColor: "white",
+    fontSize: 20,
+    textTransform: "capitalize",
+    color: "#A7A7A7"
+  },
+  rightBtn: {
+    height: 50,
+    width: 140,
+    borderRadius: "0px 5px 5px 0px",
+    boxShadow: "0px 2px 2px rgba(0,0,0,0.5)",
+    backgroundColor: "white",
+    fontSize: 20,
+    textTransform: "capitalize",
+    color: "#A7A7A7"
+  },
+  currentBtn: {
+    fontWeight: "bold",
+    color: "#5294e5"
   }
+});
+
+const currentBtnStyle = {
+  color: "#3049a1",
+  fontWeight: "bold"
 };
 
-const HeaderView = props => {
+const cleanBtnStyles = () => {
+  const viewBtns = document.querySelectorAll(".calView");
+  Object.keys(viewBtns).forEach(key => (viewBtns[key].style = ""));
+};
+
+const styleCurrentBtn = event => {
+  cleanBtnStyles();
+  const el = event.target;
+  const btn = el.matches("span") ? el.parentElement.style : el.style;
+  btn.color = currentBtnStyle.color;
+  btn.fontWeight = currentBtnStyle.fontWeight;
+};
+
+const handleOnClick = clickFunc => event => {
+  styleCurrentBtn(event);
+  clickFunc();
+};
+
+const HeaderViewComponent = props => {
+  const {
+    onClickViewButton,
+    headerDateContainer,
+    classes: styleClasses
+  } = props;
+
+  const {
+    createBtnContainer,
+    createButton,
+    optionBar,
+    optionButtons,
+    rightBtn,
+    middleBtn,
+    leftBtn
+  } = styleClasses;
+
   return (
-    <div className="header-container">
-      <div className="header-view-selector">
-        <div className="veiew-buttons-container">
-          <button
-            className="view-selector-button"
-            onClick={props.onClickViewButton("day")}
-            style={styles.firstButton}
+    <div>
+      <div>{headerDateContainer}</div>
+      <div className={createBtnContainer}>
+        <ModalFormConsumer>
+          {modalForm => (
+            <Button
+              color="primary"
+              className={createButton}
+              onClick={modalForm.handleOnClickCreateMeeting}
+              variant={"contained"}
+            >
+              CREATE MEETING
+            </Button>
+          )}
+        </ModalFormConsumer>
+      </div>
+      <div className={optionBar}>
+        <div className={optionButtons}>
+          <Button
+            className={classNames(leftBtn, "calView")}
+            onClick={handleOnClick(onClickViewButton("day"))}
+            variant={"contained"}
+            style={currentBtnStyle}
           >
             Day
-          </button>
-          <button
-            className="view-selector-button"
-            onClick={props.onClickViewButton("work_week")}
+          </Button>
+          <Button
+            className={classNames(middleBtn, "calView")}
+            onClick={handleOnClick(onClickViewButton("work_week"))}
+            variant={"contained"}
           >
             Week
-          </button>
-          <button
-            className="view-selector-button"
-            onClick={props.onClickViewButton("month")}
+          </Button>
+          <Button
+            className={classNames(rightBtn, "calView")}
+            onClick={handleOnClick(onClickViewButton("month"))}
+            variant={"contained"}
           >
             Month
-          </button>
-          <button
-            className="view-selector-button"
-            onClick={props.onClickViewButton("year")}
-            style={styles.secondButton}
-          >
-            Year
-          </button>
-        </div>
-      </div>
-      <div className="header-bottom-side">
-        {props.headerDateContainer}
-        <div className="header-bottom-side-separator"> </div>
-        <div className="header-create-meeting">
-          <ModalFormConsumer>
-            {modalForm => (
-              <button
-                className="create-meating-button"
-                onClick={modalForm.handleOnClickCreateMeeting}
-              >
-                CREATE MEETING
-              </button>
-            )}
-          </ModalFormConsumer>
+          </Button>
         </div>
       </div>
     </div>
   );
 };
 
-export default HeaderView;
+export const HeaderView = withStyles(styles)(HeaderViewComponent);

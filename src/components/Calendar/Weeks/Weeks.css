@@ -1,30 +1,26 @@
-.weeks-container {
-  height: 500px;
-  width: 100%;
-  margin: auto;
+.week .rbc-allday-cell {
+  height: 0px;
+  border: 0px transparent solid;
+  display: none;
 }
 
-.weeks-container div.rbc-time-header {
-  visibility: visible;
-  width: 100%;
+.week .rbc-time-header {
+  background-color: white;
+  box-shadow: 0px 5px 2px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.week .rbc-time-header-cell {
   height: 40px;
 }
 
-.weeks-container .rbc-toolbar {
-  visibility: hidden;
-  height: 0%;
-  width: 0%;
-}
-
-.weeks-container .rbc-time-header-content {
-  width: 560px;
-}
-
-.weeks-container .rbc-time-content {
-  width: 100%;
-  overflow: hidden;
-}
-
-.weeks-container .rbc-time-view-resources .rbc-day-slot {
-  min-width: 112px;
+.week .rbc-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  border-bottom-color: white;
+  color: #7f7f7f;
+  font-size: 21px;
+  font-weight: 200;
 }

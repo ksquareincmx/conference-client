@@ -1,4 +1,5 @@
 import * as Utils from "pages/Calendar/Utils";
+import uniq from "lodash/fp/uniq";
 
 export const toDto = state => {
   const dateFormat =
@@ -30,22 +31,22 @@ export const toDto = state => {
   };
 };
 
-export const toEvents = bookings => {
-  return bookings.reduce(
-    (accumulator, booking) => {
-      const start = Utils.getDateFormat(booking.start);
-      const end = Utils.getDateFormat(booking.end);
-      const title = booking.description;
-      const roomId = booking.room_id - 1;
+const countRoomsWithEvents = events => uniq(events.map(event => event.roomId));
 
-      accumulator[roomId].push({
-        start,
-        end,
-        title,
-        roomId
-      });
-      return accumulator;
-    },
-    [[], []]
+export const toEvents = bookings => {
+  const events = bookings.map(booking => {
+    return {
+      start: Utils.getDateFormat(booking.start),
+      end: Utils.getDateFormat(booking.end),
+      title: booking.description,
+      roomId: booking.room_id
+    };
+  });
+
+  const roomsIdsList = countRoomsWithEvents(events);
+  const eventsByRoom = roomsIdsList.map(id =>
+    events.filter(event => event.roomId === id)
   );
+
+  return eventsByRoom;
 };
