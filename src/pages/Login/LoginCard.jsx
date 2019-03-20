@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Grid, withStyles } from "@material-ui/core/";
+import { Card, withStyles } from "@material-ui/core/";
 import CardContent from "@material-ui/core/CardContent";
 import { LoginButton } from "./LoginButton";
 import { CardMessage } from "./CardMessage";

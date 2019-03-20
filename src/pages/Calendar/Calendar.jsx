@@ -6,7 +6,7 @@ import CalendarPageLogic from "./CalendarPageLogic";
 import { NavBar } from "components/NavBar";
 import { Redirect } from "react-router-dom";
 import { withAuthContext } from "hocs/Auth";
-import { ModalFormProvider } from "providers/ModalForm";
+import { NotificationProvider, ModalFormProvider } from "providers";
 
 const Calendar = ({ context: authContext }) => {
   const { isAuth } = authContext;
@@ -27,18 +27,20 @@ const Calendar = ({ context: authContext }) => {
                   <UserProvider auth={sessionInfo}>
                     <UserConsumer>
                       {userService => (
-                        <ModalFormProvider
-                          auth={sessionInfo}
-                          bookingService={bookingService}
-                          roomService={roomService}
-                        >
-                          <CalendarPageLogic
-                            bookingService={bookingService}
+                        <NotificationProvider>
+                          <ModalFormProvider
                             auth={sessionInfo}
+                            bookingService={bookingService}
                             roomService={roomService}
-                            userService={userService}
-                          />
-                        </ModalFormProvider>
+                          >
+                            <CalendarPageLogic
+                              bookingService={bookingService}
+                              auth={sessionInfo}
+                              roomService={roomService}
+                              userService={userService}
+                            />
+                          </ModalFormProvider>
+                        </NotificationProvider>
                       )}
                     </UserConsumer>
                   </UserProvider>

@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import "./App.css";
 import { Routes } from "./Routes";
-import { AuthProvider } from "./providers/Auth";
+import { AuthProvider } from "providers";
 
-export class App extends Component {
+export class App extends React.Component {
   render() {
     return (
       <AuthProvider>

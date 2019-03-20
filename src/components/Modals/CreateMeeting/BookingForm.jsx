@@ -12,6 +12,8 @@ import {
   withStyles
 } from "@material-ui/core/";
 import { withRouter } from "react-router-dom";
+import { compose } from "lodash/fp";
+
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList/";
 import DatePicker from "./DatePicker";
@@ -25,6 +27,8 @@ import {
   formatHours,
   formatMinutes
 } from "utils/BookingFormater";
+
+import { withNotifications } from "hocs";
 
 const styles = theme => ({
   card: {
@@ -114,6 +118,17 @@ class BookingFormComponent extends React.Component {
     this.enableConferenceSelect();
   };
 
+  shootNotification = content => {
+    // TODO: This functionality must be in a provider
+    const { notify, handleOnCloseModal } = this.props;
+    const configOptions = {
+      autoDismissTimeout: 5000,
+      autoDismiss: true
+    };
+    handleOnCloseModal();
+    notify(content, configOptions);
+  };
+
   setRoom = room => {
     this.setState({ roomId: room }, () => this.enableNextButton());
   };
@@ -140,49 +155,75 @@ class BookingFormComponent extends React.Component {
 
   handleClickNext = async () => {
     const post = postDto(this.state);
-    let isBookingValid = this.validate(post);
+    const isBookingValid = this.validate(post);
+    const { bookingClicked } = this.state;
+    const { booking, bookingClickedObj } = this.props;
 
     if (isBookingValid) {
-      if (this.state.bookingClicked) {
+      if (bookingClicked) {
         try {
-          const res = await this.props.booking.modifyBooking(
-            post,
-            this.props.bookingClickedObj.id
-          );
-          if (res.id) {
-            this.props.handleOnCloseModal();
-            // Temporal solution, should be handled by notification system
-            alert("Appointment edited successfully");
-            return this.props.history.push("/calendar");
+          const res = await booking.modifyBooking(post, bookingClickedObj.id);
+          const { id } = res;
+          if (id) {
+            return this.shootNotification({
+              message: {
+                reason: "Appointment Edited succesfully",
+                details: "Generic user has edited an appointment"
+              },
+              sticker: {
+                color: "blue",
+                text: "R1"
+              },
+              variant: "success"
+            });
           }
+          // Can't edit for problems with the date or the schedule
+          // Change this for form validation
           return alert(res);
         } catch (error) {
-          return alert(error.message);
+          return this.shootNotification({
+            message: {
+              reason: "Fails in the appointment creation",
+              details: "Some error happens in the server"
+            },
+            sticker: {
+              color: "gray",
+              text: "R1"
+            },
+            variant: "error"
+          });
         }
       }
       try {
         const res = await this.props.booking.createNewBooking(post);
         if (res.id) {
-          this.props.handleOnCloseModal();
-          window.location.reload();
-          //Temporal solution,it should redirect to /booking:id
-          return alert(
-            "id: " +
-              res.id +
-              " " +
-              "Start date: " +
-              res.start +
-              " " +
-              "End date: " +
-              res.end +
-              " " +
-              "Reason: " +
-              res.description
-          );
+          return this.shootNotification({
+            message: {
+              reason: "New Appointment created",
+              details: "Generic user has created new appointment"
+            },
+            sticker: {
+              color: "blue",
+              text: "R1"
+            },
+            variant: "success"
+          });
         }
-        alert(res);
+        // Can't edit for problems with the date or the schedule
+        // Change this for form validation
+        return alert(res);
       } catch (error) {
-        alert(error);
+        return this.shootNotification({
+          message: {
+            reason: "Fails in the appointment creation",
+            details: "Some error happens in the server"
+          },
+          sticker: {
+            color: "gray",
+            text: "R1"
+          },
+          variant: "error"
+        });
       }
     }
   };
@@ -443,4 +484,9 @@ function postDto(state) {
   };
 }
 
-export const BookingForm = withStyles(styles)(withRouter(BookingFormComponent));
+const withContexts = compose(
+  withStyles(styles),
+  withRouter,
+  withNotifications
+);
+export const BookingForm = withContexts(BookingFormComponent);
