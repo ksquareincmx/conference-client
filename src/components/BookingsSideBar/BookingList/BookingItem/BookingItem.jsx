@@ -5,6 +5,7 @@ import { BookingDetails } from "./BookingDetails";
 import { formatDate, formatTime } from "utils/BookingFormater";
 import { BookingItemMenu } from "./BookingItemMenu";
 import { ModalFormConsumer } from "providers/ModalForm";
+import { ConfirmationDialog } from "components/Modals/DeleteBooking/ConfirmationDialog";
 
 const styles = theme => ({
   itemCard: {
@@ -35,67 +36,105 @@ const styles = theme => ({
   }
 });
 
-const BookingItemComponent = ({
-  classes: styleClasses,
-  booking,
-  bookingService
-}) => {
-  const {
-    itemCard,
-    container,
-    gridRoomSticker,
-    gridInfo,
-    gridDate
-  } = styleClasses;
-  const { roomColor, roomNameAbbrev, userName, start, end, dateText } = booking;
-  const startTime = formatTime(formatDate(start));
-  const endTime = formatTime(formatDate(end));
-
-  const handleOnDelete = async () => {
-    try {
-      const res = await bookingService.removeBooking(booking.id);
-      if (res.ok) {
-        //Temporal solution, call notification system
-        alert("Appointment successfully deleted");
-        return window.location.reload();
-      }
-      //Temporal solution, call notification system
-      return alert("The deletion of the appointmen failed");
-    } catch (error) {
-      //Temporal solution, call notification system
-      alert("There was an error with the server");
-    }
+class BookingItemComponent extends React.Component {
+  state = {
+    openDialog: false
   };
 
-  const handleOnEdit = formModalFunction => () => formModalFunction(booking);
+  handleOpenDialog = () => {
+    this.setState({ openDialog: true });
+  };
 
-  return (
-    <Card elevation={1} square className={itemCard}>
-      <Grid container direction={"row"} className={container}>
-        <Grid item xs={3} className={gridRoomSticker}>
-          <RoomSticker roomColor={roomColor} roomName={roomNameAbbrev} />
+  handleCloseDialog = () => {
+    this.setState({ openDialog: false });
+  };
+
+  handleOnDelete = async () => {
+    const { booking, bookingService } = this.props;
+    const { id: sessionUserId } = this.props.auth.user;
+    const { user_id: bookingUserId, id: bookingId } = booking;
+    if (sessionUserId === bookingUserId) {
+      try {
+        const res = await bookingService.removeBooking(bookingId);
+        if (res.ok) {
+          //Temporal solution, call notification system
+          alert("Appointment successfully deleted");
+          return window.location.reload();
+        }
+        //Temporal solution, call notification system
+        return alert("The deletion of the appointmen failed");
+      } catch (error) {
+        //Temporal solution, call notification system
+        alert("There was an error with the server");
+      }
+    }
+    //Temporal solution, call notification system
+    return alert("You don't have permission to delete this appointment");
+  };
+
+  handleOnEdit = formModalFunction => () =>
+    formModalFunction(this.props.booking);
+
+  render() {
+    const { classes: styleClasses, booking } = this.props;
+    const {
+      itemCard,
+      container,
+      gridRoomSticker,
+      gridInfo,
+      gridDate
+    } = styleClasses;
+    const {
+      roomColor,
+      roomNameAbbrev,
+      userName,
+      start,
+      end,
+      dateText
+    } = booking;
+    const startTime = formatTime(formatDate(start));
+    const endTime = formatTime(formatDate(end));
+    const bookingFormated = {
+      ...booking,
+      startTime: startTime,
+      endTime: endTime
+    };
+    return (
+      <Card elevation={1} square className={itemCard}>
+        <Grid container direction={"row"} className={container}>
+          <Grid item xs={3} className={gridRoomSticker}>
+            <RoomSticker roomColor={roomColor} roomName={roomNameAbbrev} />
+          </Grid>
+          <Grid item xs={6} className={gridInfo}>
+            <BookingDetails
+              userName={userName}
+              startTime={startTime}
+              endTime={endTime}
+            />
+          </Grid>
+          <Grid item xs={3} className={gridDate}>
+            <div>{dateText}</div>
+            <ModalFormConsumer>
+              {modalForm => (
+                <BookingItemMenu
+                  handleOnDelete={this.handleOpenDialog}
+                  handleOnEdit={this.handleOnEdit(
+                    modalForm.handleOnClickEditMeeting
+                  )}
+                />
+              )}
+            </ModalFormConsumer>
+          </Grid>
         </Grid>
-        <Grid item xs={6} className={gridInfo}>
-          <BookingDetails
-            userName={userName}
-            startTime={startTime}
-            endTime={endTime}
-          />
-        </Grid>
-        <Grid item xs={3} className={gridDate}>
-          <div>{dateText}</div>
-          <ModalFormConsumer>
-            {modalForm => (
-              <BookingItemMenu
-                handleOnDelete={handleOnDelete}
-                handleOnEdit={handleOnEdit(modalForm.handleOnClickEditMeeting)}
-              />
-            )}
-          </ModalFormConsumer>
-        </Grid>
-      </Grid>
-    </Card>
-  );
-};
+        <ConfirmationDialog
+          handleClickYes={this.handleOnDelete}
+          booking={bookingFormated}
+          open={this.state.openDialog}
+          onClose={this.handleCloseDialog}
+        />
+      </Card>
+    );
+  }
+}
 
 export const BookingItem = withStyles(styles)(BookingItemComponent);

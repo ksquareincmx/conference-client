@@ -76,7 +76,8 @@ class BookingListComponent extends React.Component {
 
     const {
       classes: { gridList },
-      searchTerm
+      searchTerm,
+      auth
     } = this.props;
 
     const bookingItems =
@@ -95,6 +96,7 @@ class BookingListComponent extends React.Component {
                 {bookingService => (
                   <BookingItem
                     key={cuid()}
+                    auth={auth}
                     booking={data}
                     bookingService={bookingService}
                   />
