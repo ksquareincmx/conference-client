@@ -47,8 +47,7 @@ export const UserService = () => {
           Authorization: `Bearer ${authToken}`
         }
       });
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (err) {
       return new Error("An error occurred whith the request");
     }
@@ -80,8 +79,7 @@ export const UserService = () => {
           role
         }
       });
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (error) {
       return new Error("An error occurred whith the request");
     }
@@ -105,8 +103,7 @@ export const UserService = () => {
           Authorization: `Bearer  ${authToken}`
         }
       });
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (error) {
       return new Error("An error occurred whith the request");
     }
