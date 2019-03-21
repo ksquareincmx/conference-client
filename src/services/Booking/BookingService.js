@@ -170,7 +170,7 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @return {BookingResponse} - booking updated information.
    */
-  const updateOne = (booking, id, authToken) => {
+  const updateOneById = (id, booking, authToken) => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
     const { description, roomId, start, end, attendees } = booking;
@@ -218,7 +218,7 @@ export const BookingService = () => {
     getOne,
     getAll,
     getAllWithDetails,
-    updateOne,
+    updateOneById,
     deleteOne
   };
 };

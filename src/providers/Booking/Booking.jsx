@@ -32,7 +32,8 @@ class BookingProvider extends React.Component {
   };
   modifyBooking = (booking, id) => {
     const { token: authToken } = this.props.auth.jwt;
-    return bookingService.updateOne(booking, id, authToken);
+    console.log(bookingService);
+    return bookingService.updateOneById(id, booking, authToken);
   };
 
   removeBooking = id => {

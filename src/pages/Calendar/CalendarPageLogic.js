@@ -144,13 +144,15 @@ class CalendarPageLogicComponent extends React.Component {
       getUTCDateFilter()
     );
     const events = AppointmentMapper.toEvents(bookingsList.bookings);
-    this.setState(prevState => {
-      prevState.events[0].push(...events[0]);
-      prevState.events[1].push(...events[1]);
-      return {
-        events: prevState.events
-      };
-    });
+    if (events.lenth > 0) {
+      this.setState(prevState => {
+        prevState.events[0].push(...events[0]);
+        prevState.events[1].push(...events[1]);
+        return {
+          events: prevState.events
+        };
+      });
+    }
   };
 
   componentDidMount() {
