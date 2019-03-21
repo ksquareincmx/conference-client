@@ -1,6 +1,5 @@
 import React from "react";
 import { userService } from "services";
-import { withAuthContext } from "../../hocs/Auth";
 
 const UserContext = React.createContext({
   getUser: () => {},

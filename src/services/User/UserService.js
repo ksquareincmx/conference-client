@@ -47,7 +47,7 @@ export const UserService = () => {
           Authorization: `Bearer ${authToken}`
         }
       });
-      const data = res.json();
+      const data = await res.json();
       return data;
     } catch (err) {
       return new Error("An error occurred whith the request");
@@ -80,7 +80,7 @@ export const UserService = () => {
           role
         }
       });
-      const data = res.json();
+      const data = await res.json();
       return data;
     } catch (error) {
       return new Error("An error occurred whith the request");
@@ -105,7 +105,7 @@ export const UserService = () => {
           Authorization: `Bearer  ${authToken}`
         }
       });
-      const data = res.json();
+      const data = await res.json();
       return data;
     } catch (error) {
       return new Error("An error occurred whith the request");

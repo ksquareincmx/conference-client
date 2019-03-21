@@ -1,6 +1,5 @@
 import React from "react";
 import { roomService } from "services";
-import { withAuthContext } from "../../hocs/Auth";
 
 const RoomContext = React.createContext({
   createNewRoom: () => {},
