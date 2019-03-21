@@ -36,18 +36,22 @@ export const UserService = () => {
    * @param {string} authToken - authorization token.
    * @returns {User} - found user information.
    */
-  const getOne = (id, authToken) => {
+  const getOne = async (id, authToken) => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      const data = res.json();
+      return data;
+    } catch (err) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -56,27 +60,31 @@ export const UserService = () => {
    * @param {number} id - user id.
    * @returns {User}
    */
-  const updateOne = (user, id, authToken) => {
+  const updateOne = async (user, id, authToken) => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
     const { authProviderId, picture, name, email, password, role } = user;
-    return fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      },
-      body: {
-        authProviderId,
-        picture,
-        name,
-        email,
-        password,
-        role
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        },
+        body: {
+          authProviderId,
+          picture,
+          name,
+          email,
+          password,
+          role
+        }
+      });
+      const data = res.json();
+      return data;
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -86,18 +94,22 @@ export const UserService = () => {
    * @param {string} authToken - authorization token.
    */
   // TODO: @returns {NotContentResponse} - request response.
-  const deleteOne = (id, authToken) => {
+  const deleteOne = async (id, authToken) => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer  ${authToken}`
+        }
+      });
+      const data = res.json();
+      return data;
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   return {
