@@ -148,9 +148,9 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @return {BookingWithDetails} - found bookigs and, room and user information.
    */
-  const getAllWithDetails = authToken => {
+  const getAllWithDetails = (authToken, filterDate) => {
     const baseURL = getBookingApiURL();
-    const url = `${baseURL}?include=["Room","User"]`;
+    const url = `${baseURL}?include=["Room","User"]&page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}`;
     return fetch(url, {
       method: "GET",
       headers: {
@@ -170,7 +170,6 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @return {BookingResponse} - booking updated information.
    */
-  // TODO: Change id param as the first one in the function signature
   const updateOne = (booking, id, authToken) => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
@@ -179,7 +178,7 @@ export const BookingService = () => {
       method: "PUT",
       body: JSON.stringify({
         description,
-        roomId,
+        room_id: roomId,
         start,
         end,
         attendees

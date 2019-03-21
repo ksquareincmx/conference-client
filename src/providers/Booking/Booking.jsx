@@ -26,13 +26,13 @@ class BookingProvider extends React.Component {
     return bookingService.getAll(authToken);
   };
 
-  getDetailedListOfBooking = () => {
+  getDetailedListOfBooking = filterDate => {
     const { token: authToken } = this.props.auth.jwt;
-    return bookingService.getAllWithDetails(authToken);
+    return bookingService.getAllWithDetails(authToken, filterDate);
   };
   modifyBooking = (booking, id) => {
     const { token: authToken } = this.props.auth.jwt;
-    return bookingService.updateOne(booking, authToken);
+    return bookingService.updateOne(booking, id, authToken);
   };
 
   removeBooking = id => {

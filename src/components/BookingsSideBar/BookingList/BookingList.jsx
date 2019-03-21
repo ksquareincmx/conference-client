@@ -2,16 +2,13 @@ import React from "react";
 import { GridList, withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem/BookingItem";
 import cuid from "cuid";
-import {
-  getDateText,
-  formatDate,
-  abbreviateName
-} from "../../../utils/BookingFormater";
+import { getDateText, formatDate, abbreviateName } from "utils/BookingFormater";
 import {
   filterNSortedByDate,
-  filterBySearchTerm
-} from "../../../utils/BookingFilters";
-import { BookingConsumer } from "../../../providers/Booking/Booking";
+  filterBySearchTerm,
+  getUTCDateFilter
+} from "utils/BookingFilters";
+import { BookingConsumer } from "providers/Booking/Booking";
 
 const styles = theme => ({
   gridList: {
@@ -62,8 +59,10 @@ class BookingListComponent extends React.Component {
 
   async componentDidMount() {
     try {
-      const data = await this.props.booking.getDetailedListOfBooking();
-      this.setState({ bookingItems: data }, () => this.getBookings());
+      const data = await this.props.booking.getDetailedListOfBooking(
+        getUTCDateFilter()
+      );
+      this.setState({ bookingItems: data.bookings }, () => this.getBookings());
     } catch (err) {
       this.setState({ bookingItems: [] });
       //Temporal solution, here should be called the Norification system
