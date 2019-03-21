@@ -6,12 +6,23 @@ export const sortByDate = bookingItems =>
     (a, b) => formatDate(a.start).unix() - formatDate(b.start).unix()
   );
 
+const getTodaySpecificHour = hour => {
+  return moment().hour(hour);
+};
+
 export const filterByDate = bookingItems => {
   const MORNING = 6;
-  const today = moment()
-    .hour(MORNING)
-    .unix();
+  const today = getTodaySpecificHour(MORNING).unix();
   return bookingItems.filter(({ start }) => formatDate(start).unix() >= today);
+};
+
+export const getUTCDateFilter = () => {
+  const FIRSTHOUR = 0;
+  const today = getTodaySpecificHour(FIRSTHOUR)
+    .minute(0)
+    .utc()
+    .format();
+  return today;
 };
 
 export const filterNSortedByDate = bookingItems =>

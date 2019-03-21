@@ -9,7 +9,8 @@ import * as Utils from "./Utils.js";
 import HeaderStrategy from "./HeaderStrategy";
 import CalendarStrategy from "./CalendarStrategy";
 import { Grid, withStyles } from "@material-ui/core";
-import { BookingsSideBar } from "../../components/BookingsSideBar/BookingsSideBar.jsx";
+import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar.jsx";
+import { getUTCDateFilter } from "utils/BookingFilters";
 
 const styles = theme => ({
   calendarContainer: {
@@ -139,15 +140,19 @@ class CalendarPageLogicComponent extends React.Component {
   };
 
   printAppointments = async () => {
-    const bookingsList = await this.props.bookingService.getDetailedListOfBooking();
-    const events = AppointmentMapper.toEvents(bookingsList);
-    this.setState(prevState => {
-      prevState.events[0].push(...events[0]);
-      prevState.events[1].push(...events[1]);
-      return {
-        events: prevState.events
-      };
-    });
+    const bookingsList = await this.props.bookingService.getDetailedListOfBooking(
+      getUTCDateFilter()
+    );
+    const events = AppointmentMapper.toEvents(bookingsList.bookings);
+    if (events.lenth > 0) {
+      this.setState(prevState => {
+        prevState.events[0].push(...events[0]);
+        prevState.events[1].push(...events[1]);
+        return {
+          events: prevState.events
+        };
+      });
+    }
   };
 
   componentDidMount() {
