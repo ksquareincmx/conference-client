@@ -1,6 +1,5 @@
 import React from "react";
 import { profileService } from "services";
-import { withAuthContext } from "../../hocs/Auth";
 
 const ProfileContext = React.createContext({
   getProfile: () => {},
