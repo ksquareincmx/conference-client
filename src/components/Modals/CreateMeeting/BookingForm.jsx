@@ -12,7 +12,7 @@ import {
   withStyles
 } from "@material-ui/core/";
 import { withRouter } from "react-router-dom";
-import { compose } from "lodash/fp";
+import compose from "lodash/fp/compose";
 
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList/";

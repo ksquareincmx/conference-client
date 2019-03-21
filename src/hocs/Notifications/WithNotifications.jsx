@@ -2,7 +2,7 @@ import React from "react";
 import { ToastConsumer } from "react-toast-notifications";
 
 export function withNotifications(Component) {
-  return function wrappedComponent(props) {
+  return function WrappedComponent(props) {
     return (
       <ToastConsumer>
         {toasts => {
