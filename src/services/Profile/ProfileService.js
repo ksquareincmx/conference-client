@@ -30,18 +30,21 @@ export const ProfileService = () => {
    * @param {string} authToken - authorization token.
    * @returns {ProfileResponse} - found profile information.
    */
-  const getOne = (id, authToken) => {
+  const getOne = async (id, authToken) => {
     const baseURL = getProfileApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -50,17 +53,20 @@ export const ProfileService = () => {
    * @param {string} authToken - authorization token.
    * @returns {ProfileResponse[]} - found profiles information.
    */
-  const getAll = authToken => {
+  const getAll = async authToken => {
     const baseURL = getProfileApiURL();
-    return fetch(baseURL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(baseURL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -70,22 +76,26 @@ export const ProfileService = () => {
    * @param {string} authToken - authorization token.
    * @returns {ProfileResponse} - profile updated information.
    */
-  const updateOne = ({ time_zone, locale }, id, authToken) => {
+  const updateOne = async ({ time_zone, locale }, id, authToken) => {
     const baseURL = getProfileApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      },
-      body: {
-        time_zone,
-        locale
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        },
+        body: {
+          time_zone,
+          locale
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   return {
