@@ -11,7 +11,7 @@ const HeaderStrategy = props => {
     onClickButton
   } = props;
 
-  return type === "work_week" || type === "month" ? (
+  return type === "week" || type === "month" ? (
     <CalendarHeader
       titleTxt={monthName}
       subtitleTxt={fullYear}

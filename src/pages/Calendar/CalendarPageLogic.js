@@ -117,11 +117,7 @@ class CalendarPageLogicComponent extends React.Component {
   };
 
   handlerOnCLickTimeButton = buttonId => () => {
-    let selector;
-
-    if (this.state.selector === "work_week") {
-      this.setState({ selector: "week" });
-    }
+    let selector = this.state.selector;
 
     switch (buttonId) {
       case "previous":

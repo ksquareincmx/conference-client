@@ -5,7 +5,7 @@ export const CalendarStrategy = props => {
   switch (props.type) {
     case "day":
       return <DaysView {...props} />;
-    case "work_week":
+    case "week":
       return <WeeksView {...props} />;
     case "month":
       return <MonthsView {...props} />;

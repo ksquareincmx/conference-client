@@ -51,6 +51,8 @@ const WeeksViewComponent = props => {
     timeSlotWrapper: customTimeSlotWrapper
   };
 
+  const viewType = type === "week" ? "work_week" : "week";
+
   return (
     <div className={gridContainer}>
       <div className={classNames(grid, "week")}>
@@ -58,7 +60,7 @@ const WeeksViewComponent = props => {
           selectable
           toolbar={false}
           events={[...events[0], ...events[1]]}
-          views={[type]}
+          views={[viewType]}
           step={step}
           defaultView={BigCalendar.Views.WORK_WEEK}
           min={minDate}

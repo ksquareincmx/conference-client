@@ -140,7 +140,7 @@ const HeaderViewComponent = props => {
           </Button>
           <Button
             className={classNames(middleBtn, "calView")}
-            onClick={handleOnClick(onClickViewButton("work_week"))}
+            onClick={handleOnClick(onClickViewButton("week"))}
             variant={"contained"}
           >
             Week
