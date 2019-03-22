@@ -1,5 +1,5 @@
 import React from "react";
-import { NavBarRightSide } from "./RightSide";
+import { NavBarRightSide } from "./NavBarRightSide";
 import { NavBarContainer } from "./NavBarContainer";
 import { AvatarButton } from "./AvatarButton";
 import { UserNameLabel } from "./UsernameLabel";
