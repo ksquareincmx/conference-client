@@ -28,4 +28,4 @@ TODO
 
 ### License
 
-TODO
+[MIT](https://github.com/ksquareincmx/conference-client/blob/master/LICENSE) license
