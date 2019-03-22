@@ -1,8 +1,8 @@
 import React from "react";
-import NavRightSide from "./RightSide";
-import NavBarContainer from "./NavBarContainer";
+import { NavBarRightSide } from "./RightSide";
+import { NavBarContainer } from "./NavBarContainer";
 import { AvatarButton } from "./AvatarButton";
-import { UsernameLabel } from "./UsernameLabel";
+import { UserNameLabel } from "./UsernameLabel";
 import { NavBarMenu } from "./NavBarMenu";
 import { getUserName } from "../../utils/sessionInfo";
 
@@ -26,15 +26,15 @@ export class NavBar extends React.Component {
 
     return (
       <NavBarContainer>
-        <NavRightSide>
-          <UsernameLabel username={username} />
+        <NavBarRightSide>
+          <UserNameLabel username={username} />
           <AvatarButton onClick={this.handleClick} />
           <NavBarMenu
             anchorEl={anchorEl}
             onClose={this.handleClose}
             onLogout={onLogout}
           />
-        </NavRightSide>
+        </NavBarRightSide>
       </NavBarContainer>
     );
   }
