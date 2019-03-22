@@ -8,20 +8,23 @@ const HeaderStrategy = props => {
     monthName,
     numberDayInMonth,
     fullYear,
-    onClickButton
+    onClickNext,
+    onClickPrev
   } = props;
 
   return type === "week" || type === "month" ? (
     <CalendarHeader
       titleTxt={monthName}
       subtitleTxt={fullYear}
-      onClickButton={onClickButton}
+      onClickNext={onClickNext}
+      onClickPrev={onClickPrev}
     />
   ) : (
     <CalendarHeader
       titleTxt={`${monthName} ${numberDayInMonth}`}
       subtitleTxt={dayName}
-      onClickButton={onClickButton}
+      onClickNext={onClickNext}
+      onClickPrev={onClickPrev}
     />
   );
 };

@@ -113,26 +113,25 @@ class CalendarPageLogicComponent extends React.Component {
   };
 
   handlerOnClickViewButton = buttonIdentifier => () => {
-    this.setState({ selector: buttonIdentifier });
+    this.setState({
+      selector: buttonIdentifier,
+      focusDate: new Date()
+    });
   };
 
-  handlerOnCLickTimeButton = buttonId => () => {
-    let selector = this.state.selector;
+  handleOnClickPrev = () => {
+    const viewType = this.state.selector;
+    console.log(this.state.selector);
+    return this.setState(prevState => ({
+      focusDate: dates.add(prevState.focusDate, -1, viewType)
+    }));
+  };
 
-    switch (buttonId) {
-      case "previous":
-        return this.setState(prevState => ({
-          focusDate: dates.add(prevState.focusDate, -1, selector)
-        }));
-      case "next":
-        return this.setState(prevState => ({
-          focusDate: dates.add(prevState.focusDate, 1, selector)
-        }));
-      case "today":
-        return this.setState({ focusDate: new Date() });
-      default:
-        return null;
-    }
+  handleOnClickNext = () => {
+    const viewType = this.state.selector;
+    return this.setState(prevState => ({
+      focusDate: dates.add(prevState.focusDate, 1, viewType)
+    }));
   };
 
   printAppointments = async () => {
@@ -180,7 +179,8 @@ class CalendarPageLogicComponent extends React.Component {
                       numberWeekInYear={Utils.getWeekOfYear(
                         this.state.focusDate
                       )}
-                      onClickButton={this.handlerOnCLickTimeButton}
+                      onClickNext={this.handleOnClickNext}
+                      onClickPrev={this.handleOnClickPrev}
                     />
                   }
                 />
