@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, colors } from "@material-ui/core/";
+import { withStyles } from "@material-ui/core/";
 import classNames from "classnames";
 
 const style = theme => ({

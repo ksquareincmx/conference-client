@@ -79,27 +79,30 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @return {BookingResponse} - created booking information.
    */
-  const createOne = (
+  const createOne = async (
     { description, roomId, start, end, attendees },
     authToken
   ) => {
     const baseURL = getBookingApiURL();
-    return fetch(baseURL, {
-      method: "POST",
-      body: JSON.stringify({
-        description,
-        start,
-        end,
-        attendees,
-        room_id: roomId
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(baseURL, {
+        method: "POST",
+        body: JSON.stringify({
+          description,
+          start,
+          end,
+          attendees,
+          room_id: roomId
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -109,18 +112,21 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @return {BookingResponse} - found booking information.
    */
-  const getOne = (id, authToken) => {
+  const getOne = async (id, authToken) => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -129,17 +135,20 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @return {BookingResponse[]} - found bookings information.
    */
-  const getAll = authToken => {
+  const getAll = async authToken => {
     const baseURL = getBookingApiURL();
-    return fetch(baseURL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(baseURL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -148,18 +157,21 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @return {BookingWithDetails} - found bookigs and, room and user information.
    */
-  const getAllWithDetails = (authToken, filterDate) => {
+  const getAllWithDetails = async (authToken, filterDate) => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}?include=["Room","User"]&page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}`;
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -170,26 +182,29 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @return {BookingResponse} - booking updated information.
    */
-  const updateOneById = (id, booking, authToken) => {
+  const updateOneById = async (id, booking, authToken) => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
     const { description, roomId, start, end, attendees } = booking;
-    return fetch(url, {
-      method: "PUT",
-      body: JSON.stringify({
-        description,
-        room_id: roomId,
-        start,
-        end,
-        attendees
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        body: JSON.stringify({
+          description,
+          room_id: roomId,
+          start,
+          end,
+          attendees
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -199,18 +214,20 @@ export const BookingService = () => {
    * @param {string} authToken - authorization token.
    * @returns {NotContentResponse} - request response.
    */
-  const deleteOne = (id, authToken) => {
+  const deleteOne = async (id, authToken) => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res)
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      return await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   return {
