@@ -2,13 +2,7 @@ import React from "react";
 import { Menu, MenuItem, Divider } from "@material-ui/core/";
 import { Link } from "react-router-dom";
 
-// const
-
-// class NavMenu extends React.Component {
-//   state = {};
-// }
-
-export function NavBarMenu({ anchorEl, onClose, onLogout }) {
+export const NavBarMenu = ({ anchorEl, onClose, onLogout }) => {
   return (
     <Menu
       id="menu-appbar"
@@ -37,4 +31,4 @@ export function NavBarMenu({ anchorEl, onClose, onLogout }) {
       </MenuItem>
     </Menu>
   );
-}
+};

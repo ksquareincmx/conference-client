@@ -1,8 +1,8 @@
 import React from "react";
-import { IconButton, Avatar } from "@material-ui/core/";
+import { IconButton, Avatar, withStyles } from "@material-ui/core/";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
-const styles = {
+const styles = theme => ({
   accountCircle: {
     fontSize: 50
   },
@@ -10,10 +10,13 @@ const styles = {
     color: "#c4c6c6",
     backgroundColor: "#969696"
   }
-};
+});
 
-export function AvatarButton(props) {
-  const { anchorEl, onClick } = props;
+const AvatarButtonComponent = ({
+  anchorEl,
+  onClick,
+  classes: { accountCircle, avatar }
+}) => {
   return (
     <IconButton
       aria-label="Menu"
@@ -21,9 +24,11 @@ export function AvatarButton(props) {
       aria-haspopup="true"
       onClick={onClick}
     >
-      <Avatar style={styles.avatar}>
-        <AccountCircle style={styles.accountCircle} />
+      <Avatar className={avatar}>
+        <AccountCircle className={accountCircle} />
       </Avatar>
     </IconButton>
   );
-}
+};
+
+export const AvatarButton = withStyles(styles)(AvatarButtonComponent);

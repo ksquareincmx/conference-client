@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 
-function RightSide(props) {
+export const NavBarRightSide = ({ children }) => {
   return (
     <Grid
       item
@@ -11,11 +11,7 @@ function RightSide(props) {
       justify="flex-end"
       alignItems="center"
     >
-      <React.Fragment>{props.children}</React.Fragment>
+      {children}
     </Grid>
   );
-}
-
-RightSide.componentName = "rightSide";
-
-export default RightSide;
+};
