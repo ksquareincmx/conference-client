@@ -1,5 +1,6 @@
 import React from "react";
 import { CalendarHeader } from "./Headers/CalendarHeader";
+import { CalendarViewSelectors } from "utils/Enums";
 
 const HeaderStrategy = props => {
   const {
@@ -11,8 +12,9 @@ const HeaderStrategy = props => {
     onClickNext,
     onClickPrev
   } = props;
+  const { WEEK, MONTH } = CalendarViewSelectors;
 
-  return type === "week" || type === "month" ? (
+  return type === WEEK || type === MONTH ? (
     <CalendarHeader
       titleTxt={monthName}
       subtitleTxt={fullYear}

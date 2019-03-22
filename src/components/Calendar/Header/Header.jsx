@@ -2,6 +2,7 @@ import React from "react";
 import { ModalFormConsumer } from "providers/ModalForm";
 import { withStyles, Button } from "@material-ui/core";
 import classNames from "classnames";
+import { CalendarViewSelectors } from "utils/Enums";
 
 const styles = theme => ({
   createBtnContainer: {
@@ -111,6 +112,8 @@ const HeaderViewComponent = props => {
     leftBtn
   } = styleClasses;
 
+  const { DAY, WEEK, MONTH } = CalendarViewSelectors;
+
   return (
     <div>
       <div>{headerDateContainer}</div>
@@ -132,7 +135,7 @@ const HeaderViewComponent = props => {
         <div className={optionButtons}>
           <Button
             className={classNames(leftBtn, "calView")}
-            onClick={handleOnClick(onClickViewButton("day"))}
+            onClick={handleOnClick(onClickViewButton(DAY))}
             variant={"contained"}
             style={currentBtnStyle}
           >
@@ -140,14 +143,14 @@ const HeaderViewComponent = props => {
           </Button>
           <Button
             className={classNames(middleBtn, "calView")}
-            onClick={handleOnClick(onClickViewButton("week"))}
+            onClick={handleOnClick(onClickViewButton(WEEK))}
             variant={"contained"}
           >
             Week
           </Button>
           <Button
             className={classNames(rightBtn, "calView")}
-            onClick={handleOnClick(onClickViewButton("month"))}
+            onClick={handleOnClick(onClickViewButton(MONTH))}
             variant={"contained"}
           >
             Month

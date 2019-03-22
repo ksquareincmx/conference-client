@@ -121,7 +121,6 @@ class CalendarPageLogicComponent extends React.Component {
 
   handleOnClickPrev = () => {
     const viewType = this.state.selector;
-    console.log(this.state.selector);
     return this.setState(prevState => ({
       focusDate: dates.add(prevState.focusDate, -1, viewType)
     }));
