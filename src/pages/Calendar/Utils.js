@@ -1,4 +1,3 @@
-import React from "react";
 import moment from "moment";
 import dates from "react-big-calendar/lib/utils/dates";
 import BigCalendar from "react-big-calendar";
