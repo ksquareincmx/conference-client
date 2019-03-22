@@ -35,22 +35,25 @@ export const RoomService = () => {
    * @param {string} authToken - authorization token.
    * @returns {RoomResponse} - created room information.
    */
-  const createOne = (room, authToken) => {
+  const createOne = async (room, authToken) => {
     const baseURL = getRoomApiURL();
     const { name, color } = room;
-    return fetch(baseURL, {
-      method: "POST",
-      body: {
-        name,
-        color
-      },
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(baseURL, {
+        method: "POST",
+        body: {
+          name,
+          color
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -60,18 +63,21 @@ export const RoomService = () => {
    * @param {string} authToken - authorization token.
    * @returns {RoomResponse} - found room information.
    */
-  const getOne = (id, authToken) => {
+  const getOne = async (id, authToken) => {
     const baseURL = getRoomApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -80,17 +86,20 @@ export const RoomService = () => {
    * @param {string} authToken - authorization token.
    * @returns {RoomResponse[]} - found rooms information.
    */
-  const getAll = authToken => {
+  const getAll = async authToken => {
     const baseURL = getRoomApiURL();
-    return fetch(baseURL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(baseURL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -101,22 +110,25 @@ export const RoomService = () => {
    * @param {string} authToken - authorization token.
    * @returns {RoomResponse} - room updated information.
    */
-  const updateOne = ({ name, color }, id, authToken) => {
+  const updateOne = async ({ name, color }, id, authToken) => {
     const baseURL = getRoomApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "PUT",
-      body: {
-        name,
-        color
-      },
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        body: {
+          name,
+          color
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   /**
@@ -126,18 +138,21 @@ export const RoomService = () => {
    * @param {string} authToken - authorization token.
    */
   //  TODO: @returns {NotContentResponse} - request response.
-  const deleteOne = (id, authToken) => {
+  const deleteOne = async (id, authToken) => {
     const baseURL = getRoomApiURL();
     const url = `${baseURL}${id}`;
-    return fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      }
-    })
-      .then(res => res.json())
-      .catch(err => new Error("An error occurred whith the request"));
+    try {
+      const res = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      return await res.json();
+    } catch (error) {
+      return new Error("An error occurred whith the request");
+    }
   };
 
   return {
