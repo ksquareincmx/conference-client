@@ -20,8 +20,14 @@
  * @version 1.0
  * @exports UserService
  * @namespace UserService
+ * @param storageService - service used for access to session info
  */
-export const UserService = () => {
+export const UserService = storageService => {
+  /**
+   * User service require the auth token for requests
+   */
+  const { token: authToken } = storageService.getJWT();
+
   /**
    * Return URL for consuming the User API.
    * @memberof UserService
@@ -33,10 +39,9 @@ export const UserService = () => {
    * Return the found user information using the id.
    * @memberof UserSservice
    * @param {number} id - user id.
-   * @param {string} authToken - authorization token.
    * @returns {User} - found user information.
    */
-  const getOne = async (id, authToken) => {
+  const getOne = async id => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -59,7 +64,7 @@ export const UserService = () => {
    * @param {number} id - user id.
    * @returns {User}
    */
-  const updateOne = async (user, id, authToken) => {
+  const updateOne = async (user, id) => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
     const { authProviderId, picture, name, email, password, role } = user;
@@ -92,7 +97,7 @@ export const UserService = () => {
    * @param {string} authToken - authorization token.
    */
   // TODO: @returns {NotContentResponse} - request response.
-  const deleteOne = async (id, authToken) => {
+  const deleteOne = async id => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
     try {

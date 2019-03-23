@@ -11,6 +11,7 @@ import CalendarStrategy from "./CalendarStrategy";
 import { Grid, withStyles } from "@material-ui/core";
 import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar.jsx";
 import { getUTCDateFilter } from "utils/BookingFilters";
+import { bookingService } from "services";
 
 const styles = theme => ({
   calendarContainer: {
@@ -47,8 +48,8 @@ class CalendarPageLogicComponent extends React.Component {
 
   handleClickCreateBookingDraggingCalendar = async () => {
     const post = AppointmentMapper.toDto(this.state.appointmentInfo);
-    const res = await this.props.bookingService.createNewBooking(post);
-    this.props.history.push("/dashboard");
+    const res = await bookingService.createOne(post);
+    this.props.history.push("/calendar");
   };
 
   handleChangeReasonAppointment = event => {
@@ -140,7 +141,7 @@ class CalendarPageLogicComponent extends React.Component {
   };
 
   printAppointments = async () => {
-    const bookingsList = await this.props.bookingService.getDetailedListOfBooking(
+    const bookingsList = await bookingService.getAllWithDetails(
       getUTCDateFilter()
     );
     const events = AppointmentMapper.toEvents(bookingsList.bookings);

@@ -37,7 +37,7 @@ export const StorageService = () => {
    * Return authorization token.
    * @returns {AuthToken} -
    */
-  const getAuthToken = () => JSON.parse(localStorage.getItem("cb_jwt"));
+  const getJWT = () => JSON.parse(localStorage.getItem("cb_jwt"));
 
   /**
    * Returns user info.
@@ -55,7 +55,7 @@ export const StorageService = () => {
   };
 
   return {
-    getAuthToken,
+    getJWT,
     getUserInfo,
     updateInfoInStorage
   };

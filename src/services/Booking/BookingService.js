@@ -63,8 +63,14 @@
  * @version 1.0
  * @exports BookingService
  * @namespace BookingService
+ * @param storageService - service used for access to session info
  */
-export const BookingService = () => {
+export const BookingService = storageService => {
+  /**
+   * Booking service require the auth token for requests
+   */
+  const { token: authToken } = storageService.getJWT();
+
   /**
    * Return URL for consuming the Booking API.
    * @memberof BookingService
@@ -76,13 +82,9 @@ export const BookingService = () => {
    * Return the new Booking information.
    * @memberof BookingService
    * @param {BookingRequest} booking - booking information.
-   * @param {string} authToken - authorization token.
    * @return {BookingResponse} - created booking information.
    */
-  const createOne = async (
-    { description, roomId, start, end, attendees },
-    authToken
-  ) => {
+  const createOne = async ({ description, roomId, start, end, attendees }) => {
     const baseURL = getBookingApiURL();
     try {
       const res = await fetch(baseURL, {
@@ -109,10 +111,9 @@ export const BookingService = () => {
    * Return the found booking information using the id.
    * @memberof BookingService
    * @param {number} id - booking id.
-   * @param {string} authToken - authorization token.
    * @return {BookingResponse} - found booking information.
    */
-  const getOne = async (id, authToken) => {
+  const getOne = async id => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -132,10 +133,9 @@ export const BookingService = () => {
   /**
    * Return all Bookings information.
    * @memberof BookingService
-   * @param {string} authToken - authorization token.
    * @return {BookingResponse[]} - found bookings information.
    */
-  const getAll = async authToken => {
+  const getAll = async () => {
     const baseURL = getBookingApiURL();
     try {
       const res = await fetch(baseURL, {
@@ -154,10 +154,9 @@ export const BookingService = () => {
   /**
    * Return all the bookings with all their details (Room and User information).
    * @memberof BookingService
-   * @param {string} authToken - authorization token.
    * @return {BookingWithDetails} - found bookigs and, room and user information.
    */
-  const getAllWithDetails = async (authToken, filterDate) => {
+  const getAllWithDetails = async filterDate => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}?include=["Room","User"]&page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}`;
     try {
@@ -179,13 +178,14 @@ export const BookingService = () => {
    * @memberof BookingService
    * @param {BookingRequest} booking - booking new information.
    * @param {number} id - booking id.
-   * @param {string} authToken - authorization token.
    * @return {BookingResponse} - booking updated information.
    */
-  const updateOneById = async (id, booking, authToken) => {
+  const updateOneById = async (
+    id,
+    { description, roomId, start, end, attendees }
+  ) => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
-    const { description, roomId, start, end, attendees } = booking;
     try {
       const res = await fetch(url, {
         method: "PUT",
@@ -211,10 +211,9 @@ export const BookingService = () => {
    * Delete a booking by id.
    * @memberof BookingService
    * @param {number} id - booking id.
-   * @param {string} authToken - authorization token.
    * @returns {NotContentResponse} - request response.
    */
-  const deleteOne = async (id, authToken) => {
+  const deleteOne = async id => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
     try {

@@ -3,6 +3,7 @@ import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Select, Grid } from "@material-ui/core/";
 import cuid from "cuid";
+import { roomService } from "services";
 
 class RoomSelect extends React.Component {
   state = {
@@ -21,11 +22,10 @@ class RoomSelect extends React.Component {
       this.props.setRoom(event.target.value)
     );
   };
-  componentDidMount() {
-    this.props.roomService.getListOfRoom().then(rooms => {
-      const newRooms = [...rooms];
-      this.setState({ rooms: newRooms });
-    });
+
+  async componentDidMount() {
+    const rooms = await roomService.getAll();
+    this.setState({ rooms });
   }
 
   render() {

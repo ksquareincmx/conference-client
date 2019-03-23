@@ -3,9 +3,7 @@ import { Grid, Typography, Card } from "@material-ui/core/";
 import { withStyles } from "@material-ui/core/styles";
 import { SearchBar } from "./SearchBar";
 import { BookingList } from "./BookingList/BookingList";
-import { BookingConsumer } from "providers/Booking";
-import { RoomConsumer } from "providers/Room";
-import { UserConsumer } from "providers/User";
+import { RoomConsumer, UserConsumer } from "providers";
 
 const styles = theme => ({
   sideBar: {
@@ -49,25 +47,7 @@ class BookingsSideBarComponent extends React.Component {
           <Typography className={title}>Appointments Made</Typography>
           <SearchBar onChange={this.handleOnChangeSearch} />
         </Card>
-        <BookingConsumer>
-          {booking => (
-            <RoomConsumer>
-              {roomService => (
-                <UserConsumer>
-                  {userService => (
-                    <BookingList
-                      booking={booking}
-                      auth={auth}
-                      roomService={roomService}
-                      userService={userService}
-                      searchTerm={this.state.searchTerm}
-                    />
-                  )}
-                </UserConsumer>
-              )}
-            </RoomConsumer>
-          )}
-        </BookingConsumer>
+        <BookingList auth={auth} searchTerm={this.state.searchTerm} />
       </Grid>
     );
   }
