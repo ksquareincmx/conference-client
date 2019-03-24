@@ -38,22 +38,17 @@ const styles = theme => ({
 });
 
 const CalendarHeaderComponent = props => {
-  const { headerContainer, title, icon, iconButton, subtitle } = props.classes;
+  const { onClickNext, onClickPrev, classes: styleClasses } = props;
+  const { headerContainer, title, icon, iconButton, subtitle } = styleClasses;
 
   return (
     <div className={headerContainer}>
       <div className={title}>
-        <IconButton
-          className={iconButton}
-          onClick={props.onClickButton("previous")}
-        >
+        <IconButton className={iconButton} onClick={onClickPrev}>
           <KeyboardArrowLeft className={icon} />
         </IconButton>
         <span>{props.titleTxt}</span>
-        <IconButton
-          className={iconButton}
-          onClick={props.onClickButton("next")}
-        >
+        <IconButton className={iconButton} onClick={onClickNext}>
           <KeyboardArrowRight className={icon} />
         </IconButton>
       </div>
