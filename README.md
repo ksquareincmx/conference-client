@@ -51,9 +51,15 @@ code .env.local
 
 This is the structure of the `.env.local`
 
-````bash
+```bash
   REACT_APP_GOOGLE_CLIENT_ID="[Your google client_id]"
   REACT_APP_SERVER_URI= "http://[server domain]/api/v2/"
+```
+
+2. Start the app
+
+```bash
+  yarn start
 ```
 
 ### Tests
@@ -73,3 +79,4 @@ TODO
 ```
 
 ```
+````
