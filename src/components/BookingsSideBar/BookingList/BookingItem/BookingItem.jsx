@@ -4,8 +4,9 @@ import { RoomSticker } from "./RoomSticker";
 import { BookingDetails } from "./BookingDetails";
 import { formatDate, formatTime } from "utils/BookingFormater";
 import { BookingItemMenu } from "./BookingItemMenu";
-import { ModalFormConsumer } from "providers/ModalForm";
 import { ConfirmationDialog } from "components/Modals/DeleteBooking/ConfirmationDialog";
+import { ModalFormConsumer } from "providers";
+import { bookingService } from "services";
 
 const styles = theme => ({
   itemCard: {
@@ -50,12 +51,12 @@ class BookingItemComponent extends React.Component {
   };
 
   handleOnDelete = async () => {
-    const { booking, bookingService } = this.props;
+    const { booking } = this.props;
     const { id: sessionUserId } = this.props.auth.user;
     const { user_id: bookingUserId, id: bookingId } = booking;
     if (sessionUserId === bookingUserId) {
       try {
-        const res = await bookingService.removeBooking(bookingId);
+        const res = await bookingService.deleteOneById(bookingId);
         if (res.ok) {
           //Temporal solution, call notification system
           alert("Appointment successfully deleted");
@@ -65,7 +66,7 @@ class BookingItemComponent extends React.Component {
         return alert("The deletion of the appointmen failed");
       } catch (error) {
         //Temporal solution, call notification system
-        alert("There was an error with the server");
+        return alert("There was an error with the server");
       }
     }
     //Temporal solution, call notification system

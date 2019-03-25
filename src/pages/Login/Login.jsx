@@ -17,7 +17,7 @@ const style = theme => ({
 
 const Login = ({ context: { isAuth, onLogin }, classes: { loginPage } }) => {
   if (isAuth) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/calendar" />;
   }
 
   return (

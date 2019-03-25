@@ -8,10 +8,10 @@ import { UserService } from "./User";
 // TODO: Pass the storage service to the services
 const authService = AuthService();
 const storageService = StorageService();
-const bookingService = BookingService();
-const profileService = ProfileService();
-const roomService = RoomService();
-const userService = UserService();
+const bookingService = BookingService(storageService);
+const profileService = ProfileService(storageService);
+const roomService = RoomService(storageService);
+const userService = UserService(storageService);
 
 export {
   authService,

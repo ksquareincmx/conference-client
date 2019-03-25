@@ -16,12 +16,12 @@ export const ModalFormConsumer = ModalFormContext.Consumer;
 
 class ModalFormProviderComponent extends React.Component {
   state = {
-    openModal: false
+    isModalOpen: false
   };
 
   handleOnClickCreateMeeting = () => {
     this.setState({
-      openModal: true,
+      isModalOpen: true,
       room: null,
       bookingClicked: false,
       roomId: null
@@ -33,7 +33,7 @@ class ModalFormProviderComponent extends React.Component {
     const { user_id: bookingUserId } = booking;
     if (sessionUserId === bookingUserId) {
       this.setState({
-        openModal: true,
+        isModalOpen: true,
         bookingClicked: true,
         bookingClickedObj: booking
       });
@@ -41,23 +41,18 @@ class ModalFormProviderComponent extends React.Component {
   };
 
   handleOnCloseModal = () => {
-    this.setState({ openModal: false });
+    this.setState({ isModalOpen: false });
   };
 
   render() {
     const {
-      openModal,
+      isModalOpen,
       bookingClicked,
       bookingClickedObj,
       room,
       roomId
     } = this.state;
-    const {
-      classes: styleClasses,
-      bookingService,
-      roomService,
-      children
-    } = this.props;
+    const { classes: styleClasses, children } = this.props;
     const { modal } = styleClasses;
 
     return (
@@ -69,19 +64,17 @@ class ModalFormProviderComponent extends React.Component {
         }}
       >
         <Modal
-          open={openModal}
-          onClose={this.handleOnCloseModal}
-          disableAutoFocus={true}
           className={modal}
+          open={isModalOpen}
+          disableAutoFocus={true}
+          onClose={this.handleOnCloseModal}
         >
           <BookingForm
-            handleOnCloseModal={this.handleOnCloseModal}
-            booking={bookingService}
-            bookingClicked={bookingClicked}
-            bookingClickedObj={bookingClickedObj}
-            roomService={roomService}
             room={room}
             roomId={roomId}
+            bookingClicked={bookingClicked}
+            bookingClickedObj={bookingClickedObj}
+            handleOnCloseModal={this.handleOnCloseModal}
           />
         </Modal>
         {children}

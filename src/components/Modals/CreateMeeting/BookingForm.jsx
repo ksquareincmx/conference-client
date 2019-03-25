@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core/";
 import { withRouter } from "react-router-dom";
 import compose from "lodash/fp/compose";
-
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList/";
 import DatePicker from "./DatePicker";
@@ -27,8 +26,8 @@ import {
   formatHours,
   formatMinutes
 } from "utils/BookingFormater";
-
 import { withNotifications } from "hocs";
+import { bookingService } from "services";
 
 const styles = theme => ({
   card: {
@@ -157,12 +156,15 @@ class BookingFormComponent extends React.Component {
     const post = postDto(this.state);
     const isBookingValid = this.validate(post);
     const { bookingClicked } = this.state;
-    const { booking, bookingClickedObj } = this.props;
+    const { bookingClickedObj } = this.props;
 
     if (isBookingValid) {
       if (bookingClicked) {
         try {
-          const res = await booking.modifyBooking(post, bookingClickedObj.id);
+          const res = await bookingService.updateOneById(
+            bookingClickedObj.id,
+            post
+          );
           const { id } = res;
           if (id) {
             return this.shootNotification({
@@ -179,6 +181,7 @@ class BookingFormComponent extends React.Component {
           }
           // Can't edit for problems with the date or the schedule
           // Change this for form validation
+          console.log(res);
           return alert(res);
         } catch (error) {
           return this.shootNotification({
@@ -195,7 +198,7 @@ class BookingFormComponent extends React.Component {
         }
       }
       try {
-        const res = await this.props.booking.createNewBooking(post);
+        const res = await bookingService.createOne(post);
         if (res.id) {
           return this.shootNotification({
             message: {
@@ -398,7 +401,6 @@ class BookingFormComponent extends React.Component {
                 disabled={this.state.disabledConferenceSelect}
                 setRoom={this.setRoom}
                 room={room}
-                roomService={this.props.roomService}
               />
             </Grid>
             <Grid container direction="column" className={content}>

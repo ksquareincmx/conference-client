@@ -19,9 +19,9 @@ class AuthProvider extends React.Component {
   };
 
   componentDidMount() {
-    const { getAuthToken, getUserInfo, updateInfoInStorage } = storageService;
+    const { getJWT, getUserInfo, updateInfoInStorage } = storageService;
 
-    const jwt = getAuthToken();
+    const jwt = getJWT();
     const user = getUserInfo();
 
     if (jwt && user) {

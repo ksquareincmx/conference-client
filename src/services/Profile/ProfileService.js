@@ -15,8 +15,13 @@
  * @version 1.0
  * @exports ProfileService
  * @namespace ProfileService
+ * @param storageService - service used for access to session info
  */
-export const ProfileService = () => {
+export const ProfileService = storageService => {
+  /**
+   * Profile service require the auth token for requests
+   */
+  const { token: authToken } = storageService.getJWT();
   /**
    * Return URL for consuming the Profile API.
    * @memberof ProfileService
@@ -27,10 +32,9 @@ export const ProfileService = () => {
    * Return the found profile information.
    * @memberof ProfileService
    * @param {number} id - profile id.
-   * @param {string} authToken - authorization token.
    * @returns {ProfileResponse} - found profile information.
    */
-  const getOne = async (id, authToken) => {
+  const getOneById = async id => {
     const baseURL = getProfileApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -50,10 +54,9 @@ export const ProfileService = () => {
   /**
    * Returns all Profiles information.
    * @memberof ProfileService
-   * @param {string} authToken - authorization token.
    * @returns {ProfileResponse[]} - found profiles information.
    */
-  const getAll = async authToken => {
+  const getAll = async () => {
     const baseURL = getProfileApiURL();
     try {
       const res = await fetch(baseURL, {
@@ -73,13 +76,11 @@ export const ProfileService = () => {
    * Update the Profile information and return it.
    * @param {Profile} profile - profile information.
    * @param {number} id - profile id.
-   * @param {string} authToken - authorization token.
    * @returns {ProfileResponse} - profile updated information.
    */
-  const updateOne = async ({ time_zone, locale }, id, authToken) => {
+  const updateOneById = async (id, { time_zone, locale }) => {
     const baseURL = getProfileApiURL();
     const url = `${baseURL}${id}`;
-
     try {
       const res = await fetch(url, {
         method: "PUT",
@@ -99,8 +100,8 @@ export const ProfileService = () => {
   };
 
   return {
-    getOne,
+    getOneById,
     getAll,
-    updateOne
+    updateOneById
   };
 };

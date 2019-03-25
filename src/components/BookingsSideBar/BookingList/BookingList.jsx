@@ -8,7 +8,7 @@ import {
   filterBySearchTerm,
   getUTCDateFilter
 } from "utils/BookingFilters";
-import { BookingConsumer } from "providers/Booking/Booking";
+import { bookingService, userService, roomService } from "services";
 
 const styles = theme => ({
   gridList: {
@@ -29,8 +29,8 @@ class BookingListComponent extends React.Component {
   getBookings = async () => {
     const stateBookings = this.state.bookingItems;
     let bookingItems = stateBookings.map(async book => {
-      const user = this.props.userService.getUser(book.user_id);
-      const room = this.props.roomService.getRoom(book.room_id);
+      const user = userService.getOneById(book.user_id);
+      const room = roomService.getOneById(book.room_id);
       const data = await Promise.all([user, room]);
       const { name: roomName, color } = data[1];
 
@@ -59,9 +59,7 @@ class BookingListComponent extends React.Component {
 
   async componentDidMount() {
     try {
-      const data = await this.props.booking.getDetailedListOfBooking(
-        getUTCDateFilter()
-      );
+      const data = await bookingService.getAllWithDetails(getUTCDateFilter());
       this.setState({ bookingItems: data.bookings }, () => this.getBookings());
     } catch (err) {
       this.setState({ bookingItems: [] });
@@ -91,16 +89,7 @@ class BookingListComponent extends React.Component {
       <GridList className={gridList}>
         {bookingItems
           ? bookingItems.map(data => (
-              <BookingConsumer key={cuid()}>
-                {bookingService => (
-                  <BookingItem
-                    key={cuid()}
-                    auth={auth}
-                    booking={data}
-                    bookingService={bookingService}
-                  />
-                )}
-              </BookingConsumer>
+              <BookingItem key={cuid()} auth={auth} booking={data} />
             ))
           : "" /*Change for empty component;*/}
       </GridList>
