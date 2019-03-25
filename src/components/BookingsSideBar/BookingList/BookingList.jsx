@@ -29,8 +29,8 @@ class BookingListComponent extends React.Component {
   getBookings = async () => {
     const stateBookings = this.state.bookingItems;
     let bookingItems = stateBookings.map(async book => {
-      const user = userService.getOne(book.user_id);
-      const room = roomService.getOne(book.room_id);
+      const user = userService.getOneById(book.user_id);
+      const room = roomService.getOneById(book.room_id);
       const data = await Promise.all([user, room]);
       const { name: roomName, color } = data[1];
 

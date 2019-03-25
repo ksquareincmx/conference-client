@@ -34,7 +34,7 @@ export const ProfileService = storageService => {
    * @param {number} id - profile id.
    * @returns {ProfileResponse} - found profile information.
    */
-  const getOne = async id => {
+  const getOneById = async id => {
     const baseURL = getProfileApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -78,7 +78,7 @@ export const ProfileService = storageService => {
    * @param {number} id - profile id.
    * @returns {ProfileResponse} - profile updated information.
    */
-  const updateOne = async (id, { time_zone, locale }) => {
+  const updateOneById = async (id, { time_zone, locale }) => {
     const baseURL = getProfileApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -100,8 +100,8 @@ export const ProfileService = storageService => {
   };
 
   return {
-    getOne,
+    getOneById,
     getAll,
-    updateOne
+    updateOneById
   };
 };

@@ -3,7 +3,6 @@ import { Grid, Typography, Card } from "@material-ui/core/";
 import { withStyles } from "@material-ui/core/styles";
 import { SearchBar } from "./SearchBar";
 import { BookingList } from "./BookingList/BookingList";
-import { RoomConsumer, UserConsumer } from "providers";
 
 const styles = theme => ({
   sideBar: {

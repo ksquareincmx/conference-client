@@ -41,7 +41,7 @@ export const UserService = storageService => {
    * @param {number} id - user id.
    * @returns {User} - found user information.
    */
-  const getOne = async id => {
+  const getOneById = async id => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -64,7 +64,7 @@ export const UserService = storageService => {
    * @param {number} id - user id.
    * @returns {User}
    */
-  const updateOne = async (user, id) => {
+  const updateOneById = async (user, id) => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
     const { authProviderId, picture, name, email, password, role } = user;
@@ -97,7 +97,7 @@ export const UserService = storageService => {
    * @param {string} authToken - authorization token.
    */
   // TODO: @returns {NotContentResponse} - request response.
-  const deleteOne = async id => {
+  const deleteOneByID = async id => {
     const baseURL = getUserApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -115,8 +115,8 @@ export const UserService = storageService => {
   };
 
   return {
-    getOne,
-    updateOne,
-    deleteOne
+    getOneById,
+    updateOneById,
+    deleteOneByID
   };
 };

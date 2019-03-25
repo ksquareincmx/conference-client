@@ -67,7 +67,7 @@ export const RoomService = storageService => {
    * @param {number} id - room id.
    * @returns {RoomResponse} - found room information.
    */
-  const getOne = async id => {
+  const getOneById = async id => {
     const baseURL = getRoomApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -112,7 +112,7 @@ export const RoomService = storageService => {
    * @param {number} id - room id.
    * @returns {RoomResponse} - room updated information.
    */
-  const updateOne = async (id, { name, color }) => {
+  const updateOneById = async (id, { name, color }) => {
     const baseURL = getRoomApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -139,7 +139,7 @@ export const RoomService = storageService => {
    * @param {number} id - room id.
    */
   //  TODO: @returns {NotContentResponse} - request response.
-  const deleteOne = async id => {
+  const deleteOneById = async id => {
     const baseURL = getRoomApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -158,9 +158,9 @@ export const RoomService = storageService => {
 
   return {
     createOne,
-    getOne,
+    getOneById,
     getAll,
-    updateOne,
-    deleteOne
+    updateOneById,
+    deleteOneById
   };
 };

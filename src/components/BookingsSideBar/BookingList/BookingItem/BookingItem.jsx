@@ -52,11 +52,15 @@ class BookingItemComponent extends React.Component {
 
   handleOnDelete = async () => {
     const { booking } = this.props;
+    console.log(booking);
     const { id: sessionUserId } = this.props.auth.user;
     const { user_id: bookingUserId, id: bookingId } = booking;
+    console.log(sessionUserId);
+    console.log(bookingUserId);
     if (sessionUserId === bookingUserId) {
+      console.log("aqui");
       try {
-        const res = await bookingService.deleteOne(bookingId);
+        const res = await bookingService.deleteOneById(bookingId);
         if (res.ok) {
           //Temporal solution, call notification system
           alert("Appointment successfully deleted");
@@ -66,7 +70,7 @@ class BookingItemComponent extends React.Component {
         return alert("The deletion of the appointmen failed");
       } catch (error) {
         //Temporal solution, call notification system
-        alert("There was an error with the server");
+        return alert("There was an error with the server");
       }
     }
     //Temporal solution, call notification system

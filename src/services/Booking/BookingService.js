@@ -113,7 +113,7 @@ export const BookingService = storageService => {
    * @param {number} id - booking id.
    * @return {BookingResponse} - found booking information.
    */
-  const getOne = async id => {
+  const getOneById = async id => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -213,7 +213,7 @@ export const BookingService = storageService => {
    * @param {number} id - booking id.
    * @returns {NotContentResponse} - request response.
    */
-  const deleteOne = async id => {
+  const deleteOneById = async id => {
     const baseURL = getBookingApiURL();
     const url = `${baseURL}${id}`;
     try {
@@ -231,10 +231,10 @@ export const BookingService = storageService => {
 
   return {
     createOne,
-    getOne,
+    getOneById,
     getAll,
     getAllWithDetails,
     updateOneById,
-    deleteOne
+    deleteOneById
   };
 };
