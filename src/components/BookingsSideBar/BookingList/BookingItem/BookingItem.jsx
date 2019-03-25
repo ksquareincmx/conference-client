@@ -52,13 +52,9 @@ class BookingItemComponent extends React.Component {
 
   handleOnDelete = async () => {
     const { booking } = this.props;
-    console.log(booking);
     const { id: sessionUserId } = this.props.auth.user;
     const { user_id: bookingUserId, id: bookingId } = booking;
-    console.log(sessionUserId);
-    console.log(bookingUserId);
     if (sessionUserId === bookingUserId) {
-      console.log("aqui");
       try {
         const res = await bookingService.deleteOneById(bookingId);
         if (res.ok) {
