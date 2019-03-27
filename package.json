@@ -25,9 +25,7 @@
     "eslint-config-react-app": "^2.1.0",
     "eslint-loader": "1.9.0",
     "eslint-plugin-flowtype": "2.39.1",
-    "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jsx-a11y": "5.1.1",
-    "eslint-plugin-react": "7.4.0",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.5",
     "fs-extra": "3.0.1",
@@ -105,12 +103,14 @@
       "react-app"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "devDependencies": {
     "dotenv": "^4.0.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.4.0",
     "node-sass": "^4.9.3",
+    "prettier": "^1.16.4",
     "sass-loader": "^7.1.0"
   }
 }
