@@ -1,10 +1,10 @@
-import { APIServices } from "./services-routes";
+import { servicesRoutes } from "./services-routes";
 
 export const APIGateway = () => {
   const doGet = async (service, config) => {
     /* I don't fell confortable doing this but
     if this is the only way... */
-    const { getServiceURI } = APIServices[service];
+    const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
     const { authToken } = config;
     try {
@@ -16,12 +16,12 @@ export const APIGateway = () => {
         }
       });
     } catch (error) {
-      return new Error("An error ocurred in the GET request");
+      return Promise.reject(new Error("An error occurred in the GET request"));
     }
   };
 
   const doPost = async (service, config) => {
-    const { getServiceURI } = APIServices[service];
+    const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
     const { createBody, authToken } = config;
     const body = JSON.stringify(createBody);
@@ -35,12 +35,12 @@ export const APIGateway = () => {
         }
       });
     } catch (error) {
-      return new Error("An error ocured in the POST request");
+      return Promise.reject(new Error("An error occurred in the POST request"));
     }
   };
 
   const doUpdate = async (service, config) => {
-    const { getServiceURI } = APIServices[service];
+    const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
     const { updateBody, authToken } = config;
     const body = JSON.stringify(updateBody);
@@ -54,12 +54,12 @@ export const APIGateway = () => {
         }
       });
     } catch (error) {
-      return new Error("An error ocured in the PUT request");
+      return Promise.reject(new Error("An error occurred in the PUT request"));
     }
   };
 
   const doDelete = async (service, config) => {
-    const { getServiceURI } = APIServices[service];
+    const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
     const { authToken } = config;
     try {
@@ -71,7 +71,9 @@ export const APIGateway = () => {
         }
       });
     } catch (error) {
-      return new Error("An error ocurred in the DELETE request");
+      return Promise.reject(
+        new Error("An error occurred in the DELETE request")
+      );
     }
   };
 

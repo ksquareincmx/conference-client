@@ -1,4 +1,4 @@
-import { APIGateway } from "api-gateway";
+import { apiGateway } from "gateways";
 
 /**
  * @typedef {Object} Profile
@@ -34,7 +34,7 @@ export const ProfileService = storageService => {
   const getOneById = async id => {
     const config = { id, authToken };
     try {
-      const res = await APIGateway.doGet("getProfileById", config);
+      const res = await apiGateway.doGet("getProfileById", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -49,7 +49,7 @@ export const ProfileService = storageService => {
   const getAll = async () => {
     const config = { authToken };
     try {
-      const res = await APIGateway.doGet("getAllProfiles", config);
+      const res = await apiGateway.doGet("getAllProfiles", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -72,7 +72,7 @@ export const ProfileService = storageService => {
       authToken
     };
     try {
-      const res = await APIGateway.doUpdate("updateProfileById", config);
+      const res = await apiGateway.doUpdate("updateProfileById", config);
       return await res;
     } catch (error) {
       return new Error(error.message);

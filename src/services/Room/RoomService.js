@@ -1,4 +1,4 @@
-import { APIGateway } from "api-gateway";
+import { apiGateway } from "gateways";
 
 /**
  * @typedef {Object} Room
@@ -52,7 +52,7 @@ export const RoomService = storageService => {
       authToken
     };
     try {
-      const res = await APIGateway.doPost("createRoom", config);
+      const res = await apiGateway.doPost("createRoom", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -68,7 +68,7 @@ export const RoomService = storageService => {
   const getOneById = async id => {
     const config = { id, authToken };
     try {
-      const res = await APIGateway.doGet("getRoomById", config);
+      const res = await apiGateway.doGet("getRoomById", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -83,7 +83,7 @@ export const RoomService = storageService => {
   const getAll = async () => {
     const config = { authToken };
     try {
-      const res = await APIGateway.doGet("getAllRooms", config);
+      const res = await apiGateway.doGet("getAllRooms", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -107,7 +107,7 @@ export const RoomService = storageService => {
       authToken
     };
     try {
-      const res = await APIGateway.doUpdate("updateRoomById", config);
+      const res = await apiGateway.doUpdate("updateRoomById", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -123,7 +123,7 @@ export const RoomService = storageService => {
   const deleteOneById = async id => {
     const config = { id, authToken };
     try {
-      const res = await APIGateway.doDelete("deleteRoomById", config);
+      const res = await apiGateway.doDelete("deleteRoomById", config);
       return await res;
     } catch (error) {
       return new Error(error.message);

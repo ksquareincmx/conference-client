@@ -1,4 +1,4 @@
-import { APIGateway } from "api-gateway";
+import { apiGateway } from "gateways";
 
 /**
  * @typedef {Object} User
@@ -39,7 +39,7 @@ export const UserService = storageService => {
   const getOneById = async id => {
     const config = { id, authToken };
     try {
-      const res = await APIGateway.doGet("getUserById", config);
+      const res = await apiGateway.doGet("getUserById", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -69,7 +69,7 @@ export const UserService = storageService => {
       authToken
     };
     try {
-      const res = await APIGateway.doUpdate("updateUserById", config);
+      const res = await apiGateway.doUpdate("updateUserById", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -86,7 +86,7 @@ export const UserService = storageService => {
   const deleteOneByID = async id => {
     const config = { id, authToken };
     try {
-      const res = await APIGateway.doDelete("deleteUserById", config);
+      const res = await apiGateway.doDelete("deleteUserById", config);
       // This is not tested, is probably that app crashes
       return await res;
     } catch (error) {

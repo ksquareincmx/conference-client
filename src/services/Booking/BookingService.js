@@ -1,4 +1,4 @@
-import { APIGateway } from "api-gateway";
+import { apiGateway } from "gateways";
 
 /**
  * @typedef {Object} BookingRequest
@@ -91,7 +91,7 @@ export const BookingService = storageService => {
       authToken
     };
     try {
-      const res = await APIGateway.doPost("createBooking", config);
+      const res = await apiGateway.doPost("createBooking", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -107,7 +107,7 @@ export const BookingService = storageService => {
   const getOneById = async id => {
     const config = { id, authToken };
     try {
-      const res = await APIGateway.doGet("getBookingById", config);
+      const res = await apiGateway.doGet("getBookingById", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -122,7 +122,7 @@ export const BookingService = storageService => {
   const getAll = async () => {
     const config = { authToken };
     try {
-      const res = await APIGateway.doGet("getAllBookings", config);
+      const res = await apiGateway.doGet("getAllBookings", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -137,7 +137,7 @@ export const BookingService = storageService => {
   const getAllWithDetails = async filterDate => {
     const config = { filterDate, authToken };
     try {
-      const res = await APIGateway.doGet("getDetailedBookings", config);
+      const res = await apiGateway.doGet("getDetailedBookings", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -167,7 +167,7 @@ export const BookingService = storageService => {
       authToken
     };
     try {
-      const res = await APIGateway.doUpdate("updateBookingById", config);
+      const res = await apiGateway.doUpdate("updateBookingById", config);
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -183,7 +183,7 @@ export const BookingService = storageService => {
   const deleteOneById = async id => {
     const config = { id, authToken };
     try {
-      const res = await APIGateway.doDelete("deleteBookingById", config);
+      const res = await apiGateway.doDelete("deleteBookingById", config);
       return await res;
     } catch (error) {
       return new Error(error.message);

@@ -3,7 +3,7 @@ const profileServiceURI = `${process.env.REACT_APP_SERVER_URI}Profile/`;
 const bookingServiceURI = `${process.env.REACT_APP_SERVER_URI}Booking/`;
 const roomServiceURI = `${process.env.REACT_APP_SERVER_URI}Room/`;
 
-export const APIServices = {
+export const servicesRoutes = {
   // User
   createUser: {
     getServiceURI: config => `${userServiceURI}`
@@ -61,7 +61,7 @@ export const APIServices = {
   },
   getDetailedBookings: {
     getServiceURI: ({ filterDate }) => {
-      const query = `?include=["Room","User"]&page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}`;
+      const query = `?page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}`;
       return `${bookingServiceURI}${query}`;
     }
   },
