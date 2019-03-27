@@ -1,3 +1,5 @@
+import { apiGateway } from "gateways";
+
 /**
  * @typedef {Object} User
  * @property {number} authProviderId - user auth provider id.
@@ -29,64 +31,48 @@ export const UserService = storageService => {
   const { token: authToken } = storageService.getJWT();
 
   /**
-   * Return URL for consuming the User API.
-   * @memberof UserService
-   * @return {string} - Base URL for all related Users requests.
-   */
-  const getUserApiURL = () => `${process.env.REACT_APP_SERVER_URI}User/`;
-
-  /**
    * Return the found user information using the id.
    * @memberof UserSservice
    * @param {number} id - user id.
    * @returns {User} - found user information.
    */
   const getOneById = async id => {
-    const baseURL = getUserApiURL();
-    const url = `${baseURL}${id}`;
+    const config = { id, authToken };
     try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await apiGateway.doGet("getUserById", config);
       return await res.json();
-    } catch (err) {
-      return new Error("An error occurred whith the request");
+    } catch (error) {
+      return new Error(error.message);
     }
   };
 
   /**
    * Update the user information and return it.
-   * @param {UserRequest} user - user information.
    * @param {number} id - user id.
-   * @returns {User}
+   * @param {UserRequest} user - user information.
+   * @returns {User} - updated user information
    */
-  const updateOneById = async (user, id) => {
-    const baseURL = getUserApiURL();
-    const url = `${baseURL}${id}`;
-    const { authProviderId, picture, name, email, password, role } = user;
+  const updateOneById = async (
+    id,
+    { authProviderId, picture, name, email, password, role }
+  ) => {
+    const config = {
+      id,
+      body: {
+        authProviderId,
+        picture,
+        name,
+        email,
+        password,
+        role
+      },
+      authToken
+    };
     try {
-      const res = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        },
-        body: {
-          authProviderId,
-          picture,
-          name,
-          email,
-          password,
-          role
-        }
-      });
+      const res = await apiGateway.doUpdate("updateUserById", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -98,19 +84,13 @@ export const UserService = storageService => {
    */
   // TODO: @returns {NotContentResponse} - request response.
   const deleteOneByID = async id => {
-    const baseURL = getUserApiURL();
-    const url = `${baseURL}${id}`;
+    const config = { id, authToken };
     try {
-      const res = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer  ${authToken}`
-        }
-      });
-      return await res.json();
+      const res = await apiGateway.doDelete("deleteUserById", config);
+      // This is not tested, is probably that app crashes
+      return await res;
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
