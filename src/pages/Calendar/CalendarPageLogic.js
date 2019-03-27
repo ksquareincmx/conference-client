@@ -11,7 +11,7 @@ import CalendarStrategy from "./CalendarStrategy";
 import { Grid, withStyles } from "@material-ui/core";
 import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar.jsx";
 import { getUTCDateFilter } from "utils/BookingFilters";
-import { bookingService } from "services";
+import { bookingService, roomService } from "services";
 
 const styles = theme => ({
   calendarContainer: {
@@ -23,7 +23,8 @@ class CalendarPageLogicComponent extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {
-      events: [[], []],
+      events: [],
+      rooms: [],
       selector: "day",
       focusDate: new Date(),
       appointmentInfo: {
@@ -138,16 +139,10 @@ class CalendarPageLogicComponent extends React.Component {
     const bookingsList = await bookingService.getAllWithDetails(
       getUTCDateFilter()
     );
-    const events = AppointmentMapper.toEvents(bookingsList.bookings);
-    if (events.lenth > 0) {
-      this.setState(prevState => {
-        prevState.events[0].push(...events[0]);
-        prevState.events[1].push(...events[1]);
-        return {
-          events: prevState.events
-        };
-      });
-    }
+    const roomList = await roomService.getAll();
+    const ROOMSPERCALENDAR = 2;
+    roomList.length = ROOMSPERCALENDAR;
+    this.setState({ events: bookingsList.bookings, rooms: roomList });
   };
 
   componentDidMount() {
@@ -186,7 +181,8 @@ class CalendarPageLogicComponent extends React.Component {
                 />
                 <CalendarStrategy
                   type={this.state.selector}
-                  events={this.state.events}
+                  bookings={this.state.events}
+                  roomList={this.state.rooms}
                   handleSelect={this.handleSelect}
                   components={{
                     event: this.handleEventView

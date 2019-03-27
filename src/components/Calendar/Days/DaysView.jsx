@@ -3,7 +3,9 @@ import BigCalendar from "react-big-calendar";
 import { withStyles } from "@material-ui/core";
 import "./Days.css";
 import classNames from "classnames";
+import { mapEventsByRoom } from "mappers/AppointmentMapper";
 import fp from "lodash/fp";
+import cuid from "cuid";
 
 const styles = theme => ({
   gridContainer: {
@@ -52,9 +54,10 @@ const customTimeSlotWrapper = ({ children }) =>
     }
   });
 
-const dayGrid = props => idConference => {
+const dayGrid = props => room => {
   const {
-    events,
+    bookings,
+    roomList,
     type,
     step,
     minDate,
@@ -79,19 +82,31 @@ const dayGrid = props => idConference => {
     timeSlotWrapper: customTimeSlotWrapper
   };
 
+  const getRoomEvents = roomId => {
+    const events = mapEventsByRoom(bookings, roomList);
+    const eventsObj = events.find(
+      eventsByRoom => eventsByRoom.roomId === roomId
+    );
+    return eventsObj.roomEvents;
+  };
+
+  const roomEvents = room ? getRoomEvents(room.id) : [];
+
   return (
-    <div className={classNames(grid, "day")} key={idConference}>
+    <div className={classNames(grid, "day")} key={room ? room.id : cuid()}>
       <div className={gridHeaderContainer}>
         <div className={gridGutter} />
         <div className={gridHeader}>
-          <h3 className={gridHeaderTxt}>Conference Room #{idConference + 1}</h3>
+          <h3 className={gridHeaderTxt}>
+            {room ? `Conference ${room.name}` : "Loading"}
+          </h3>
         </div>
       </div>
       <BigCalendar
         selectable
         toolbar={false}
         scrollToTime={new Date(2000, 1, 1, 0)}
-        events={events[idConference]}
+        events={roomEvents}
         views={[type]}
         step={step}
         defaultView={BigCalendar.Views.DAY}
@@ -100,7 +115,7 @@ const dayGrid = props => idConference => {
         formats={{ timeGutterFormat: "hh:mm A", dayFormat: "ddd D" }}
         localizer={localizer}
         onSelectEvent={event => alert(event.title)}
-        onSelectSlot={handleSelect(idConference)}
+        onSelectSlot={room ? handleSelect(room.id) : null}
         timeslots={timeSlots}
         components={components}
         date={date}
@@ -111,8 +126,10 @@ const dayGrid = props => idConference => {
 };
 
 const DaysViewComponent = props => {
-  const { gridContainer } = props.classes;
-  return <div className={gridContainer}>{[0, 1].map(dayGrid(props))}</div>;
+  const { roomList, classes: styleClasses } = props;
+  const { gridContainer } = styleClasses;
+
+  return <div className={gridContainer}>{roomList.map(dayGrid(props))}</div>;
 };
 
 export const DaysView = withStyles(styles)(DaysViewComponent);

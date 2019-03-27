@@ -4,6 +4,7 @@ import classNames from "classnames";
 import BigCalendar from "react-big-calendar";
 import "./Months.css";
 import fp from "lodash/fp";
+import { formatEvents } from "mappers/AppointmentMapper";
 
 const styles = theme => ({
   gridContainer: {
@@ -27,7 +28,7 @@ const customDateCellWrapper = ({ children }) =>
 
 const MonthsViewComponent = props => {
   const {
-    events,
+    bookings,
     type,
     minDate,
     maxDate,
@@ -37,6 +38,8 @@ const MonthsViewComponent = props => {
   } = props;
 
   const { grid, gridContainer } = styleClasses;
+
+  const monthEvents = formatEvents(bookings);
 
   const components = {
     event: props.components.event,
@@ -48,7 +51,7 @@ const MonthsViewComponent = props => {
       <div className={classNames(grid, "month")}>
         <BigCalendar
           toolbar={false}
-          events={[...events[0], ...events[1]]}
+          events={monthEvents}
           formats={{ weekdayFormat: "dddd" }}
           views={[type]}
           defaultView={BigCalendar.Views.MONTH}

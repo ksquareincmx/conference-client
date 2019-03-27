@@ -4,6 +4,7 @@ import BigCalendar from "react-big-calendar";
 import classNames from "classnames";
 import "./Weeks.css";
 import fp from "lodash/fp";
+import { formatEvents } from "mappers/AppointmentMapper";
 
 const styles = theme => ({
   gridContainer: {
@@ -32,7 +33,7 @@ const customTimeSlotWrapper = ({ children }) =>
 
 const WeeksViewComponent = props => {
   const {
-    events,
+    bookings,
     type,
     step,
     minDate,
@@ -43,6 +44,8 @@ const WeeksViewComponent = props => {
     date,
     classes: styleClasses
   } = props;
+
+  const weekEvents = formatEvents(bookings);
 
   const { gridContainer, grid } = styleClasses;
 
@@ -59,7 +62,7 @@ const WeeksViewComponent = props => {
         <BigCalendar
           selectable
           toolbar={false}
-          events={[...events[0], ...events[1]]}
+          events={weekEvents}
           views={[viewType]}
           step={step}
           defaultView={BigCalendar.Views.WORK_WEEK}
