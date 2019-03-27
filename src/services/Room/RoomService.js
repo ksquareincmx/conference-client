@@ -1,3 +1,5 @@
+import { APIGateway } from "api-gateway";
+
 /**
  * @typedef {Object} Room
  * @property {string} name - room name.
@@ -16,6 +18,16 @@
  * @property {string} status - room status ("Available" or "Not Available").
  */
 
+// TODO: Review the use of this type definition
+/**
+ * @typedef {object} NotContentResponse
+ * @property {string} type - type response cors.
+ * @property {string} url - request url.
+ * @property {boolean} redirected - redirection of the request.
+ * @property {number} status - status code of the request.
+ * @property {boolean} ok - errors on the request.
+ */
+
 /**
  * @version 1.0
  * @exports RoomService
@@ -29,35 +41,21 @@ export const RoomService = storageService => {
   const { token: authToken } = storageService.getJWT();
 
   /**
-   * Return URL for consuming the Room API.
-   * @memberof RoomService
-   * @return {string} - Base URL for all related Rooms requests.
-   */
-  const getRoomApiURL = () => `${process.env.REACT_APP_SERVER_URI}Room/`;
-  /**
    * Create a new room and return it.
    * @memberof RoomService
    * @param {Room} room - room object.
    * @returns {RoomResponse} - created room information.
    */
-  const createOne = async room => {
-    const baseURL = getRoomApiURL();
-    const { name, color } = room;
+  const createOne = async ({ name, color }) => {
+    const config = {
+      createBody: { name, color },
+      authToken
+    };
     try {
-      const res = await fetch(baseURL, {
-        method: "POST",
-        body: {
-          name,
-          color
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doPost("createRoom", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -68,19 +66,12 @@ export const RoomService = storageService => {
    * @returns {RoomResponse} - found room information.
    */
   const getOneById = async id => {
-    const baseURL = getRoomApiURL();
-    const url = `${baseURL}${id}`;
+    const config = { id, authToken };
     try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doGet("getRoomById", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -90,46 +81,36 @@ export const RoomService = storageService => {
    * @returns {RoomResponse[]} - found rooms information.
    */
   const getAll = async () => {
-    const baseURL = getRoomApiURL();
+    const config = { authToken };
     try {
-      const res = await fetch(baseURL, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doGet("getAllRooms", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
   /**
    * Update the room information and return it.
    * @memberof RoomService
-   * @param {Room} room - room object.
    * @param {number} id - room id.
+   * @param {Room} room - room object.
    * @returns {RoomResponse} - room updated information.
    */
   const updateOneById = async (id, { name, color }) => {
-    const baseURL = getRoomApiURL();
-    const url = `${baseURL}${id}`;
+    const config = {
+      id,
+      updateBody: {
+        name,
+        color
+      },
+      authToken
+    };
     try {
-      const res = await fetch(url, {
-        method: "PUT",
-        body: {
-          name,
-          color
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doUpdate("updateRoomById", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -137,22 +118,15 @@ export const RoomService = storageService => {
    * Delete a room by id.
    * @memberof RoomService
    * @param {number} id - room id.
+   *  @returns {NotContentResponse} - request response.
    */
-  //  TODO: @returns {NotContentResponse} - request response.
   const deleteOneById = async id => {
-    const baseURL = getRoomApiURL();
-    const url = `${baseURL}${id}`;
+    const config = { id, authToken };
     try {
-      const res = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
-      return await res.json();
+      const res = await APIGateway.doDelete("deleteRoomById", config);
+      return await res;
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 

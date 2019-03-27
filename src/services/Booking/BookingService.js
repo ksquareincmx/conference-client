@@ -1,3 +1,5 @@
+import { APIGateway } from "api-gateway";
+
 /**
  * @typedef {Object} BookingRequest
  * @property {string} description - booking description.
@@ -72,38 +74,27 @@ export const BookingService = storageService => {
   const { token: authToken } = storageService.getJWT();
 
   /**
-   * Return URL for consuming the Booking API.
-   * @memberof BookingService
-   * @return {string} - Base URL for all related Bookings requests.
-   */
-  const getBookingApiURL = () => `${process.env.REACT_APP_SERVER_URI}Booking/`;
-
-  /**
    * Return the new Booking information.
    * @memberof BookingService
    * @param {BookingRequest} booking - booking information.
    * @return {BookingResponse} - created booking information.
    */
   const createOne = async ({ description, roomId, start, end, attendees }) => {
-    const baseURL = getBookingApiURL();
+    const config = {
+      createBody: {
+        start,
+        end,
+        description,
+        roomId,
+        attendees
+      },
+      authToken
+    };
     try {
-      const res = await fetch(baseURL, {
-        method: "POST",
-        body: JSON.stringify({
-          description,
-          start,
-          end,
-          attendees,
-          room_id: roomId
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doPost("createBooking", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -114,19 +105,12 @@ export const BookingService = storageService => {
    * @return {BookingResponse} - found booking information.
    */
   const getOneById = async id => {
-    const baseURL = getBookingApiURL();
-    const url = `${baseURL}${id}`;
+    const config = { id, authToken };
     try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doGet("getBookingById", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -136,18 +120,12 @@ export const BookingService = storageService => {
    * @return {BookingResponse[]} - found bookings information.
    */
   const getAll = async () => {
-    const baseURL = getBookingApiURL();
+    const config = { authToken };
     try {
-      const res = await fetch(baseURL, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doGet("getAllBookings", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -157,53 +135,42 @@ export const BookingService = storageService => {
    * @return {BookingWithDetails} - found bookigs and, room and user information.
    */
   const getAllWithDetails = async filterDate => {
-    const baseURL = getBookingApiURL();
-    const url = `${baseURL}?include=["Room","User"]&page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}`;
+    const config = { filterDate, authToken };
     try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doGet("getDetailedBookings", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
   /**
    * Update the booking information and return it.
    * @memberof BookingService
-   * @param {BookingRequest} booking - booking new information.
    * @param {number} id - booking id.
+   * @param {BookingRequest} booking - booking new information.
    * @return {BookingResponse} - booking updated information.
    */
   const updateOneById = async (
     id,
     { description, roomId, start, end, attendees }
   ) => {
-    const baseURL = getBookingApiURL();
-    const url = `${baseURL}${id}`;
+    const config = {
+      id,
+      updateBody: {
+        description,
+        room_id: roomId,
+        start,
+        end,
+        attendees
+      },
+      authToken
+    };
     try {
-      const res = await fetch(url, {
-        method: "PUT",
-        body: JSON.stringify({
-          description,
-          room_id: roomId,
-          start,
-          end,
-          attendees
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doUpdate("updateBookingById", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -214,18 +181,12 @@ export const BookingService = storageService => {
    * @returns {NotContentResponse} - request response.
    */
   const deleteOneById = async id => {
-    const baseURL = getBookingApiURL();
-    const url = `${baseURL}${id}`;
+    const config = { id, authToken };
     try {
-      return await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doDelete("deleteBookingById", config);
+      return await res;
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 

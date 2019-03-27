@@ -1,3 +1,5 @@
+import { APIGateway } from "api-gateway";
+
 /**
  * @typedef {Object} Profile
  * @property {string} time_zone - profile time zone.
@@ -22,12 +24,7 @@ export const ProfileService = storageService => {
    * Profile service require the auth token for requests
    */
   const { token: authToken } = storageService.getJWT();
-  /**
-   * Return URL for consuming the Profile API.
-   * @memberof ProfileService
-   * @return {string} - Base URL for all related Profiles requests.
-   */
-  const getProfileApiURL = () => `${process.env.REACT_APP_SERVER_URI}Profile/`;
+
   /**
    * Return the found profile information.
    * @memberof ProfileService
@@ -35,19 +32,12 @@ export const ProfileService = storageService => {
    * @returns {ProfileResponse} - found profile information.
    */
   const getOneById = async id => {
-    const baseURL = getProfileApiURL();
-    const url = `${baseURL}${id}`;
+    const config = { id, authToken };
     try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doGet("getProfileById", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
@@ -57,45 +47,35 @@ export const ProfileService = storageService => {
    * @returns {ProfileResponse[]} - found profiles information.
    */
   const getAll = async () => {
-    const baseURL = getProfileApiURL();
+    const config = { authToken };
     try {
-      const res = await fetch(baseURL, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      });
+      const res = await APIGateway.doGet("getAllProfiles", config);
       return await res.json();
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
   /**
    * Update the Profile information and return it.
-   * @param {Profile} profile - profile information.
    * @param {number} id - profile id.
+   * @param {Profile} profile - profile information.
    * @returns {ProfileResponse} - profile updated information.
    */
   const updateOneById = async (id, { time_zone, locale }) => {
-    const baseURL = getProfileApiURL();
-    const url = `${baseURL}${id}`;
+    const config = {
+      id,
+      body: {
+        time_zone,
+        locale
+      },
+      authToken
+    };
     try {
-      const res = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        },
-        body: {
-          time_zone,
-          locale
-        }
-      });
-      return await res.json();
+      const res = await APIGateway.doUpdate("updateProfileById", config);
+      return await res;
     } catch (error) {
-      return new Error("An error occurred whith the request");
+      return new Error(error.message);
     }
   };
 
