@@ -139,8 +139,8 @@ class CalendarPageLogicComponent extends React.Component {
       getUTCDateFilter()
     );
     const roomList = await roomService.getAll();
-    const ROOMSPERCALENDAR = 2;
-    roomList.length = ROOMSPERCALENDAR;
+    const ROOMS_PER_CALENDAR = 2;
+    roomList.length = ROOMS_PER_CALENDAR;
     this.setState({ events: bookingsList.bookings, rooms: roomList });
   };
 

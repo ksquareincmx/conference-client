@@ -27,6 +27,6 @@ export const getEventColors = eventColor => {
         textColor: "#00543f"
       };
     default:
-      break;
+      return {};
   }
 };
