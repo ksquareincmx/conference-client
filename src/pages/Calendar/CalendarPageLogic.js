@@ -64,7 +64,6 @@ class CalendarPageLogicComponent extends React.Component {
     return (
       <span>
         <strong>{event.title}</strong>
-        {event.desc && ":  " + event.desc}
       </span>
     );
   };

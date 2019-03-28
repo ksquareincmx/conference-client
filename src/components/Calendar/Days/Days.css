@@ -7,3 +7,13 @@
 .day .rbc-time-header {
   display: none;
 }
+
+.day .rbc-event-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.day .rbc-event-label {
+  display: none;
+}

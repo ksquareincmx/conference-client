@@ -27,3 +27,13 @@
   border-radius: 5px;
   color: white;
 }
+
+.month .rbc-event-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.month .rbc-event-label {
+  display: none;
+}
