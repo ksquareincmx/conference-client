@@ -5,7 +5,7 @@ import classNames from "classnames";
 import "./Weeks.css";
 import fp from "lodash/fp";
 import { formatEvents } from "mappers/AppointmentMapper";
-import { getEventColors } from "utils/BookingColors";
+import { getEventColors } from "utils/Colors";
 
 const styles = theme => ({
   gridContainer: {
