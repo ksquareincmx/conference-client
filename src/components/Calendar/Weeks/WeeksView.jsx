@@ -4,6 +4,8 @@ import BigCalendar from "react-big-calendar";
 import classNames from "classnames";
 import "./Weeks.css";
 import fp from "lodash/fp";
+import { formatEvents } from "mappers/AppointmentMapper";
+import { getEventColors } from "utils/Colors";
 
 const styles = theme => ({
   gridContainer: {
@@ -30,9 +32,37 @@ const customTimeSlotWrapper = ({ children }) =>
     }
   });
 
+const customEventWrapper = eventWrapper => {
+  const { children, event } = eventWrapper;
+  const styles = getEventColors(event.color);
+  return React.cloneElement(Children.only(children), {
+    style: {
+      ...children.props.style,
+      width: "50%",
+      fontSize: "0.8em",
+      textAlign: "center",
+      backgroundColor: styles.backgroundColor,
+      border: `2px solid ${styles.borderColor}`,
+      color: styles.textColor,
+      borderRadius: 0,
+      opacity: 0.7
+    }
+  });
+};
+
+const customEventContainerWrapper = eventWrapper => {
+  const { children } = eventWrapper;
+  return React.cloneElement(Children.only(children), {
+    style: {
+      ...children.props.style,
+      marginRight: 0
+    }
+  });
+};
+
 const WeeksViewComponent = props => {
   const {
-    events,
+    bookings,
     type,
     step,
     minDate,
@@ -44,9 +74,13 @@ const WeeksViewComponent = props => {
     classes: styleClasses
   } = props;
 
+  const weekEvents = formatEvents(bookings);
+
   const { gridContainer, grid } = styleClasses;
 
   const components = {
+    eventWrapper: customEventWrapper,
+    eventContainerWrapper: customEventContainerWrapper,
     event: props.components.event,
     timeSlotWrapper: customTimeSlotWrapper
   };
@@ -59,7 +93,7 @@ const WeeksViewComponent = props => {
         <BigCalendar
           selectable
           toolbar={false}
-          events={[...events[0], ...events[1]]}
+          events={weekEvents}
           views={[viewType]}
           step={step}
           defaultView={BigCalendar.Views.WORK_WEEK}

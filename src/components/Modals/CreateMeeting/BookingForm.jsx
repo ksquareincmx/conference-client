@@ -408,7 +408,6 @@ class BookingFormComponent extends React.Component {
                 Reason for the Appointment
               </Typography>
               <TextField
-                id="standard-full-width"
                 placeholder="Reason"
                 fullWidth
                 onChange={this.handleChangeReason}

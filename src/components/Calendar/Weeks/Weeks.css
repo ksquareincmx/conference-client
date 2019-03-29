@@ -21,6 +21,21 @@
   align-items: flex-end;
   border-bottom-color: white;
   color: #7f7f7f;
+  background-color: white;
   font-size: 21px;
   font-weight: 200;
+}
+
+.week .rbc-today {
+  color: #3049a1;
+}
+
+.week .rbc-event-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.week .rbc-event-label {
+  display: none;
 }
