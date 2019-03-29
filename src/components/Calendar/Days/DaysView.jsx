@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core";
 import "./Days.css";
 import classNames from "classnames";
 import { mapEventsByRoom } from "mappers/AppointmentMapper";
-import { getEventColors } from "mappers/RoomMapper";
+import { getEventColors } from "utils/BookingColors";
 import fp from "lodash/fp";
 import cuid from "cuid";
 

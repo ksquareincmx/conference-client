@@ -5,7 +5,7 @@ import BigCalendar from "react-big-calendar";
 import "./Months.css";
 import fp from "lodash/fp";
 import { formatEvents } from "mappers/AppointmentMapper";
-import { getEventColors } from "mappers/RoomMapper";
+import { getEventColors } from "utils/BookingColors";
 
 const styles = theme => ({
   gridContainer: {
