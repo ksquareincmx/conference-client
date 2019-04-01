@@ -1,5 +1,6 @@
+import { validateUserInfo, validateJWT } from "utils/sessionInfo";
 /**
- * @typedef {Object} AuthToken
+ * @typedef {Object} JWT
  * @property {number} expires - token expiration time.
  * @property {RefreshToken} refreshToken - refresh token information.
  * @property {string} token - authorization token.
@@ -22,7 +23,7 @@
 
 /**
  * @typedef {Object} SessionInfo
- * @property {AuthToken} token - authorization token.
+ * @property {JWT} token - authorization token.
  * @property {User} user - user info.
  */
 
@@ -34,16 +35,22 @@
 
 export const StorageService = () => {
   /**
-   * Return authorization token.
-   * @returns {AuthToken} -
+   * Return JWT.
+   * @returns {JWT | string} - JWT if is valid, empty string if not.
    */
-  const getJWT = () => JSON.parse(localStorage.getItem("cb_jwt"));
+  const getJWT = () => {
+    const jwt = JSON.parse(localStorage.getItem("cb_jwt"));
+    return validateJWT(jwt);
+  };
 
   /**
    * Returns user info.
-   * @returns {User}
+   * @returns {User | string} - user info if is valid, empty string if not.
    */
-  const getUserInfo = () => JSON.parse(localStorage.getItem("cb_user"));
+  const getUserInfo = () => {
+    const user = JSON.parse(localStorage.getItem("cb_user"));
+    return validateUserInfo(user);
+  };
 
   /**
    * Update local storage with actual session info.

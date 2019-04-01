@@ -2,8 +2,6 @@ import { servicesRoutes } from "./services-routes";
 
 export const APIGateway = () => {
   const doGet = async (service, config) => {
-    /* I don't fell confortable doing this but
-    if this is the only way... */
     const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
     const { authToken } = config;
@@ -29,7 +27,7 @@ export const APIGateway = () => {
       return await fetch(serviceURI, {
         method: "POST",
         body,
-        header: {
+        headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`
         }
@@ -48,7 +46,7 @@ export const APIGateway = () => {
       return await fetch(serviceURI, {
         method: "PUT",
         body,
-        header: {
+        headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`
         }
