@@ -19,7 +19,7 @@ class ModalFormProviderComponent extends React.Component {
     isModalOpen: false
   };
 
-  handleOnClickCreateMeeting = booking => {
+  handleClickCreateBooking = booking => {
     if (booking.start) {
       return this.setState({
         isModalOpen: true,
@@ -38,7 +38,7 @@ class ModalFormProviderComponent extends React.Component {
     });
   };
 
-  handleOnClickEditMeeting = booking => {
+  handleClickEditBooking = booking => {
     const { id: sessionUserId } = this.props.auth.user;
     const { user_id: bookingUserId } = booking;
     if (sessionUserId === bookingUserId) {
@@ -70,8 +70,8 @@ class ModalFormProviderComponent extends React.Component {
     return (
       <ModalFormContext.Provider
         value={{
-          handleOnClickCreateMeeting: this.handleOnClickCreateMeeting,
-          handleOnClickEditMeeting: this.handleOnClickEditMeeting,
+          handleOnClickCreateMeeting: this.handleClickCreateBooking,
+          handleOnClickEditMeeting: this.handleClickEditBooking,
           handleOnCloseModal: this.handleOnCloseModal
         }}
       >

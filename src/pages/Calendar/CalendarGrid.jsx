@@ -6,32 +6,31 @@ import * as Utils from "./Utils.js";
 import CalendarStrategy from "./CalendarStrategy";
 import { getUTCDateFilter } from "utils/BookingFilters";
 import { bookingService, roomService } from "services";
+import { Event } from "components/Calendar";
+import { withNotifications } from "hocs";
 
-export class CalendarGrid extends React.Component {
-  constructor(...args) {
-    super(...args);
-    this.state = {
-      events: [],
-      rooms: [],
-      appointmentInfo: {
-        start: {
-          hours: "0",
-          minutes: "0"
-        },
-        end: {
-          hours: "0",
-          minutes: "0"
-        },
-        roomId: 0,
-        date: {
-          day: 0,
-          month: 0,
-          year: 0
-        },
-        reasonAppointment: ""
-      }
-    };
-  }
+class CalendarGridComponent extends React.Component {
+  state = {
+    events: [],
+    rooms: [],
+    appointmentInfo: {
+      start: {
+        hours: "0",
+        minutes: "0"
+      },
+      end: {
+        hours: "0",
+        minutes: "0"
+      },
+      roomId: 0,
+      date: {
+        day: 0,
+        month: 0,
+        year: 0
+      },
+      reasonAppointment: ""
+    }
+  };
 
   handleClickCreateBookingDraggingCalendar = async () => {
     const post = AppointmentMapper.toDto(this.state.appointmentInfo);
@@ -47,12 +46,8 @@ export class CalendarGrid extends React.Component {
     });
   };
 
-  handleEventView = ({ event }) => {
-    return (
-      <span>
-        <strong>{event.title}</strong>
-      </span>
-    );
+  customEventView = ({ event }) => {
+    return <Event content={event.title} />;
   };
 
   handleSelect = (roomId, roomName) => event => {
@@ -67,15 +62,23 @@ export class CalendarGrid extends React.Component {
     const title = 1;
 
     if (end < new Date()) {
-      return alert(
-        "La fecha de finalización no puede ser previa a la fecha actual"
-      );
+      return this.shootNotification({
+        message: {
+          reason: "Failed to create the appointment",
+          details: "A meeting can't be booked before today's date and time"
+        },
+        sticker: {
+          color: "grey",
+          text: "X"
+        },
+        variant: "error"
+      });
     }
 
     this.props.onCreate(appointmentInfo);
   };
 
-  printAppointments = async () => {
+  fetchBookings = async () => {
     const bookingsList = await bookingService.getAllWithDetails(
       getUTCDateFilter()
     );
@@ -86,8 +89,18 @@ export class CalendarGrid extends React.Component {
   };
 
   componentDidMount() {
-    this.printAppointments();
+    this.fetchBookings();
   }
+
+  shootNotification = content => {
+    // TODO: This functionality must be in a provider
+    const { notify } = this.props;
+    const configOptions = {
+      autoDismissTimeout: 5000,
+      autoDismiss: true
+    };
+    notify(content, configOptions);
+  };
 
   render() {
     return (
@@ -98,7 +111,7 @@ export class CalendarGrid extends React.Component {
           roomList={this.state.rooms}
           handleSelect={this.handleSelect}
           components={{
-            event: this.handleEventView
+            event: this.customEventView
           }}
           localizer={Utils.localizer}
           minDate={Utils.minDate}
@@ -118,3 +131,5 @@ export class CalendarGrid extends React.Component {
     );
   }
 }
+
+export const CalendarGrid = withNotifications(CalendarGridComponent);

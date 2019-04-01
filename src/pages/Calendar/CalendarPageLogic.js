@@ -17,13 +17,10 @@ const styles = theme => ({
 });
 
 class CalendarPageLogicComponent extends React.Component {
-  constructor(...args) {
-    super(...args);
-    this.state = {
-      selector: "day",
-      focusDate: new Date()
-    };
-  }
+  state = {
+    selector: "day",
+    focusDate: new Date()
+  };
 
   handlerOnClickViewButton = buttonIdentifier => () => {
     this.setState({
