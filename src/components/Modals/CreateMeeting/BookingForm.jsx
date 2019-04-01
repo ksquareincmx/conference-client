@@ -181,7 +181,6 @@ class BookingFormComponent extends React.Component {
           }
           // Can't edit for problems with the date or the schedule
           // Change this for form validation
-          console.log(res);
           return alert(res);
         } catch (error) {
           return this.shootNotification({
@@ -252,14 +251,28 @@ class BookingFormComponent extends React.Component {
     let date = "";
 
     if (this.props.quickAppointment) {
-      date = this.getDate();
       if (!this.state.quickAppointment) {
+        const { start, end, roomName, roomId } = this.props.bookingClickedObj;
+        const startDate = formatDate(start);
+        const endDate = formatDate(end);
+
         this.setState({
           quickAppointment: true,
-          disabledDate: true,
-          date: date,
+          room: roomName,
+          roomId: roomId,
+          date: formatDashedDate(startDate),
+          startTime: {
+            hour: formatHours(startDate),
+            minute: formatMinutes(startDate)
+          },
+          endTime: {
+            hour: formatHours(endDate),
+            minute: formatMinutes(endDate)
+          },
           disabledStartTimeSelect: false,
-          roomId: this.props.roomId
+          disabledEndTimeSelect: false,
+          disabledConferenceSelect: false,
+          disabledNextButton: roomName ? false : true
         });
       }
     } else if (this.props.bookingClicked) {
@@ -321,11 +334,6 @@ class BookingFormComponent extends React.Component {
         isInvalidDate={this.state.isInvalidDate}
       />
     );
-
-    let room = this.props.room;
-    if (this.state.bookingClicked) {
-      room = this.props.bookingClickedObj.roomName;
-    }
 
     const formTitle = this.props.bookingClicked
       ? "Edit Meeting"
@@ -400,7 +408,7 @@ class BookingFormComponent extends React.Component {
               <RoomSelect
                 disabled={this.state.disabledConferenceSelect}
                 setRoom={this.setRoom}
-                room={room}
+                room={this.state.room}
               />
             </Grid>
             <Grid container direction="column" className={content}>

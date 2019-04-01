@@ -143,7 +143,7 @@ const dayGrid = props => room => {
         formats={{ timeGutterFormat: "hh:mm A", dayFormat: "ddd D" }}
         localizer={localizer}
         onSelectEvent={event => alert(event.title)}
-        onSelectSlot={room ? handleSelect(room.id) : null}
+        onSelectSlot={room ? handleSelect(room.id, room.name) : null}
         timeslots={timeSlots}
         components={components}
         date={date}

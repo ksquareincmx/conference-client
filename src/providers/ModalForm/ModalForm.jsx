@@ -19,11 +19,21 @@ class ModalFormProviderComponent extends React.Component {
     isModalOpen: false
   };
 
-  handleOnClickCreateMeeting = () => {
-    this.setState({
+  handleOnClickCreateMeeting = booking => {
+    if (booking.start) {
+      return this.setState({
+        isModalOpen: true,
+        room: booking.roomName,
+        bookingClicked: false,
+        quickAppointment: true,
+        bookingClickedObj: booking
+      });
+    }
+    return this.setState({
       isModalOpen: true,
       room: null,
       bookingClicked: false,
+      quickAppointment: false,
       roomId: null
     });
   };
@@ -35,6 +45,7 @@ class ModalFormProviderComponent extends React.Component {
       this.setState({
         isModalOpen: true,
         bookingClicked: true,
+        quickAppointment: false,
         bookingClickedObj: booking
       });
     }
@@ -49,6 +60,7 @@ class ModalFormProviderComponent extends React.Component {
       isModalOpen,
       bookingClicked,
       bookingClickedObj,
+      quickAppointment,
       room,
       roomId
     } = this.state;
@@ -74,6 +86,7 @@ class ModalFormProviderComponent extends React.Component {
             roomId={roomId}
             bookingClicked={bookingClicked}
             bookingClickedObj={bookingClickedObj}
+            quickAppointment={quickAppointment}
             handleOnCloseModal={this.handleOnCloseModal}
           />
         </Modal>

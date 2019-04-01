@@ -6,6 +6,7 @@ import "./Weeks.css";
 import fp from "lodash/fp";
 import { formatEvents } from "mappers/AppointmentMapper";
 import { getEventColors } from "utils/Colors";
+import { getOffsets } from "utils/OffSets";
 
 const styles = theme => ({
   gridContainer: {
@@ -35,9 +36,12 @@ const customTimeSlotWrapper = ({ children }) =>
 const customEventWrapper = eventWrapper => {
   const { children, event } = eventWrapper;
   const styles = getEventColors(event.color);
+  const { right, left } = getOffsets(event.color);
   return React.cloneElement(Children.only(children), {
     style: {
       ...children.props.style,
+      left: left,
+      right: right,
       width: "50%",
       fontSize: "0.8em",
       textAlign: "center",
@@ -102,7 +106,7 @@ const WeeksViewComponent = props => {
           localizer={localizer}
           formats={{ dayFormat: "dddd D" }}
           onSelectEvent={event => alert(event.title)}
-          onSelectSlot={handleSelect(0)}
+          onSelectSlot={handleSelect()}
           timeslots={timeSlots}
           components={components}
           date={date}
