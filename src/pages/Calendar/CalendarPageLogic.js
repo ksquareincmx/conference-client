@@ -2,16 +2,13 @@ import React, { Fragment } from "react";
 import dates from "react-big-calendar/lib/utils/dates";
 import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import DraggingCalendar from "components/Modals/DraggingCalendar";
 import { HeaderView } from "components/Calendar";
-import * as AppointmentMapper from "mappers/AppointmentMapper";
 import * as Utils from "./Utils.js";
 import HeaderStrategy from "./HeaderStrategy";
-import CalendarStrategy from "./CalendarStrategy";
 import { Grid, withStyles } from "@material-ui/core";
 import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar.jsx";
-import { getUTCDateFilter } from "utils/BookingFilters";
-import { bookingService, roomService } from "services";
+import { CalendarGrid } from "./CalendarGrid";
+import { ModalFormConsumer } from "providers";
 
 const styles = theme => ({
   calendarContainer: {
@@ -20,97 +17,9 @@ const styles = theme => ({
 });
 
 class CalendarPageLogicComponent extends React.Component {
-  constructor(...args) {
-    super(...args);
-    this.state = {
-      events: [],
-      rooms: [],
-      selector: "day",
-      focusDate: new Date(),
-      appointmentInfo: {
-        start: {
-          hours: "0",
-          minutes: "0"
-        },
-        end: {
-          hours: "0",
-          minutes: "0"
-        },
-        roomId: 0,
-        date: {
-          day: 0,
-          month: 0,
-          year: 0
-        },
-        reasonAppointment: ""
-      }
-    };
-  }
-
-  handleClickCreateBookingDraggingCalendar = async () => {
-    const post = AppointmentMapper.toDto(this.state.appointmentInfo);
-    const res = await bookingService.createOne(post);
-    this.props.history.push("/calendar");
-  };
-
-  handleChangeReasonAppointment = event => {
-    const keyPressed = event.target.value;
-    this.setState(prevState => {
-      prevState.appointmentInfo.reasonAppointment = keyPressed;
-      return prevState;
-    });
-  };
-  handleEventView = ({ event }) => {
-    return (
-      <span>
-        <strong>{event.title}</strong>
-      </span>
-    );
-  };
-
-  handleSelect = conferenceRoomName => event => {
-    const start = event.start;
-    const end = event.end;
-    const appointmentInfo = {
-      start: {
-        hours: start.getHours(),
-        minutes: start.getMinutes()
-      },
-      end: {
-        hours: end.getHours(),
-        minutes: end.getMinutes()
-      },
-      date: {
-        day: start.getDate(),
-        month: start.getMonth() + 1,
-        year: start.getFullYear()
-      },
-      roomId: conferenceRoomName + 1,
-      reasonAppointment: ""
-    };
-    const title = 1;
-
-    if (title) {
-      if (end < new Date()) {
-        return alert(
-          "La fecha de finalización no puede ser previa a la fecha actual"
-        );
-      }
-
-      this.setState(prevState => {
-        prevState.events[conferenceRoomName].push({
-          start,
-          end,
-          title,
-          roomId: conferenceRoomName
-        });
-        return {
-          events: prevState.events,
-          coordinates: event.bounds,
-          appointmentInfo: appointmentInfo
-        };
-      });
-    }
+  state = {
+    selector: "day",
+    focusDate: new Date()
   };
 
   handlerOnClickViewButton = buttonIdentifier => () => {
@@ -133,20 +42,6 @@ class CalendarPageLogicComponent extends React.Component {
       focusDate: dates.add(prevState.focusDate, 1, viewType)
     }));
   };
-
-  printAppointments = async () => {
-    const bookingsList = await bookingService.getAllWithDetails(
-      getUTCDateFilter()
-    );
-    const roomList = await roomService.getAll();
-    const ROOMS_PER_CALENDAR = 2;
-    roomList.length = ROOMS_PER_CALENDAR;
-    this.setState({ events: bookingsList.bookings, rooms: roomList });
-  };
-
-  componentDidMount() {
-    this.printAppointments();
-  }
 
   render() {
     const { calendarContainer } = this.props.classes;
@@ -178,28 +73,15 @@ class CalendarPageLogicComponent extends React.Component {
                     />
                   }
                 />
-                <CalendarStrategy
-                  type={this.state.selector}
-                  bookings={this.state.events}
-                  roomList={this.state.rooms}
-                  handleSelect={this.handleSelect}
-                  components={{
-                    event: this.handleEventView
-                  }}
-                  localizer={Utils.localizer}
-                  minDate={Utils.minDate}
-                  maxDate={Utils.maxDate}
-                  step={Utils.step}
-                  timeSlots={Utils.timeSlots}
-                  date={this.state.focusDate}
-                />
-
-                <DraggingCalendar
-                  coordinates={this.state.coordinates}
-                  appointmentInfo={this.state.appointmentInfo}
-                  onChange={this.handleChangeReasonAppointment}
-                  onClick={this.handleClickCreateBookingDraggingCalendar}
-                />
+                <ModalFormConsumer>
+                  {modalForm => (
+                    <CalendarGrid
+                      type={this.state.selector}
+                      date={this.state.focusDate}
+                      onCreate={modalForm.handleOnClickCreateMeeting}
+                    />
+                  )}
+                </ModalFormConsumer>
               </div>
             </Grid>
           </Grid>

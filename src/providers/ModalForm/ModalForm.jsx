@@ -19,22 +19,33 @@ class ModalFormProviderComponent extends React.Component {
     isModalOpen: false
   };
 
-  handleOnClickCreateMeeting = () => {
-    this.setState({
+  handleClickCreateBooking = booking => {
+    if (booking.start) {
+      return this.setState({
+        isModalOpen: true,
+        room: booking.roomName,
+        bookingClicked: false,
+        quickAppointment: true,
+        bookingClickedObj: booking
+      });
+    }
+    return this.setState({
       isModalOpen: true,
       room: null,
       bookingClicked: false,
+      quickAppointment: false,
       roomId: null
     });
   };
 
-  handleOnClickEditMeeting = booking => {
+  handleClickEditBooking = booking => {
     const { id: sessionUserId } = this.props.auth.user;
     const { user_id: bookingUserId } = booking;
     if (sessionUserId === bookingUserId) {
       this.setState({
         isModalOpen: true,
         bookingClicked: true,
+        quickAppointment: false,
         bookingClickedObj: booking
       });
     }
@@ -49,6 +60,7 @@ class ModalFormProviderComponent extends React.Component {
       isModalOpen,
       bookingClicked,
       bookingClickedObj,
+      quickAppointment,
       room,
       roomId
     } = this.state;
@@ -58,8 +70,8 @@ class ModalFormProviderComponent extends React.Component {
     return (
       <ModalFormContext.Provider
         value={{
-          handleOnClickCreateMeeting: this.handleOnClickCreateMeeting,
-          handleOnClickEditMeeting: this.handleOnClickEditMeeting,
+          handleOnClickCreateMeeting: this.handleClickCreateBooking,
+          handleOnClickEditMeeting: this.handleClickEditBooking,
           handleOnCloseModal: this.handleOnCloseModal
         }}
       >
@@ -74,6 +86,7 @@ class ModalFormProviderComponent extends React.Component {
             roomId={roomId}
             bookingClicked={bookingClicked}
             bookingClickedObj={bookingClickedObj}
+            quickAppointment={quickAppointment}
             handleOnCloseModal={this.handleOnCloseModal}
           />
         </Modal>

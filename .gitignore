@@ -22,3 +22,4 @@ yarn-error.log*
 
 # package-lock.json should not be committed
 package-lock.json
+yarn.lock
