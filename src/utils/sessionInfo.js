@@ -1,8 +1,8 @@
 import { compose, prop, defaultTo } from "lodash/fp";
 
-const validateUserInfo = compose(defaultTo(""));
+const validateUserInfo = defaultTo("");
 
-const validateJWT = compose(defaultTo(""));
+const validateJWT = defaultTo("");
 
 const getUserName = compose(
   defaultTo(""),
