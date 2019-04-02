@@ -1,6 +1,29 @@
 import { servicesRoutes } from "./services-routes";
 
+// TODO: Define the interfaces when TS is installed
+/**
+ * @typedef {Object} doGETConfig
+ */
+
+/**
+ * @typedef {Object} doPOSTConfig
+ */
+
+/**
+ * @typedef {Object} doUPDATEConfig
+ */
+
+/**
+ * @typedef {Object} doDELETEConfig
+ */
+
 export const APIGateway = () => {
+  /**
+   * Do a GET Request to API
+   * @param {string} service  - service name.
+   * @param {doGETConfig} config - get request config.
+   * @return {Promise} - Result of the request
+   */
   const doGet = async (service, config) => {
     const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
@@ -18,6 +41,12 @@ export const APIGateway = () => {
     }
   };
 
+  /**
+   * Do a POST Request to API
+   * @param {string} service  - service name.
+   * @param {doPOSTConfig} config - post request config.
+   * @return {Promise} - Result of the request
+   */
   const doPost = async (service, config) => {
     const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
@@ -37,6 +66,12 @@ export const APIGateway = () => {
     }
   };
 
+  /**
+   * Do a UPDATE Request to API
+   * @param {string} service  - service name.
+   * @param {doUPDATEConfig} config - update request config.
+   * @return {Promise} - Result of the request
+   */
   const doUpdate = async (service, config) => {
     const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
@@ -56,6 +91,12 @@ export const APIGateway = () => {
     }
   };
 
+  /**
+   * Do a DELETE Request to API
+   * @param {string} service  - service name.
+   * @param {doDELETEConfig} config - delete request config.
+   * @return {Promise} - Result of the request
+   */
   const doDelete = async (service, config) => {
     const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
