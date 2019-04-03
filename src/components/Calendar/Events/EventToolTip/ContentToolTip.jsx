@@ -31,7 +31,7 @@ const styles = theme => {
 };
 
 const ContentComponent = props => {
-  const { content, classes: styleClasses } = props;
+  const { content, onClickDelete, classes: styleClasses } = props;
   const {
     start,
     end,
@@ -57,7 +57,7 @@ const ContentComponent = props => {
         <div className={actions}>
           <Button
             variant="contained"
-            onClick={this.handleOnClickCancel}
+            onClick={onClickDelete}
             className={cancelBtn}
           >
             Cancel

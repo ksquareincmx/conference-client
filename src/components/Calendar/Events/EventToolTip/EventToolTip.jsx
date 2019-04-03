@@ -1,6 +1,16 @@
 import React, { Fragment } from "react";
 import { ContentToolTip } from "./ContentToolTip";
+import { ConfirmationDialog } from "components/Modals/DeleteBooking/ConfirmationDialog";
 import { withStyles, Tooltip, ClickAwayListener } from "@material-ui/core";
+import {
+  getDateText,
+  formatDate,
+  formatTime,
+  abbreviateName
+} from "utils/BookingFormater";
+import { storageService, bookingService } from "services";
+import { withNotifications } from "hocs";
+import { capitalize } from "lodash/fp";
 
 const arrowGenerator = color => {
   return {
@@ -126,12 +136,98 @@ const getTooltipColor = (color, styles) => {
 
 class EventToolTipComponent extends React.Component {
   state = {
-    arrowRef: null
+    arrowRef: null,
+    openDialog: false
   };
 
   handleArrowRef = node => {
     this.setState({
       arrowRef: node
+    });
+  };
+
+  handleOpenDialog = () => {
+    this.setState({ openDialog: true });
+  };
+
+  handleCloseDialog = () => {
+    this.setState({ openDialog: false });
+  };
+
+  shootNotification = content => {
+    // TODO: This functionality must be in a provider
+    const { notify } = this.props;
+    const configOptions = {
+      autoDismissTimeout: 5000,
+      autoDismiss: true
+    };
+    notify(content, configOptions);
+  };
+
+  handleDelete = async () => {
+    const {
+      start,
+      end,
+      title,
+      userId,
+      roomId,
+      roomName,
+      color,
+      bookingId,
+      desc
+    } = this.props.content;
+    const { id: sessionUserId } = storageService.getUserInfo();
+    if (sessionUserId === userId) {
+      try {
+        const res = await bookingService.deleteOneById(bookingId);
+        if (res.ok) {
+          return this.shootNotification({
+            message: {
+              reason: "Appointment successfully deleted",
+              details: `${title} deleted an appointment in ${roomName}`
+            },
+            sticker: {
+              color: color,
+              text: abbreviateName(capitalize(roomName))
+            },
+            variant: "success"
+          });
+        }
+        return this.shootNotification({
+          message: {
+            reason: "The appointment failed to be deleted",
+            details: `${title} tried to delete an appointment in ${roomName}`
+          },
+          sticker: {
+            color: "grey",
+            text: "X"
+          },
+          variant: "error"
+        });
+      } catch (error) {
+        return this.shootNotification({
+          message: {
+            reason: "The appointment failed to be deleted",
+            details: `Something went wrong with the server`
+          },
+          sticker: {
+            color: "grey",
+            text: "X"
+          },
+          variant: "error"
+        });
+      }
+    }
+    return this.shootNotification({
+      message: {
+        reason: "Not allowed",
+        details: `You ar not allowed to delete this appointment`
+      },
+      sticker: {
+        color: "grey",
+        text: "X"
+      },
+      variant: "error"
     });
   };
 
@@ -151,7 +247,13 @@ class EventToolTipComponent extends React.Component {
       bootstrapPlacementTop,
       bootstrapPlacementBottom
     } = styleClasses;
-    const { color } = content;
+    const { start, end, roomName, color } = content;
+    const bookingFormated = {
+      roomName,
+      dateText: getDateText(formatDate(start)),
+      startTime: formatTime(formatDate(start)),
+      endTime: formatTime(formatDate(end))
+    };
     const tooltipStyleColors = getTooltipColor(color, styleClasses);
     const toolTipClasses = {
       ...tooltipStyleColors,
@@ -172,29 +274,42 @@ class EventToolTipComponent extends React.Component {
     };
 
     return (
-      <ClickAwayListener onClickAway={handleTooltipClose}>
-        <Tooltip
-          title={
-            <Fragment>
-              <ContentToolTip content={content} />
-              <span className={arrow} ref={this.handleArrowRef} />
-            </Fragment>
-          }
-          classes={{ ...toolTipClasses }}
-          PopperProps={popperProps}
-          placement={"right"}
-          interactive
-          onClose={handleTooltipClose}
-          open={isOpen}
-          disableFocusListener
-          disableHoverListener
-          disableTouchListener
-        >
-          {children}
-        </Tooltip>
-      </ClickAwayListener>
+      <Fragment>
+        <ClickAwayListener onClickAway={handleTooltipClose}>
+          <Tooltip
+            title={
+              <Fragment>
+                <ContentToolTip
+                  content={content}
+                  onClickDelete={this.handleOpenDialog}
+                />
+                <span className={arrow} ref={this.handleArrowRef} />
+              </Fragment>
+            }
+            classes={{ ...toolTipClasses }}
+            PopperProps={popperProps}
+            placement={"right"}
+            interactive
+            onClose={handleTooltipClose}
+            open={isOpen}
+            disableFocusListener
+            disableHoverListener
+            disableTouchListener
+          >
+            {children}
+          </Tooltip>
+        </ClickAwayListener>
+        <ConfirmationDialog
+          handleClickYes={this.handleDelete}
+          booking={bookingFormated}
+          open={this.state.openDialog}
+          onClose={this.handleCloseDialog}
+        />
+      </Fragment>
     );
   }
 }
 
-export const EventToolTip = withStyles(styles)(EventToolTipComponent);
+export const EventToolTip = withStyles(styles)(
+  withNotifications(EventToolTipComponent)
+);
