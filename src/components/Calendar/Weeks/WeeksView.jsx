@@ -105,7 +105,6 @@ const WeeksViewComponent = props => {
           max={maxDate}
           localizer={localizer}
           formats={{ dayFormat: "dddd D" }}
-          onSelectEvent={event => alert(event.title)}
           onSelectSlot={handleSelect()}
           timeslots={timeSlots}
           components={components}

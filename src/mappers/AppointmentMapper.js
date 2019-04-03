@@ -38,8 +38,10 @@ export const formatEvents = bookings => {
       end: formatDate(booking.end).toDate(),
       title: booking.user.name,
       roomId: booking.room.id,
+      roomName: booking.room.name,
       color: booking.room.color,
-      bookingId: booking.id
+      bookingId: booking.id,
+      desc: booking.description
     };
   });
 };
