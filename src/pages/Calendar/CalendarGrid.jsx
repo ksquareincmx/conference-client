@@ -46,8 +46,8 @@ class CalendarGridComponent extends React.Component {
     });
   };
 
-  customEventView = ({ event }) => {
-    return <Event content={event.title} />;
+  customEventView = content => {
+    return <Event content={content} />;
   };
 
   handleSelect = (roomId, roomName) => event => {

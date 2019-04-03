@@ -85,7 +85,7 @@ export const BookingService = storageService => {
         start,
         end,
         description,
-        roomId,
+        room_id: roomId,
         attendees
       },
       authToken
