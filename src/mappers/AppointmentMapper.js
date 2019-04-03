@@ -37,6 +37,7 @@ export const formatEvents = bookings => {
       start: formatDate(booking.start).toDate(),
       end: formatDate(booking.end).toDate(),
       title: booking.user.name,
+      userId: booking.user.id,
       roomId: booking.room.id,
       roomName: booking.room.name,
       color: booking.room.color,
