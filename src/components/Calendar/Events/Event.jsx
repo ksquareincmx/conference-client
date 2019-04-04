@@ -1,6 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 import { EventToolTip } from "./EventToolTip/EventToolTip";
+import { ModalFormConsumer } from "providers";
 
 const styles = theme => {
   return {
@@ -33,16 +34,21 @@ class EventComponent extends React.Component {
     const { eventContainter } = styleClasses;
 
     return (
-      <EventToolTip
-        content={content.event}
-        handleTooltipClose={this.handleTooltipClose}
-        handleTooltipOpen={this.handleTooltipOpen}
-        open={this.state.isOpen}
-      >
-        <div className={eventContainter} onClick={this.handleTooltipOpen}>
-          <strong>{title}</strong>
-        </div>
-      </EventToolTip>
+      <ModalFormConsumer>
+        {({ handleOnClickEditMeeting }) => (
+          <EventToolTip
+            content={content.event}
+            handleTooltipClose={this.handleTooltipClose}
+            handleTooltipOpen={this.handleTooltipOpen}
+            onEdit={handleOnClickEditMeeting}
+            open={this.state.isOpen}
+          >
+            <div className={eventContainter} onClick={this.handleTooltipOpen}>
+              <strong>{title}</strong>
+            </div>
+          </EventToolTip>
+        )}
+      </ModalFormConsumer>
     );
   }
 }

@@ -280,11 +280,11 @@ class BookingFormComponent extends React.Component {
         const {
           start,
           end,
-          roomName,
-          room_id: roomId,
+          room,
           description,
           attendees
         } = this.props.bookingClickedObj;
+        const { name: roomName, id: roomId } = room;
 
         const startDate = formatDate(start);
         const endDate = formatDate(end);
