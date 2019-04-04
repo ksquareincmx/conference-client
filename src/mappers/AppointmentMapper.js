@@ -42,7 +42,8 @@ export const formatEvents = bookings => {
       roomName: booking.room.name,
       color: booking.room.color,
       bookingId: booking.id,
-      desc: booking.description
+      desc: booking.description,
+      booking
     };
   });
 };

@@ -31,7 +31,7 @@ const styles = theme => {
 };
 
 const ContentComponent = props => {
-  const { content, onClickDelete, classes: styleClasses } = props;
+  const { content, onClickEdit, onClickDelete, classes: styleClasses } = props;
   const {
     start,
     end,
@@ -64,7 +64,7 @@ const ContentComponent = props => {
           </Button>
           <Button
             variant="contained"
-            onClick={this.handlehandleOnClickYes}
+            onClick={onClickEdit}
             color="primary"
             className={editBtn}
           >

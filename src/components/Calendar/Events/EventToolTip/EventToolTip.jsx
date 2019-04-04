@@ -164,6 +164,10 @@ class EventToolTipComponent extends React.Component {
     notify(content, configOptions);
   };
 
+  handleEdit = () => {
+    this.props.onEdit(this.props.content.booking);
+  };
+
   handleDelete = async () => {
     const {
       start,
@@ -281,6 +285,7 @@ class EventToolTipComponent extends React.Component {
               <Fragment>
                 <ContentToolTip
                   content={content}
+                  onClickEdit={this.handleEdit}
                   onClickDelete={this.handleOpenDialog}
                 />
                 <span className={arrow} ref={this.handleArrowRef} />
