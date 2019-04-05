@@ -83,10 +83,9 @@ const validateBooking = bookingObj => {
   );
   const isWorkingHours = validateWorkingHours(startDate, endDate);
 
-  const isAfterCurrentHour = validateIsAfterCurrentHour(
-    startDate.unix(),
-    moment().unix()
-  );
+  const isAfterCurrentHour = isCoherentDate
+    ? validateIsAfterCurrentHour(startDate.unix(), moment().unix())
+    : true;
 
   const isValidHour =
     isDiferentHour && isCoherentHour && isWorkingHours && isAfterCurrentHour;
