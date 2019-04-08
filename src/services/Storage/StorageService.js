@@ -1,4 +1,10 @@
-import { validateUserInfo, validateJWT } from "utils/sessionInfo";
+import {
+  validateUserInfo,
+  validateJWT,
+  validateUserName
+} from "utils/sessionInfo";
+import compose from "lodash/fp/compose";
+
 /**
  * @typedef {Object} JWT
  * @property {number} expires - token expiration time.
@@ -35,22 +41,42 @@ import { validateUserInfo, validateJWT } from "utils/sessionInfo";
 
 export const StorageService = () => {
   /**
+   * Returns an item in local storage
+   * @param {string} item - item name in local storage
+   * @returns {Object} - an item
+   */
+  const getItem = item => JSON.parse(localStorage.getItem(item));
+
+  /**
    * Return JWT.
    * @returns {JWT | string} - JWT if is valid, empty string if not.
    */
-  const getJWT = () => {
-    const jwt = JSON.parse(localStorage.getItem("cb_jwt"));
-    return validateJWT(jwt);
-  };
+  const getJWT = () =>
+    compose(
+      validateJWT,
+      getItem
+    )("cb_jwt");
 
   /**
    * Returns user info.
    * @returns {User | string} - user info if is valid, empty string if not.
    */
-  const getUserInfo = () => {
-    const user = JSON.parse(localStorage.getItem("cb_user"));
-    return validateUserInfo(user);
-  };
+  const getUserInfo = () =>
+    compose(
+      validateUserInfo,
+      getItem
+    )("cb_user");
+
+  /**
+   * Returns user name.
+   * @param {User} - user info.
+   * @returns {string} - user name
+   */
+  const getUserName = () =>
+    compose(
+      validateUserName,
+      getUserInfo
+    )();
 
   /**
    * Update local storage with actual session info.
@@ -64,6 +90,7 @@ export const StorageService = () => {
   return {
     getJWT,
     getUserInfo,
+    getUserName,
     updateInfoInStorage
   };
 };

@@ -107,7 +107,7 @@ const validateBooking = bookingObj => {
     : "A meeting can't start or finish after 18:00";
 
   return {
-    specificValidations: {
+    InfoValidations: {
       invalidWeekendMessage: weekendMessage,
       invalidDateMessage: dateMessage,
       invalidHourMessage: hourMessage,

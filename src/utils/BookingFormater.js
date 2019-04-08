@@ -1,4 +1,5 @@
 import moment from "moment";
+import { compose, capitalize } from "lodash/fp";
 
 export const normaliceTZ = date => moment(date).local();
 
@@ -31,5 +32,7 @@ export const formatHours = date => date.format("HH");
 
 export const formatMinutes = date => date.format("mm");
 
-export const abbreviateName = name =>
-  `${name.substring(0, 1)}${name.substring(name.length - 1)}`;
+export const abbreviateRoomName = compose(
+  capitalize,
+  name => `${name.substring(0, 1)}${name.substring(name.length - 1)}`
+);
