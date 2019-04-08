@@ -51,7 +51,8 @@ class ModalFormProviderComponent extends React.Component {
   };
 
   handleClickEditBooking = booking => {
-    const { userId, room } = booking;
+    const { user, room } = booking;
+    const { id: userId } = user;
     const { name: roomName, id: roomId } = room;
     const { id: sessionUserId } = storageService.getUserInfo();
     if (sessionUserId === userId) {
