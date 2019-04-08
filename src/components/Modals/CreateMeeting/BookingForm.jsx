@@ -79,18 +79,7 @@ class BookingFormComponent extends React.Component {
     disabledNextButton: true,
     disabledDate: false,
     quickAppointment: false,
-<<<<<<< HEAD
     isBookingEdition: false,
-=======
-    bookingClicked: false,
-    date: "",
-    startTime: "",
-    endTime: "",
-    room: "",
-    roomId: "",
-    reasonAppointmentText: "",
-    attendees: [],
->>>>>>> fcd84ab92f97d39ff69932068372bf7b45fe4fd9
     refreshChipList: false,
     isInvalidDate: false,
     isInvalidHour: false,
@@ -278,13 +267,8 @@ class BookingFormComponent extends React.Component {
       }
     } else if (this.props.isBookingEdition) {
       if (!this.state.isBookingEdition) {
-        const {
-          start,
-          end,
-          room,
-          description,
-          attendees
-        } = this.props.bookingForEdition;
+        const { bookingForEdition, roomId, roomName } = this.props;
+        const { start, end, room, description, attendees } = bookingForEdition;
 
         const startDate = formatDate(start);
         const endDate = formatDate(end);

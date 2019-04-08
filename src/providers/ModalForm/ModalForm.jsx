@@ -19,28 +19,40 @@ class ModalFormProviderComponent extends React.Component {
   };
 
   handleClickCreateBooking = booking => {
-    // This comes from the calendar grid
     if (booking.start) {
-      return this.setState({
-        isModalOpen: true,
-        room: booking.roomName,
-        bookingClicked: false,
-        quickAppointment: true,
-        bookingClickedObj: booking
-      });
+      this.handleCreationFromCalendar(booking);
+      return;
     }
-    // This comes from the button
-    return this.setState({
+    this.handleCreationFromButton();
+    return;
+  };
+
+  handleCreationFromCalendar = booking => {
+    const { roomName } = booking;
+    this.setState({
+      isModalOpen: true,
+      room: roomName,
+      bookingClicked: false,
+      quickAppointment: true,
+      bookingClickedObj: booking
+    });
+    return;
+  };
+
+  handleCreationFromButton = () => {
+    this.setState({
       isModalOpen: true,
       room: null,
       bookingClicked: false,
       quickAppointment: false,
       roomId: null
     });
+    return;
   };
 
   handleClickEditBooking = booking => {
-    const { userId } = booking;
+    const { userId, room } = booking;
+    const { name: roomName, id: roomId } = room;
     const { id: sessionUserId } = storageService.getUserInfo();
     if (sessionUserId === userId) {
       this.setState({
@@ -48,8 +60,8 @@ class ModalFormProviderComponent extends React.Component {
         bookingClicked: true,
         quickAppointment: false,
         bookingClickedObj: booking,
-        room: booking.room.name,
-        roomId: booking.room.id
+        roomName,
+        roomId
       });
     }
   };
@@ -64,9 +76,10 @@ class ModalFormProviderComponent extends React.Component {
       bookingClicked,
       bookingClickedObj,
       quickAppointment,
-      room,
+      roomName,
       roomId
     } = this.state;
+
     const {
       classes: { modal },
       children,
@@ -88,7 +101,7 @@ class ModalFormProviderComponent extends React.Component {
           onClose={this.handleModalClose}
         >
           <BookingForm
-            room={room}
+            roomName={roomName}
             roomId={roomId}
             isBookingEdition={bookingClicked}
             bookingForEdition={bookingClickedObj}

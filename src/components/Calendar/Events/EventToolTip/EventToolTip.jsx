@@ -6,11 +6,10 @@ import {
   getDateText,
   formatDate,
   formatTime,
-  abbreviateName
+  abbreviateRoomName
 } from "utils/BookingFormater";
 import { storageService, bookingService } from "services";
 import { withNotifications } from "hocs";
-import { capitalize } from "lodash/fp";
 
 const arrowGenerator = color => {
   return {
@@ -192,7 +191,7 @@ class EventToolTipComponent extends React.Component {
             },
             sticker: {
               color: color,
-              text: abbreviateName(capitalize(roomName))
+              text: abbreviateRoomName(roomName)
             },
             variant: "success"
           });
