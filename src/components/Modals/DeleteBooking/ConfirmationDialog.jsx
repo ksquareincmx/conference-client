@@ -31,7 +31,7 @@ const styles = theme => ({
   remarkedTxt: {
     fontWeight: "bold"
   },
-  yesBtn: {
+  confirmationBtn: {
     color: "white",
     width: 84,
     fontWeight: "bold",
@@ -51,73 +51,63 @@ const styles = theme => ({
   }
 });
 
-class ConfirmationDialogComponent extends React.Component {
-  handleOnClickCancel = () => {
-    this.props.onClose();
-  };
+const ConfirmationDialogComponent = ({
+  isOpen,
+  bookingInfo,
+  onConfirmation,
+  onCancel,
+  classes: styleClasses
+}) => {
+  const { roomName, startTime, endTime, dateText } = bookingInfo;
+  const {
+    dialog,
+    title,
+    content,
+    divider,
+    remarkedTxt,
+    btnsContainer,
+    confirmationBtn,
+    cancelBtn
+  } = styleClasses;
 
-  handlehandleOnClickYes = () => {
-    this.props.onClose();
-    this.props.handleClickYes();
-  };
-
-  render() {
-    const { booking, classes: styleClasses, onClose, open } = this.props;
-    const { roomName, startTime, endTime, dateText } = booking;
-    const {
-      dialog,
-      title,
-      content,
-      divider,
-      remarkedTxt,
-      btnsContainer,
-      yesBtn,
-      cancelBtn
-    } = styleClasses;
-
-    return (
-      <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
-        onClose={onClose}
-        open={open}
-      >
-        <div className={dialog}>
-          <Typography variant="h4" className={title}>
-            Delete Meeting
-          </Typography>
-          <Divider className={divider} />
-          <DialogContent className={content}>
-            <p>
-              Are you sure you want to delete the meeting in{" "}
-              <span className={remarkedTxt}>{roomName}</span> from{" "}
-              <span className={remarkedTxt}>{startTime}</span> to{" "}
-              <span className={remarkedTxt}>{endTime}</span> for{" "}
-              <span className={remarkedTxt}>{dateText}</span>?
-            </p>
-          </DialogContent>
-          <DialogActions className={btnsContainer}>
-            <Button
-              variant="contained"
-              onClick={this.handleOnClickCancel}
-              className={cancelBtn}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={this.handlehandleOnClickYes}
-              color="primary"
-              className={yesBtn}
-            >
-              Yes
-            </Button>
-          </DialogActions>
-        </div>
-      </Dialog>
-    );
-  }
-}
+  return (
+    <Dialog
+      disableBackdropClick
+      disableEscapeKeyDown
+      onClose={onCancel}
+      open={isOpen}
+    >
+      <div className={dialog}>
+        <Typography variant="h4" className={title}>
+          Delete Meeting
+        </Typography>
+        <Divider className={divider} />
+        <DialogContent className={content}>
+          <p>
+            Are you sure you want to delete the meeting in{" "}
+            <span className={remarkedTxt}>{roomName}</span> from{" "}
+            <span className={remarkedTxt}>{startTime}</span> to{" "}
+            <span className={remarkedTxt}>{endTime}</span> for{" "}
+            <span className={remarkedTxt}>{dateText}</span>?
+          </p>
+        </DialogContent>
+        <DialogActions className={btnsContainer}>
+          <Button className={cancelBtn} variant="contained" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button
+            className={confirmationBtn}
+            variant="contained"
+            color="primary"
+            onClick={onConfirmation}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </div>
+    </Dialog>
+  );
+};
 
 export const ConfirmationDialog = withStyles(styles)(
   ConfirmationDialogComponent
