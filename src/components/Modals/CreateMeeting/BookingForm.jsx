@@ -79,7 +79,18 @@ class BookingFormComponent extends React.Component {
     disabledNextButton: true,
     disabledDate: false,
     quickAppointment: false,
+<<<<<<< HEAD
     isBookingEdition: false,
+=======
+    bookingClicked: false,
+    date: "",
+    startTime: "",
+    endTime: "",
+    room: "",
+    roomId: "",
+    reasonAppointmentText: "",
+    attendees: [],
+>>>>>>> fcd84ab92f97d39ff69932068372bf7b45fe4fd9
     refreshChipList: false,
     isInvalidDate: false,
     isInvalidHour: false,
@@ -270,8 +281,7 @@ class BookingFormComponent extends React.Component {
         const {
           start,
           end,
-          roomName,
-          room_id: roomId,
+          room,
           description,
           attendees
         } = this.props.bookingForEdition;
@@ -393,6 +403,7 @@ class BookingFormComponent extends React.Component {
                 disabled={this.state.disabledConferenceSelect}
                 setRoom={this.setRoom}
                 room={this.state.room}
+                roomId={this.state.roomId}
               />
             </Grid>
             <Grid container direction="column" className={content}>

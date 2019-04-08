@@ -29,49 +29,28 @@ class RoomSelect extends React.Component {
   }
 
   render() {
-    let roomSelect;
-
-    if (this.props.room) {
-      const idx =
-        this.state.rooms.findIndex(room => {
-          return room.name === this.props.room;
-        }) + 1;
-
-      roomSelect = (
-        <Select
-          value={idx}
-          onChange={this.handleOnChange}
-          style={this.styles.select}
-          disabled={this.props.disabled}
-        >
-          {this.state.rooms.map(room => (
-            <MenuItem value={room.id} key={cuid()}>
-              {" "}
-              {room.name}
-            </MenuItem>
-          ))}
-        </Select>
-      );
-    } else {
-      roomSelect = (
-        <Select
-          value={this.state.roomSelected}
-          onChange={this.handleOnChange}
-          style={this.styles.select}
-          disabled={this.props.disabled}
-          displayEmpty
-        >
+    const roomSelect = (
+      <Select
+        value={roomId ? roomId : this.state.roomSelected}
+        onChange={this.handleOnChange}
+        style={this.styles.select}
+        disabled={this.props.disabled}
+        displayEmpty={roomId ? false : true}
+      >
+        {roomId ? (
+          " "
+        ) : (
           <MenuItem value="" disabled>
             Room
           </MenuItem>
-          {this.state.rooms.map(room => (
-            <MenuItem value={room.id} key={cuid()}>
-              {room.name}
-            </MenuItem>
-          ))}
-        </Select>
-      );
-    }
+        )}
+        {this.state.rooms.map(room => (
+          <MenuItem value={room.id} key={cuid()}>
+            {room.name}
+          </MenuItem>
+        ))}
+      </Select>
+    );
 
     return (
       <Grid item xs={6}>
