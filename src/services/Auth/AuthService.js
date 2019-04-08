@@ -1,3 +1,5 @@
+import { apiGateway } from "gateways";
+
 /**
  * @typedef {Object} Profile
  * @property {number} id - profile id
@@ -36,21 +38,17 @@ export const AuthService = () => {
    * @returns {Credentials}
    */
   const login = async idToken => {
-    const url = `${process.env.REACT_APP_SERVER_URI}auth/googlelogin`;
+    const config = {
+      createBody: {
+        idToken
+      },
+      authToken: ""
+    };
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          idToken
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      return new Error("An error occurred whith the request");
+      const res = await apiGateway.doPost("logInWithGoogle", config);
+      return await res.json();
+    } catch (error) {
+      return Promise.reject(new Error(error.message));
     }
   };
 
