@@ -6,7 +6,7 @@ export function withAuthContext(Component) {
   return function WrappedComponent(props) {
     return (
       <AuthConsumer>
-        {auth => <Component context={auth} {...props} />}
+        {auth => <Component authContext={auth} {...props} />}
       </AuthConsumer>
     );
   };
