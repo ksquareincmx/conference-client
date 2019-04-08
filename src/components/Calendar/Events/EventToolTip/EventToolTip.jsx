@@ -304,10 +304,10 @@ class EventToolTipComponent extends React.Component {
           </Tooltip>
         </ClickAwayListener>
         <ConfirmationDialog
-          handleClickYes={this.handleDelete}
-          booking={bookingFormated}
-          open={this.state.openDialog}
-          onClose={this.handleCloseDialog}
+          onConfirmation={this.handleDelete}
+          bookingInfo={bookingFormated}
+          isOpen={this.state.openDialog}
+          onCancel={this.handleCloseDialog}
         />
       </Fragment>
     );
