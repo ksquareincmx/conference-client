@@ -74,6 +74,7 @@ class BookingFormComponent extends React.Component {
     startTime: "",
     endTime: "",
     room: "",
+    roomId: "",
     reasonAppointmentText: "",
     attendees: [],
     refreshChipList: false,
@@ -280,11 +281,11 @@ class BookingFormComponent extends React.Component {
         const {
           start,
           end,
-          roomName,
-          room_id: roomId,
+          room,
           description,
           attendees
         } = this.props.bookingClickedObj;
+        const { name: roomName, id: roomId } = room;
 
         const startDate = formatDate(start);
         const endDate = formatDate(end);
@@ -409,6 +410,7 @@ class BookingFormComponent extends React.Component {
                 disabled={this.state.disabledConferenceSelect}
                 setRoom={this.setRoom}
                 room={this.state.room}
+                roomId={this.state.roomId}
               />
             </Grid>
             <Grid container direction="column" className={content}>

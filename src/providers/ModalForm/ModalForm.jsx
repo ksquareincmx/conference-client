@@ -46,7 +46,9 @@ class ModalFormProviderComponent extends React.Component {
         isModalOpen: true,
         bookingClicked: true,
         quickAppointment: false,
-        bookingClickedObj: booking
+        bookingClickedObj: booking,
+        room: booking.room.name,
+        roomId: booking.room.id
       });
     }
   };

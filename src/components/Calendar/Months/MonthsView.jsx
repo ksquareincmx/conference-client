@@ -77,6 +77,7 @@ const MonthsViewComponent = props => {
           localizer={localizer}
           components={components}
           date={date}
+          popup={true}
           onNavigate={fp.noop}
         />
       </div>
