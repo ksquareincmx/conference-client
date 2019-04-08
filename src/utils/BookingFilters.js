@@ -28,7 +28,7 @@ export const getUTCDateFilter = () => {
 export const filterNSortedByDate = bookingItems =>
   sortByDate(filterByDate(bookingItems));
 
-export const filterBySearchTerm = (bookingItems, searchTerm) =>
+export const filterByTerm = (bookingItems, searchTerm) =>
   bookingItems.filter(
     ({ userName, roomName, roomNameAbbrev, description, dateText }) =>
       `${userName} ${roomName} ${roomNameAbbrev} ${description} ${dateText}`
