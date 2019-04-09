@@ -25,6 +25,7 @@ import {
   formatHours,
   formatMinutes
 } from "utils/BookingFormater";
+import { mapToPost } from "mappers/AppointmentMapper";
 import addZeros from "utils/AddZeros";
 import { mapToNotificationContentFormat } from "mappers/bookingMapper";
 import { bookingService } from "services";
@@ -142,7 +143,7 @@ class BookingFormComponent extends React.Component {
 
   handleBookingOperation = async () => {
     const { isBookingEdition } = this.state;
-    const booking = postDto(this.state);
+    const booking = mapToPost(this.state);
     const isBookingValid = this.validate(booking);
     const {
       onSuccessNotification,
@@ -447,25 +448,6 @@ class BookingFormComponent extends React.Component {
     );
   }
 }
-
-const postDto = newBooking => {
-  const {
-    bookingReason,
-    roomId,
-    date,
-    startTime,
-    endTime,
-    attendees
-  } = newBooking;
-
-  return {
-    roomId,
-    attendees,
-    description: bookingReason,
-    start: `${date}T${startTime.hour}:${startTime.minute}:00.000-06:00`,
-    end: `${date}T${endTime.hour}:${endTime.minute}:00.000-06:00`
-  };
-};
 
 const withContexts = compose(
   withStyles(styles),
