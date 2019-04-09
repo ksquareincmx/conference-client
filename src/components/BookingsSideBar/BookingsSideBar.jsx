@@ -48,7 +48,9 @@ class BookingsSideBarComponent extends React.Component {
     return (
       <Grid container className={siderBarContainer}>
         <Card className={searchBarCard} square elevation={1}>
-          <Typography className={searchBarCardTittle}>Bookings Made</Typography>
+          <Typography className={searchBarCardTittle}>
+            Appointments Made
+          </Typography>
           <SearchBar onChange={this.handleFilterTermChange} />
         </Card>
         <BookingList

@@ -126,7 +126,7 @@ const HeaderViewComponent = props => {
               onClick={modalForm.handleOnClickCreateMeeting}
               variant={"contained"}
             >
-              CREATE MEETING
+              CREATE APPOINTMENT
             </Button>
           )}
         </ModalFormConsumer>

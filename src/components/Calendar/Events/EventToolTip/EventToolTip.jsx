@@ -154,7 +154,11 @@ class EventToolTipComponent extends React.Component {
   };
 
   handleBookingDeleteOperation = async () => {
-    const { onSuccessNotification, onErrorNotification } = this.props;
+    const {
+      onSuccessNotification,
+      onErrorNotification,
+      onBookingsDataChange
+    } = this.props;
     try {
       const bookingInfo = await this.doBookingDelete();
       this.handleDialogClose();
@@ -162,6 +166,7 @@ class EventToolTipComponent extends React.Component {
         bookingInfo,
         notificationType: "delete"
       });
+      onBookingsDataChange();
       return;
     } catch (error) {
       const { title, body } = error;
@@ -191,7 +196,7 @@ class EventToolTipComponent extends React.Component {
         return alert(deleteResponse);
       } catch (error) {
         return Promise.reject({
-          title: "Booking delete fail's",
+          title: "Appointment delete fail's",
           body: "There was an error with the server"
         });
       }
