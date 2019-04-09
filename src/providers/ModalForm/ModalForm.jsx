@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, withStyles } from "@material-ui/core";
 import { BookingForm } from "components/Modals/CreateMeeting/BookingForm";
+import { storageService } from "services";
 
 const styles = theme => ({
   modal: { width: "100%", height: "100%" }
@@ -12,8 +13,6 @@ const ModalFormContext = React.createContext({
   handleOnCloseModal: () => {}
 });
 
-export const ModalFormConsumer = ModalFormContext.Consumer;
-
 class ModalFormProviderComponent extends React.Component {
   state = {
     isModalOpen: false
@@ -21,39 +20,54 @@ class ModalFormProviderComponent extends React.Component {
 
   handleClickCreateBooking = booking => {
     if (booking.start) {
-      return this.setState({
-        isModalOpen: true,
-        room: booking.roomName,
-        bookingClicked: false,
-        quickAppointment: true,
-        bookingClickedObj: booking
-      });
+      this.handleCreationFromCalendar(booking);
+      return;
     }
-    return this.setState({
+    this.handleCreationFromButton();
+    return;
+  };
+
+  handleCreationFromCalendar = booking => {
+    const { roomName } = booking;
+    this.setState({
+      isModalOpen: true,
+      room: roomName,
+      bookingClicked: false,
+      quickAppointment: true,
+      bookingClickedObj: booking
+    });
+    return;
+  };
+
+  handleCreationFromButton = () => {
+    this.setState({
       isModalOpen: true,
       room: null,
       bookingClicked: false,
       quickAppointment: false,
       roomId: null
     });
+    return;
   };
 
   handleClickEditBooking = booking => {
-    const { id: sessionUserId } = this.props.auth.user;
-    const { user_id: bookingUserId } = booking;
-    if (sessionUserId === bookingUserId) {
+    const { user, room } = booking;
+    const { id: userId } = user;
+    const { name: roomName, id: roomId } = room;
+    const { id: sessionUserId } = storageService.getUserInfo();
+    if (sessionUserId === userId) {
       this.setState({
         isModalOpen: true,
         bookingClicked: true,
         quickAppointment: false,
         bookingClickedObj: booking,
-        room: booking.room.name,
-        roomId: booking.room.id
+        roomName,
+        roomId
       });
     }
   };
 
-  handleOnCloseModal = () => {
+  handleModalClose = () => {
     this.setState({ isModalOpen: false });
   };
 
@@ -63,33 +77,38 @@ class ModalFormProviderComponent extends React.Component {
       bookingClicked,
       bookingClickedObj,
       quickAppointment,
-      room,
+      roomName,
       roomId
     } = this.state;
-    const { classes: styleClasses, children } = this.props;
-    const { modal } = styleClasses;
+
+    const {
+      classes: { modal },
+      children,
+      onBookingsDataChange
+    } = this.props;
 
     return (
       <ModalFormContext.Provider
         value={{
           handleOnClickCreateMeeting: this.handleClickCreateBooking,
           handleOnClickEditMeeting: this.handleClickEditBooking,
-          handleOnCloseModal: this.handleOnCloseModal
+          handleOnCloseModal: this.handleModalClose
         }}
       >
         <Modal
           className={modal}
           open={isModalOpen}
           disableAutoFocus={true}
-          onClose={this.handleOnCloseModal}
+          onClose={this.handleModalClose}
         >
           <BookingForm
-            room={room}
+            roomName={roomName}
             roomId={roomId}
-            bookingClicked={bookingClicked}
-            bookingClickedObj={bookingClickedObj}
+            isBookingEdition={bookingClicked}
+            bookingForEdition={bookingClickedObj}
             quickAppointment={quickAppointment}
-            handleOnCloseModal={this.handleOnCloseModal}
+            onModalClose={this.handleModalClose}
+            onBookingsDataChange={onBookingsDataChange}
           />
         </Modal>
         {children}
@@ -98,4 +117,6 @@ class ModalFormProviderComponent extends React.Component {
   }
 }
 
-export const ModalFormProvider = withStyles(styles)(ModalFormProviderComponent);
+const ModalFormConsumer = ModalFormContext.Consumer;
+const ModalFormProvider = withStyles(styles)(ModalFormProviderComponent);
+export { ModalFormProvider, ModalFormConsumer };

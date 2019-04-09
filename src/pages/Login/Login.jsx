@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { withStyles } from "@material-ui/core/";
 import { LoginCard } from "./LoginCard";
-import { withAuthContext } from "../../hocs/Auth";
+import { withAuthContext } from "hocs";
 import background from "./login.jpg";
 
 const style = theme => ({
@@ -15,11 +15,13 @@ const style = theme => ({
   }
 });
 
-const Login = ({ context: { isAuth, onLogin }, classes: { loginPage } }) => {
+const Login = ({ authContext, classes: { loginPage } }) => {
+  const { isAuth } = authContext;
   if (isAuth) {
     return <Redirect to="/calendar" />;
   }
 
+  const { onLogin } = authContext;
   return (
     <div className={loginPage}>
       <LoginCard onLogin={onLogin} />

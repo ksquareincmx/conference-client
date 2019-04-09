@@ -2,11 +2,16 @@ const userServiceURI = `${process.env.REACT_APP_SERVER_URI}User/`;
 const profileServiceURI = `${process.env.REACT_APP_SERVER_URI}Profile/`;
 const bookingServiceURI = `${process.env.REACT_APP_SERVER_URI}Booking/`;
 const roomServiceURI = `${process.env.REACT_APP_SERVER_URI}Room/`;
+const googleAuthURI = `${process.env.REACT_APP_SERVER_URI}auth/googlelogin`;
 
 export const servicesRoutes = {
+  // token
+  logInWithGoogle: {
+    getServiceURI: config => googleAuthURI
+  },
   // User
   createUser: {
-    getServiceURI: config => `${userServiceURI}`
+    getServiceURI: config => userServiceURI
   },
   getUserById: {
     getServiceURI: ({ id }) => `${userServiceURI}${id}`
@@ -19,13 +24,13 @@ export const servicesRoutes = {
   },
   // Profile
   createProfile: {
-    getServiceURI: config => `${profileServiceURI}`
+    getServiceURI: config => profileServiceURI
   },
   getProfileById: {
     getServiceURI: ({ id }) => `${profileServiceURI}${id}`
   },
   getAllProfiles: {
-    getServiceURI: config => `${profileServiceURI}`
+    getServiceURI: config => profileServiceURI
   },
   updateProfileById: {
     getServiceURI: ({ id }) => `${profileServiceURI}${id}`
@@ -35,13 +40,13 @@ export const servicesRoutes = {
   },
   // Room
   createRoom: {
-    getServiceURI: config => `${roomServiceURI}`
+    getServiceURI: config => roomServiceURI
   },
   getRoomById: {
     getServiceURI: ({ id }) => `${roomServiceURI}${id}`
   },
   getAllRooms: {
-    getServiceURI: config => `${roomServiceURI}`
+    getServiceURI: config => roomServiceURI
   },
   updateRoomById: {
     getServiceURI: ({ id }) => `${roomServiceURI}${id}`
@@ -51,13 +56,13 @@ export const servicesRoutes = {
   },
   // Booking
   createBooking: {
-    getServiceURI: config => `${bookingServiceURI}`
+    getServiceURI: config => bookingServiceURI
   },
   getBookingById: {
     getServiceURI: ({ id }) => `${bookingServiceURI}${id}`
   },
   getAllBookings: {
-    getServiceURI: config => `${bookingServiceURI}`
+    getServiceURI: config => bookingServiceURI
   },
   getDetailedBookings: {
     getServiceURI: ({ filterDate }) => {

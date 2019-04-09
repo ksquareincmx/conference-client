@@ -18,6 +18,7 @@ class CalendarGridComponent extends React.Component {
   };
 
   handleSelect = (roomId, roomName) => event => {
+    const { onErrorNotification } = this.props;
     const start = event.start;
     const end = event.end;
     const appointmentInfo = {
@@ -26,19 +27,11 @@ class CalendarGridComponent extends React.Component {
       roomName,
       roomId
     };
-    const title = 1;
 
     if (end < new Date()) {
-      return this.shootNotification({
-        message: {
-          reason: "Failed to create the appointment",
-          details: "A meeting can't be booked before today's date and time"
-        },
-        sticker: {
-          color: "grey",
-          text: "X"
-        },
-        variant: "error"
+      return onErrorNotification({
+        title: "Failed to create the appointment",
+        body: "A meeting can't be booked before today's date and time"
       });
     }
 
@@ -58,16 +51,6 @@ class CalendarGridComponent extends React.Component {
   componentDidMount() {
     this.fetchBookings();
   }
-
-  shootNotification = content => {
-    // TODO: This functionality must be in a provider
-    const { notify } = this.props;
-    const configOptions = {
-      autoDismissTimeout: 5000,
-      autoDismiss: true
-    };
-    notify(content, configOptions);
-  };
 
   render() {
     return (

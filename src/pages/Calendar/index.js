@@ -1,1 +1,1 @@
-export { CalendarWithAuthContext as Calendar } from "./Calendar";
+export { CalendarContainer as Calendar } from "./CalendarContainer";

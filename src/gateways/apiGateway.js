@@ -1,4 +1,4 @@
-import { servicesRoutes } from "./services-routes";
+import { servicesRoutes } from "./servicesRoutes";
 
 // TODO: Define the interfaces when TS is installed
 /**

@@ -1,4 +1,6 @@
-import { validateUserInfo, validateJWT } from "utils/sessionInfo";
+import { validateUserInfo, validateJWT, getName } from "utils/sessionInfo";
+import compose from "lodash/fp/compose";
+
 /**
  * @typedef {Object} JWT
  * @property {number} expires - token expiration time.
@@ -35,35 +37,64 @@ import { validateUserInfo, validateJWT } from "utils/sessionInfo";
 
 export const StorageService = () => {
   /**
+   * This is necessary for mantain the context of 'this'
+   */
+  const set = localStorage.setItem.bind(localStorage);
+  const get = localStorage.getItem.bind(localStorage);
+
+  /**
+   * Returns an item in local storage
+   * @param {string} item - item name in local storage
+   * @returns {Object} - an item
+   */
+  const getItem = compose(
+    JSON.parse,
+    get
+  );
+
+  /**
    * Return JWT.
    * @returns {JWT | string} - JWT if is valid, empty string if not.
    */
-  const getJWT = () => {
-    const jwt = JSON.parse(localStorage.getItem("cb_jwt"));
-    return validateJWT(jwt);
-  };
+  const getJWT = () =>
+    compose(
+      validateJWT,
+      getItem
+    )("cb_jwt");
 
   /**
    * Returns user info.
    * @returns {User | string} - user info if is valid, empty string if not.
    */
-  const getUserInfo = () => {
-    const user = JSON.parse(localStorage.getItem("cb_user"));
-    return validateUserInfo(user);
-  };
+  const getUserInfo = () =>
+    compose(
+      validateUserInfo,
+      getItem
+    )("cb_user");
+
+  /**
+   * Returns user name.
+   * @param {User} - user info.
+   * @returns {string} - user name
+   */
+  const getUserName = compose(
+    getName,
+    getUserInfo
+  );
 
   /**
    * Update local storage with actual session info.
    * @param {SessionInfo} sessionInfo - session info.
    */
   const updateInfoInStorage = ({ jwt, user }) => {
-    localStorage.setItem("cb_jwt", JSON.stringify(jwt));
-    localStorage.setItem("cb_user", JSON.stringify(user));
+    set("cb_jwt", JSON.stringify(jwt));
+    set("cb_user", JSON.stringify(user));
   };
 
   return {
     getJWT,
     getUserInfo,
+    getUserName,
     updateInfoInStorage
   };
 };

@@ -4,14 +4,19 @@ import classNames from "classnames";
 
 const style = theme => ({
   snackBarSticker: {
+    width: 65,
+    height: 65,
+    marginLeft: 10,
+    marginTop: 10,
     position: "absolute",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    opacity: 0.6
+    opacity: 0.6,
+    borderRadius: 5
   },
   snackBarStickerContent: {
-    fontSize: 35,
+    fontSize: 40,
     fontWeight: "bold"
   }
 });
@@ -19,14 +24,10 @@ const style = theme => ({
 const SnackBarStickerComponent = ({
   color,
   text,
-  classes: { snackBarSticker, snackBarStickerContent },
-  overrideClass
+  classes: { snackBarSticker, snackBarStickerContent }
 }) => {
   return (
-    <div
-      className={classNames(snackBarSticker, overrideClass)}
-      style={{ background: `light${color}` }}
-    >
+    <div className={snackBarSticker} style={{ background: `light${color}` }}>
       <div className={snackBarStickerContent} style={{ color: `dark${color}` }}>
         {text}
       </div>

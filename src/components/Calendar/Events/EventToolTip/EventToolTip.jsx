@@ -2,15 +2,10 @@ import React, { Fragment } from "react";
 import { ContentToolTip } from "./ContentToolTip";
 import { ConfirmationDialog } from "components/Modals/DeleteBooking/ConfirmationDialog";
 import { withStyles, Tooltip, ClickAwayListener } from "@material-ui/core";
-import {
-  getDateText,
-  formatDate,
-  formatTime,
-  abbreviateName
-} from "utils/BookingFormater";
+import { getDateText, formatDate, formatTime } from "utils/BookingFormater";
+import { mapToNotificationContentFormat } from "mappers/bookingMapper";
 import { storageService, bookingService } from "services";
 import { withNotifications } from "hocs";
-import { capitalize } from "lodash/fp";
 
 const arrowGenerator = color => {
   return {
@@ -137,7 +132,7 @@ const getTooltipColor = (color, styles) => {
 class EventToolTipComponent extends React.Component {
   state = {
     arrowRef: null,
-    openDialog: false
+    isDialogOpen: false
   };
 
   handleArrowRef = node => {
@@ -146,93 +141,61 @@ class EventToolTipComponent extends React.Component {
     });
   };
 
-  handleOpenDialog = () => {
-    this.setState({ openDialog: true });
+  handleDialogOpen = () => {
+    this.setState({ isDialogOpen: true });
   };
 
-  handleCloseDialog = () => {
-    this.setState({ openDialog: false });
-  };
-
-  shootNotification = content => {
-    // TODO: This functionality must be in a provider
-    const { notify } = this.props;
-    const configOptions = {
-      autoDismissTimeout: 5000,
-      autoDismiss: true
-    };
-    notify(content, configOptions);
+  handleDialogClose = () => {
+    this.setState({ isDialogOpen: false });
   };
 
   handleEdit = () => {
     this.props.onEdit(this.props.content.booking);
   };
 
-  handleDelete = async () => {
-    const {
-      start,
-      end,
-      title,
-      userId,
-      roomId,
-      roomName,
-      color,
-      bookingId,
-      desc
-    } = this.props.content;
+  handleBookingDeleteOperation = async () => {
+    const { onSuccessNotification, onErrorNotification } = this.props;
+    try {
+      const bookingInfo = await this.doBookingDelete();
+      this.handleDialogClose();
+      onSuccessNotification({
+        bookingInfo,
+        notificationType: "delete"
+      });
+      return;
+    } catch (error) {
+      const { title, body } = error;
+      this.handleDialogClose();
+      onErrorNotification({
+        title,
+        body
+      });
+      return;
+    }
+  };
+
+  doBookingDelete = async () => {
+    const { booking } = this.props.content;
+    const { id: userId } = booking.user;
+    const { id: bookingId } = booking;
     const { id: sessionUserId } = storageService.getUserInfo();
     if (sessionUserId === userId) {
       try {
-        const res = await bookingService.deleteOneById(bookingId);
-        if (res.ok) {
-          return this.shootNotification({
-            message: {
-              reason: "Appointment successfully deleted",
-              details: `${title} deleted an appointment in ${roomName}`
-            },
-            sticker: {
-              color: color,
-              text: abbreviateName(capitalize(roomName))
-            },
-            variant: "success"
-          });
+        const deleteResponse = await bookingService.deleteOneById(bookingId);
+        const { ok } = deleteResponse;
+        if (ok) {
+          return mapToNotificationContentFormat(booking);
         }
-        return this.shootNotification({
-          message: {
-            reason: "The appointment failed to be deleted",
-            details: `${title} tried to delete an appointment in ${roomName}`
-          },
-          sticker: {
-            color: "grey",
-            text: "X"
-          },
-          variant: "error"
-        });
+
+        // TODO: Check this kind fo errors
+        return alert(deleteResponse);
       } catch (error) {
-        return this.shootNotification({
-          message: {
-            reason: "The appointment failed to be deleted",
-            details: `Something went wrong with the server`
-          },
-          sticker: {
-            color: "grey",
-            text: "X"
-          },
-          variant: "error"
+        return Promise.reject({
+          title: "Booking delete fail's",
+          body: "There was an error with the server"
         });
       }
     }
-    return this.shootNotification({
-      message: {
-        reason: "Not allowed",
-        details: `You ar not allowed to delete this appointment`
-      },
-      sticker: {
-        color: "grey",
-        text: "X"
-      },
-      variant: "error"
-    });
   };
 
   render() {
@@ -286,7 +249,7 @@ class EventToolTipComponent extends React.Component {
                 <ContentToolTip
                   content={content}
                   onClickEdit={this.handleEdit}
-                  onClickDelete={this.handleOpenDialog}
+                  onClickDelete={this.handleDialogOpen}
                 />
                 <span className={arrow} ref={this.handleArrowRef} />
               </Fragment>
@@ -305,10 +268,10 @@ class EventToolTipComponent extends React.Component {
           </Tooltip>
         </ClickAwayListener>
         <ConfirmationDialog
-          handleClickYes={this.handleDelete}
-          booking={bookingFormated}
-          open={this.state.openDialog}
-          onClose={this.handleCloseDialog}
+          onConfirmation={this.handleBookingDeleteOperation}
+          bookingInfo={bookingFormated}
+          isOpen={this.state.isDialogOpen}
+          onCancel={this.handleDialogClose}
         />
       </Fragment>
     );

@@ -29,6 +29,7 @@ class RoomSelect extends React.Component {
   }
 
   render() {
+    const { roomId } = this.props;
     const roomSelect = (
       <Select
         value={roomId ? roomId : this.state.roomSelected}
