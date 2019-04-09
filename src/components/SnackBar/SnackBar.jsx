@@ -4,26 +4,23 @@ import classNames from "classnames";
 
 const styles = theme => ({
   snackBar: {
+    width: 430,
+    height: 85,
+    boxShadow: "0px 4px 4px #888888",
     background: "#FFFFFF",
     position: "relative",
-    marginTop: 0
+    marginTop: 7,
+    marginBottom: 10
   }
 });
 
-const SnackBarComponent = ({
-  children,
-  variant,
-  classes: { snackBar },
-  overrideClass
-}) => {
-  // const green = "#00B390";
-  // const red = "#D93045";
-  const color = variant === "success" ? "green" : "red";
+const SUCCESS_COLOR = "green";
+const ERROR_COLOR = "red";
+
+const SnackBarComponent = ({ children, variant, classes: { snackBar } }) => {
+  const color = variant === "success" ? SUCCESS_COLOR : ERROR_COLOR;
   return (
-    <div
-      className={classNames(snackBar, overrideClass)}
-      style={{ borderTop: `5px solid ${color}` }}
-    >
+    <div className={snackBar} style={{ borderTop: `5px solid ${color}` }}>
       {children}
     </div>
   );

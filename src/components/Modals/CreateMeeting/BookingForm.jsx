@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { withRouter } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -11,15 +12,13 @@ import {
   Typography,
   withStyles
 } from "@material-ui/core/";
-import { withRouter } from "react-router-dom";
 import compose from "lodash/fp/compose";
-import MaterialButton from "components/MaterialButton";
-import ChipList from "components/ChipList/";
 import DatePicker from "./DatePicker";
 import TimeSelect from "./TimeSelect";
 import RoomSelect from "./RoomSelect";
-import addZeros from "utils/AddZeros";
 import { validateBooking } from "./meetingValidations";
+import MaterialButton from "components/MaterialButton";
+import ChipList from "components/ChipList";
 import {
   formatDate,
   formatDashedDate,
@@ -27,8 +26,10 @@ import {
   formatMinutes
 } from "utils/BookingFormater";
 import { mapToPost } from "mappers/AppointmentMapper";
-import { withNotifications } from "hocs";
+import addZeros from "utils/AddZeros";
+import { mapToNotificationContentFormat } from "mappers/bookingMapper";
 import { bookingService } from "services";
+import { withNotifications } from "hocs";
 
 const styles = theme => ({
   card: {
@@ -64,28 +65,27 @@ const styles = theme => ({
 
 class BookingFormComponent extends React.Component {
   state = {
+    date: "",
+    startTime: "",
+    endTime: "",
+    room: "",
+    bookingReason: "",
+    attendees: [],
+    invalidWeekendMessage: "",
+    invalidDateMessage: "",
+    invalidHourMessage: "",
     disabledEndTimeSelect: true,
     disabledStartTimeSelect: true,
     disabledConferenceSelect: true,
     disabledNextButton: true,
     disabledDate: false,
     quickAppointment: false,
-    bookingClicked: false,
-    date: "",
-    startTime: "",
-    endTime: "",
-    room: "",
-    roomId: "",
-    reasonAppointmentText: "",
-    attendees: [],
+    isBookingEdition: false,
     refreshChipList: false,
     isInvalidDate: false,
     isInvalidHour: false,
     isInvalidReason: false,
-    isInvalidInvite: false,
-    invalidWeekendMessage: "",
-    invalidDateMessage: "",
-    invalidHourMessage: ""
+    isInvalidInvite: false
   };
 
   enableStartTimeSelect = () => {
@@ -105,11 +105,11 @@ class BookingFormComponent extends React.Component {
   };
 
   setBookingStartTime = startTime => {
-    this.setState({ startTime: startTime }, () => this.enableEndTimeSelect());
+    this.setState({ startTime }, () => this.enableEndTimeSelect());
   };
 
   setBookingEndTime = endTime => {
-    this.setState({ endTime: endTime }, () => this.verifyQuickAppointment());
+    this.setState({ endTime }, () => this.verifyQuickAppointment());
   };
 
   verifyQuickAppointment = () => {
@@ -117,17 +117,6 @@ class BookingFormComponent extends React.Component {
       return this.enableNextButton();
     }
     this.enableConferenceSelect();
-  };
-
-  shootNotification = content => {
-    // TODO: This functionality must be in a provider
-    const { notify, handleOnCloseModal } = this.props;
-    const configOptions = {
-      autoDismissTimeout: 5000,
-      autoDismiss: true
-    };
-    handleOnCloseModal();
-    notify(content, configOptions);
   };
 
   setRoom = room => {
@@ -146,94 +135,94 @@ class BookingFormComponent extends React.Component {
 
   validate = bookingObj => {
     const bookingValidated = validateBooking(bookingObj);
-
     this.setState({
-      ...bookingValidated.specificValidations
+      ...bookingValidated.InfoValidations
     });
-
     return bookingValidated.isValidBooking;
   };
 
-  handleClickNext = async () => {
-    const post = mapToPost(this.state);
-    const isBookingValid = this.validate(post);
-    const { bookingClicked } = this.state;
-    const { bookingClickedObj } = this.props;
+  handleBookingOperation = async () => {
+    const { isBookingEdition } = this.state;
+    const booking = mapToPost(this.state);
+    const isBookingValid = this.validate(booking);
+    const {
+      onSuccessNotification,
+      onErrorNotification,
+      onModalClose,
+      onBookingsDataChange
+    } = this.props;
 
-    if (isBookingValid) {
-      if (bookingClicked) {
-        try {
-          const res = await bookingService.updateOneById(
-            bookingClickedObj.id,
-            post
-          );
-          const { id } = res;
-          if (id) {
-            return this.shootNotification({
-              message: {
-                reason: "Appointment Edited succesfully",
-                details: "Generic user has edited an appointment"
-              },
-              sticker: {
-                color: "blue",
-                text: "R1"
-              },
-              variant: "success"
-            });
-          }
-          // Can't edit for problems with the date or the schedule
-          // Change this for form validation
-          return alert(res);
-        } catch (error) {
-          return this.shootNotification({
-            message: {
-              reason: "Fails in the appointment creation",
-              details: "Some error happens in the server"
-            },
-            sticker: {
-              color: "gray",
-              text: "R1"
-            },
-            variant: "error"
+    try {
+      if (isBookingValid) {
+        if (isBookingEdition) {
+          const { bookingForEdition } = this.props;
+          const { id } = bookingForEdition;
+          const bookingInfo = await this.doBookingEdition(id, booking);
+          onModalClose();
+          onSuccessNotification({
+            bookingInfo,
+            notificationType: "edit"
           });
+          onBookingsDataChange();
+          return;
         }
-      }
-      try {
-        const res = await bookingService.createOne(post);
-        if (res.id) {
-          return this.shootNotification({
-            message: {
-              reason: "New Appointment created",
-              details: "Generic user has created new appointment"
-            },
-            sticker: {
-              color: "blue",
-              text: "R1"
-            },
-            variant: "success"
-          });
-        }
-        // Can't edit for problems with the date or the schedule
-        // Change this for form validation
-        return alert(res);
-      } catch (error) {
-        return this.shootNotification({
-          message: {
-            reason: "Fails in the appointment creation",
-            details: "Some error happens in the server"
-          },
-          sticker: {
-            color: "gray",
-            text: "R1"
-          },
-          variant: "error"
+        const bookingInfo = await this.doBookingCreation(booking);
+        onModalClose();
+        onSuccessNotification({
+          bookingInfo,
+          notificationType: "create"
         });
+        onBookingsDataChange();
+        return;
       }
+    } catch (error) {
+      const { title, body } = error;
+      onErrorNotification({
+        title,
+        body
+      });
+      return;
+    }
+  };
+
+  doBookingCreation = async bookingInfo => {
+    try {
+      const bookingCreated = await bookingService.createOne(bookingInfo);
+      const { id } = bookingCreated;
+      if (id) {
+        const bookingInfo = mapToNotificationContentFormat(bookingCreated);
+        return bookingInfo;
+      }
+
+      return alert(bookingCreated);
+    } catch (error) {
+      return Promise.reject({
+        title: "Booking creation fail's",
+        body: "There was an error with the server"
+      });
+    }
+  };
+
+  doBookingEdition = async (id, bookingInfo) => {
+    try {
+      const bookingEdited = await bookingService.updateOneById(id, bookingInfo);
+      const { id: bookingEditedId } = bookingEdited;
+      if (bookingEditedId) {
+        return mapToNotificationContentFormat(bookingEdited);
+      }
+      // Can't edit for problems with the date or the schedule
+      // Change this for form validation
+      return alert(bookingEdited);
+    } catch (error) {
+      return Promise.reject({
+        title: "Booking edition fail's",
+        body: "There was an error with the server"
+      });
     }
   };
 
   handleChangeReason = event => {
-    this.setState({ reasonAppointmentText: event.target.value });
+    this.setState({ bookingReason: event.target.value });
   };
 
   handleChangeInvite = attendeesList => {
@@ -254,7 +243,7 @@ class BookingFormComponent extends React.Component {
 
     if (this.props.quickAppointment) {
       if (!this.state.quickAppointment) {
-        const { start, end, roomName, roomId } = this.props.bookingClickedObj;
+        const { start, end, roomName, roomId } = this.props.bookingForEdition;
         const startDate = formatDate(start);
         const endDate = formatDate(end);
 
@@ -277,16 +266,10 @@ class BookingFormComponent extends React.Component {
           disabledNextButton: roomName ? false : true
         });
       }
-    } else if (this.props.bookingClicked) {
-      if (!this.state.bookingClicked) {
-        const {
-          start,
-          end,
-          room,
-          description,
-          attendees
-        } = this.props.bookingClickedObj;
-        const { name: roomName, id: roomId } = room;
+    } else if (this.props.isBookingEdition) {
+      if (!this.state.isBookingEdition) {
+        const { bookingForEdition, roomId, roomName } = this.props;
+        const { start, end, room, description, attendees } = bookingForEdition;
 
         const startDate = formatDate(start);
         const endDate = formatDate(end);
@@ -294,7 +277,7 @@ class BookingFormComponent extends React.Component {
         this.setState({
           room: roomName,
           roomId: roomId,
-          bookingClicked: true,
+          isBookingEdition: true,
           date: formatDashedDate(startDate),
           startTime: {
             hour: formatHours(startDate),
@@ -304,7 +287,7 @@ class BookingFormComponent extends React.Component {
             hour: formatHours(endDate),
             minute: formatMinutes(endDate)
           },
-          reasonAppointmentText: description,
+          bookingReason: description,
           attendees: attendees,
           disabledStartTimeSelect: false,
           disabledEndTimeSelect: false,
@@ -318,6 +301,7 @@ class BookingFormComponent extends React.Component {
   }
 
   render() {
+    const { isBookingEdition, classes: styleClasses } = this.props;
     const {
       card,
       root,
@@ -326,22 +310,10 @@ class BookingFormComponent extends React.Component {
       subtitle,
       alertMessage,
       helpText
-    } = this.props.classes;
+    } = styleClasses;
 
-    let date = (
-      <DatePicker
-        setDate={this.setDate}
-        disabled={this.state.disabledDate}
-        date={this.state.date}
-        isInvalidDate={this.state.isInvalidDate}
-      />
-    );
-
-    const formTitle = this.props.bookingClicked
-      ? "Edit Meeting"
-      : "New Meeting";
-
-    const buttonSaveTxt = this.props.bookingClicked ? "Edit" : "Create";
+    const formTitle = isBookingEdition ? "Edit Appointment" : "New Appointment";
+    const buttonSaveTxt = isBookingEdition ? "Edit" : "Create";
 
     return (
       <Grid
@@ -358,7 +330,12 @@ class BookingFormComponent extends React.Component {
               <Typography className={subtitle} variant="subtitle1">
                 Reservation Date
               </Typography>
-              {date}
+              <DatePicker
+                setDate={this.setDate}
+                disabled={this.state.disabledDate}
+                date={this.state.date}
+                isInvalidDate={this.state.isInvalidDate}
+              />
               <Collapse in={this.state.isInvalidDate}>
                 <small className={alertMessage}>
                   {this.state.invalidWeekendMessage !== "" ? (
@@ -426,7 +403,7 @@ class BookingFormComponent extends React.Component {
                   shrink: true
                 }}
                 error={this.state.isInvalidReason}
-                value={this.state.reasonAppointmentText}
+                value={this.state.bookingReason}
               />
               <Collapse in={this.state.isInvalidReason}>
                 <small className={alertMessage}>Reason can not be empty</small>
@@ -456,13 +433,13 @@ class BookingFormComponent extends React.Component {
               textButton="Back"
               sizeButton="large"
               colorButton="#909497"
-              onClick={this.props.handleOnCloseModal}
+              onClick={this.props.onModalClose}
             />
             <MaterialButton
               textButton={buttonSaveTxt}
               sizeButton="large"
               colorButton="#5094E3"
-              onClick={this.handleClickNext}
+              onClick={this.handleBookingOperation}
               disabled={this.state.disabledNextButton}
             />
           </CardActions>

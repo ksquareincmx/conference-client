@@ -1,4 +1,5 @@
 import { apiGateway } from "gateways";
+import { mapToRequestFormat } from "mappers/bookingMapper";
 
 /**
  * @typedef {Object} BookingRequest
@@ -79,15 +80,10 @@ export const BookingService = storageService => {
    * @param {BookingRequest} booking - booking information.
    * @return {BookingResponse} - created booking information.
    */
-  const createOne = async ({ description, roomId, start, end, attendees }) => {
+  const createOne = async booking => {
+    const createBody = mapToRequestFormat(booking);
     const config = {
-      createBody: {
-        start,
-        end,
-        description,
-        room_id: roomId,
-        attendees
-      },
+      createBody,
       authToken
     };
     try {
@@ -151,19 +147,11 @@ export const BookingService = storageService => {
    * @param {BookingRequest} booking - booking new information.
    * @return {BookingResponse} - booking updated information.
    */
-  const updateOneById = async (
-    id,
-    { description, roomId, start, end, attendees }
-  ) => {
+  const updateOneById = async (id, booking) => {
+    const updateBody = mapToRequestFormat(booking);
     const config = {
       id,
-      updateBody: {
-        description,
-        room_id: roomId,
-        start,
-        end,
-        attendees
-      },
+      updateBody,
       authToken
     };
     try {

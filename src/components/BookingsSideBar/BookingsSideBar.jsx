@@ -5,7 +5,7 @@ import { SearchBar } from "./SearchBar";
 import { BookingList } from "./BookingList/BookingList";
 
 const styles = theme => ({
-  sideBar: {
+  siderBarContainer: {
     height: 855,
     width: 460,
     display: "flex",
@@ -14,12 +14,12 @@ const styles = theme => ({
     justifyContent: "start",
     overflowY: "auto"
   },
-  headerCard: {
+  searchBarCard: {
     width: "100%",
     height: 180,
     marginBottom: 4
   },
-  title: {
+  searchBarCardTittle: {
     marginTop: 25,
     marginLeft: 50,
     fontSize: "1.8em",
@@ -30,23 +30,34 @@ const styles = theme => ({
 
 class BookingsSideBarComponent extends React.Component {
   state = {
-    searchTerm: ""
+    filterTerm: ""
   };
 
-  handleOnChangeSearch = event => {
-    this.setState({ searchTerm: event.target.value });
+  handleFilterTermChange = event => {
+    this.setState({ filterTerm: event.target.value });
   };
 
   render() {
-    const { sideBar, headerCard, title } = this.props.classes;
-    const { auth } = this.props;
+    const { filterTerm } = this.state;
+    const {
+      bookingsData,
+      onBookingsDataChange,
+      classes: { siderBarContainer, searchBarCard, searchBarCardTittle }
+    } = this.props;
+
     return (
-      <Grid container className={sideBar}>
-        <Card className={headerCard} square elevation={1}>
-          <Typography className={title}>Appointments Made</Typography>
-          <SearchBar onChange={this.handleOnChangeSearch} />
+      <Grid container className={siderBarContainer}>
+        <Card className={searchBarCard} square elevation={1}>
+          <Typography className={searchBarCardTittle}>
+            Appointments Made
+          </Typography>
+          <SearchBar onChange={this.handleFilterTermChange} />
         </Card>
-        <BookingList auth={auth} searchTerm={this.state.searchTerm} />
+        <BookingList
+          bookingsData={bookingsData}
+          filterTerm={filterTerm}
+          onBookingsDataChange={onBookingsDataChange}
+        />
       </Grid>
     );
   }

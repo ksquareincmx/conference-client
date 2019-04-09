@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import dates from "react-big-calendar/lib/utils/dates";
 import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -6,7 +6,6 @@ import { HeaderView } from "components/Calendar";
 import * as Utils from "./Utils.js";
 import HeaderStrategy from "./HeaderStrategy";
 import { Grid, withStyles } from "@material-ui/core";
-import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar.jsx";
 import { CalendarGrid } from "./CalendarGrid";
 import { ModalFormConsumer } from "providers";
 
@@ -45,48 +44,42 @@ class CalendarPageLogicComponent extends React.Component {
 
   render() {
     const { calendarContainer } = this.props.classes;
+    const { bookingsData, onBookingsDataChange } = this.props;
 
     return (
-      <Fragment>
-        <Grid container direction="row">
-          <Grid item xs={3}>
-            <BookingsSideBar auth={this.props.auth} />
-          </Grid>
-          <Grid item xs={9}>
-            <Grid container direction="column">
-              <div className={calendarContainer}>
-                <HeaderView
-                  onClickViewButton={this.handlerOnClickViewButton}
-                  headerDateContainer={
-                    <HeaderStrategy
-                      type={this.state.selector}
-                      numberDayInMonth={this.state.focusDate.getDate()}
-                      fullYear={this.state.focusDate.getFullYear()}
-                      date={this.state.focusDate}
-                      dayName={Utils.getNameDay(this.state.focusDate)}
-                      monthName={Utils.getNameMonth(this.state.focusDate)}
-                      numberWeekInYear={Utils.getWeekOfYear(
-                        this.state.focusDate
-                      )}
-                      onClickNext={this.handleOnClickNext}
-                      onClickPrev={this.handleOnClickPrev}
-                    />
-                  }
+      <Grid container direction="column">
+        <div className={calendarContainer}>
+          <HeaderView
+            onClickViewButton={this.handlerOnClickViewButton}
+            headerDateContainer={
+              <HeaderStrategy
+                type={this.state.selector}
+                numberDayInMonth={this.state.focusDate.getDate()}
+                fullYear={this.state.focusDate.getFullYear()}
+                date={this.state.focusDate}
+                dayName={Utils.getNameDay(this.state.focusDate)}
+                monthName={Utils.getNameMonth(this.state.focusDate)}
+                numberWeekInYear={Utils.getWeekOfYear(this.state.focusDate)}
+                onClickNext={this.handleOnClickNext}
+                onClickPrev={this.handleOnClickPrev}
+              />
+            }
+          />
+          <ModalFormConsumer>
+            {modalForm => {
+              return (
+                <CalendarGrid
+                  type={this.state.selector}
+                  date={this.state.focusDate}
+                  bookingsData={bookingsData}
+                  onBookingsDataChange={onBookingsDataChange}
+                  onCreate={modalForm.handleOnClickCreateMeeting}
                 />
-                <ModalFormConsumer>
-                  {modalForm => (
-                    <CalendarGrid
-                      type={this.state.selector}
-                      date={this.state.focusDate}
-                      onCreate={modalForm.handleOnClickCreateMeeting}
-                    />
-                  )}
-                </ModalFormConsumer>
-              </div>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Fragment>
+              );
+            }}
+          </ModalFormConsumer>
+        </div>
+      </Grid>
     );
   }
 }

@@ -1,38 +1,39 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/";
-import classNames from "classnames";
 
 const style = theme => ({
-  snackBarText: {
+  snackBarTextBox: {
+    top: 15,
+    left: 90,
+    width: 335,
+    height: 65,
     fontFamily: "helvetica",
-    fontsize: 20,
     position: "absolute"
   },
-  snackBarTextBoxHeader: {
-    color: "#000510",
+  snackBarTextBoxTitle: {
+    color: "#535b66",
     position: "absolute",
     fontWeight: "bold",
-    marginTop: 20,
-    marginLeft: 90
+    fontSize: 14,
+    marginTop: 10
   },
   snackBarTextBoxBody: {
     color: "#525860",
     position: "absolute",
-    marginTop: 40,
-    marginLeft: 90
+    marginTop: 30,
+    fontSize: 13
   }
 });
 
 const SnackBarTextBoxComponent = ({
-  reason,
-  details,
-  classes: { snackBarTextBox, snackBarTextBoxHeader, snackBarTextBoxBody },
-  overrideClass
+  title,
+  body,
+  classes: { snackBarTextBox, snackBarTextBoxTitle, snackBarTextBoxBody }
 }) => {
   return (
-    <div className={classNames(snackBarTextBox, overrideClass)}>
-      <div className={snackBarTextBoxHeader}>{reason}</div>
-      <div className={snackBarTextBoxBody}>{details}</div>
+    <div className={snackBarTextBox}>
+      <div className={snackBarTextBoxTitle}>{title}</div>
+      <div className={snackBarTextBoxBody}>{body}</div>
     </div>
   );
 };
