@@ -311,7 +311,7 @@ class BookingFormComponent extends React.Component {
       helpText
     } = styleClasses;
 
-    const formTitle = isBookingEdition ? "Edit Meeting" : "New Meeting";
+    const formTitle = isBookingEdition ? "Edit Appointment" : "New Appointment";
     const buttonSaveTxt = isBookingEdition ? "Edit" : "Create";
 
     return (

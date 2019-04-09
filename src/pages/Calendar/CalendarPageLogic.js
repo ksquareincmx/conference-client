@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import dates from "react-big-calendar/lib/utils/dates";
 import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -44,6 +44,7 @@ class CalendarPageLogicComponent extends React.Component {
 
   render() {
     const { calendarContainer } = this.props.classes;
+    const { bookingsData, onBookingsDataChange } = this.props;
 
     return (
       <Grid container direction="column">
@@ -70,6 +71,8 @@ class CalendarPageLogicComponent extends React.Component {
                 <CalendarGrid
                   type={this.state.selector}
                   date={this.state.focusDate}
+                  bookingsData={bookingsData}
+                  onBookingsDataChange={onBookingsDataChange}
                   onCreate={modalForm.handleOnClickCreateMeeting}
                 />
               );

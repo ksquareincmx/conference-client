@@ -33,7 +33,11 @@ const CalendarComponent = ({
             </Grid>
             <Grid item xs={9}>
               {/* TODO: Pass the onNewBooking function to the Provider */}
-              <CalendarPageLogic auth={sessionInfo} />
+              <CalendarPageLogic
+                auth={sessionInfo}
+                bookingsData={bookingsData}
+                onBookingsDataChange={onBookingsDataChange}
+              />
             </Grid>
           </Grid>
         </ModalFormProvider>

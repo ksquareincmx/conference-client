@@ -29,7 +29,7 @@ class EventComponent extends React.Component {
   };
 
   render() {
-    const { content, classes: styleClasses } = this.props;
+    const { content, classes: styleClasses, onBookingsDataChange } = this.props;
     const { title } = content.event;
     const { eventContainter } = styleClasses;
 
@@ -42,6 +42,7 @@ class EventComponent extends React.Component {
             handleTooltipOpen={this.handleTooltipOpen}
             onEdit={handleOnClickEditMeeting}
             open={this.state.isOpen}
+            onBookingsDataChange={onBookingsDataChange}
           >
             <div className={eventContainter} onClick={this.handleTooltipOpen}>
               <strong>{title}</strong>
