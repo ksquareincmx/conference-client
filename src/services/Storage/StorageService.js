@@ -1,8 +1,4 @@
-import {
-  validateUserInfo,
-  validateJWT,
-  validateUserName
-} from "utils/sessionInfo";
+import { validateUserInfo, validateJWT, getName } from "utils/sessionInfo";
 import compose from "lodash/fp/compose";
 
 /**
@@ -40,12 +36,25 @@ import compose from "lodash/fp/compose";
  */
 
 export const StorageService = () => {
+  const set = localStorage.setItem.bind(localStorage);
+  const get = localStorage.getItem.bind(localStorage);
+
   /**
    * Returns an item in local storage
    * @param {string} item - item name in local storage
    * @returns {Object} - an item
    */
-  const getItem = item => JSON.parse(localStorage.getItem(item));
+  const getItem = compose(
+    JSON.parse,
+    get
+  );
+
+  // const test2 = hola => () => hola;
+  // const test3 = message => console.log(message);
+  // const test = compose(
+  //   test3,
+  //   test2("hola")
+  // );
 
   /**
    * Return JWT.
@@ -72,23 +81,23 @@ export const StorageService = () => {
    * @param {User} - user info.
    * @returns {string} - user name
    */
-  const getUserName = () =>
-    compose(
-      validateUserName,
-      getUserInfo
-    )();
+  const getUserName = compose(
+    getName,
+    getUserInfo
+  );
 
   /**
    * Update local storage with actual session info.
    * @param {SessionInfo} sessionInfo - session info.
    */
   const updateInfoInStorage = ({ jwt, user }) => {
-    localStorage.setItem("cb_jwt", JSON.stringify(jwt));
-    localStorage.setItem("cb_user", JSON.stringify(user));
+    set("cb_jwt", JSON.stringify(jwt));
+    set("cb_user", JSON.stringify(user));
   };
 
   return {
     getJWT,
+    // test,
     getUserInfo,
     getUserName,
     updateInfoInStorage

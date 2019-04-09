@@ -32,7 +32,10 @@ export const formatHours = date => date.format("HH");
 
 export const formatMinutes = date => date.format("mm");
 
+const abbreviate = name =>
+  `${name.substring(0, 1)}${name.substring(name.length - 1)}`;
+
 export const abbreviateRoomName = compose(
   capitalize,
-  name => `${name.substring(0, 1)}${name.substring(name.length - 1)}`
+  abbreviate
 );

@@ -1,3 +1,27 @@
+const CREATE_NOTIFICATION = "create";
+const EDIT_NOTIFICATION = "edit";
+const DELETE_NOTIFICATION = "delete";
+
+const getMessageContent = (notificationType, userName) => {
+  switch (notificationType) {
+    case CREATE_NOTIFICATION:
+      return {
+        title: "New Appointment created",
+        body: `${userName} has created new appointment`
+      };
+    case EDIT_NOTIFICATION:
+      return {
+        title: "Appointment edited succesfully",
+        body: `${userName} has edited a appointment`
+      };
+    case DELETE_NOTIFICATION:
+      return {
+        title: "Appointment deleted succesfully",
+        body: `${userName} has deleted a appointment`
+      };
+  }
+};
+
 export const buildContentFromBooking = (
   { userName, color, abbvRoomName },
   notificationType
@@ -14,28 +38,4 @@ export const buildContentFromBooking = (
     },
     variant: "success"
   };
-};
-
-const CREATE_NOTIFICATION = "create";
-const EDIT_NOTIFICATION = "edit";
-const DELETE_NOTIFICATION = "delete";
-
-const getMessageContent = (notificationType, userName) => {
-  switch (notificationType) {
-    case CREATE_NOTIFICATION:
-      return {
-        title: "New booking created",
-        body: `${userName} has created new booking`
-      };
-    case EDIT_NOTIFICATION:
-      return {
-        title: "Booking edited succesfully",
-        body: `${userName} has edited a booking`
-      };
-    case DELETE_NOTIFICATION:
-      return {
-        title: "Booking deleted succesfully",
-        body: `${userName} has deleted a booking`
-      };
-  }
 };

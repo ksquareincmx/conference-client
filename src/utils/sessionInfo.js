@@ -4,9 +4,9 @@ const validateUserInfo = defaultTo("");
 
 const validateJWT = defaultTo("");
 
-const validateUserName = compose(
+const getName = compose(
   defaultTo(""),
   prop("name")
 );
 
-export { validateUserName, validateUserInfo, validateJWT };
+export { getName, validateUserInfo, validateJWT };
