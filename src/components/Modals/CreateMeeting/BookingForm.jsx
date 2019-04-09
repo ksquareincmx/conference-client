@@ -26,6 +26,7 @@ import {
   formatHours,
   formatMinutes
 } from "utils/BookingFormater";
+import { mapToPost } from "mappers/AppointmentMapper";
 import { withNotifications } from "hocs";
 import { bookingService } from "services";
 
@@ -154,7 +155,7 @@ class BookingFormComponent extends React.Component {
   };
 
   handleClickNext = async () => {
-    const post = postDto(this.state);
+    const post = mapToPost(this.state);
     const isBookingValid = this.validate(post);
     const { bookingClicked } = this.state;
     const { bookingClickedObj } = this.props;
@@ -469,30 +470,6 @@ class BookingFormComponent extends React.Component {
       </Grid>
     );
   }
-}
-
-function postDto(state) {
-  return {
-    description: state.reasonAppointmentText,
-    roomId: state.roomId,
-    start:
-      state.date +
-      "T" +
-      state.startTime.hour +
-      ":" +
-      state.startTime.minute +
-      ":" +
-      "00.000-06:00",
-    end:
-      state.date +
-      "T" +
-      state.endTime.hour +
-      ":" +
-      state.endTime.minute +
-      ":" +
-      "00.000-06:00",
-    attendees: [...state.attendees]
-  };
 }
 
 const withContexts = compose(
