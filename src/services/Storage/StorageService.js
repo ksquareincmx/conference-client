@@ -36,6 +36,9 @@ import compose from "lodash/fp/compose";
  */
 
 export const StorageService = () => {
+  /**
+   * This is necessary for mantain the context of 'this'
+   */
   const set = localStorage.setItem.bind(localStorage);
   const get = localStorage.getItem.bind(localStorage);
 
@@ -48,13 +51,6 @@ export const StorageService = () => {
     JSON.parse,
     get
   );
-
-  // const test2 = hola => () => hola;
-  // const test3 = message => console.log(message);
-  // const test = compose(
-  //   test3,
-  //   test2("hola")
-  // );
 
   /**
    * Return JWT.
@@ -97,7 +93,6 @@ export const StorageService = () => {
 
   return {
     getJWT,
-    // test,
     getUserInfo,
     getUserName,
     updateInfoInStorage
