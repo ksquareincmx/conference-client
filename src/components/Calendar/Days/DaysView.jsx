@@ -162,9 +162,11 @@ const DaysViewComponent = props => {
   const { roomList, classes: styleClasses } = props;
   const { gridContainer, loadingContainer } = styleClasses;
 
-  return roomList ? (
-    <div className={gridContainer}>{roomList.map(dayGrid(props))}</div>
-  ) : (
+  if (roomList) {
+    return <div className={gridContainer}>{roomList.map(dayGrid(props))}</div>;
+  }
+
+  return (
     <div className={loadingContainer}>
       <h1>LOADING...</h1>
     </div>

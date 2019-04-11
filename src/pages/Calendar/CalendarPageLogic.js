@@ -33,7 +33,6 @@ class CalendarPageLogicComponent extends React.Component {
   handleOnClickPrev = () => {
     const viewType = this.state.selector;
     return this.setState(prevState => {
-      console.log(prevState.focusDate);
       return {
         focusDate: dates.add(prevState.focusDate, -1, viewType)
       };
@@ -57,8 +56,9 @@ class CalendarPageLogicComponent extends React.Component {
     const roomList = await roomService.getAll();
     const ROOMS_PER_CALENDAR = 2;
     const pairedRooms = roomList.reduce((result, value, index, array) => {
-      if (index % 2 === 0)
+      if (index % 2 === 0) {
         result.push(array.slice(index, index + ROOMS_PER_CALENDAR));
+      }
       return result;
     }, []);
     this.setState({ pairedRooms, selectedRooms: pairedRooms[0] });
