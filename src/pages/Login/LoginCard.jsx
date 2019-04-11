@@ -9,18 +9,13 @@ const style = theme => ({
   loginCard: {
     width: 375,
     height: 340,
-    marginRight: 100,
-    marginTop: 200,
-    marginLeft: 100,
-    marginBottom: 100,
-    display: "flex",
+    margin: "0 auto",
+    display: "block",
     flexDirection: "column",
     justifyContent: "space-between",
     textAlign: "center",
     borderRadius: 10,
-    position: "absolute",
-    top: 10,
-    left: 715,
+    position: "relative",
     overflow: "visible"
   }
 });
