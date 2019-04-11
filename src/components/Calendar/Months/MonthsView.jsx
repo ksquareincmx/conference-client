@@ -45,6 +45,7 @@ const customEventWrapper = eventWrapper => {
 const MonthsViewComponent = props => {
   const {
     bookings,
+    roomList,
     type,
     minDate,
     maxDate,
@@ -55,12 +56,23 @@ const MonthsViewComponent = props => {
 
   const { grid, gridContainer } = styleClasses;
 
-  const monthEvents = formatEvents(bookings);
-
   const components = {
     eventWrapper: customEventWrapper,
     event: props.components.event,
     dateCellWrapper: customDateCellWrapper
+  };
+
+  const getRoomsEvents = rooms => {
+    const monthEvents = formatEvents(bookings);
+    let roomEvents = [];
+    rooms.forEach(room => {
+      const fileteredEvents = monthEvents.filter(
+        event => event.roomId === room.id
+      );
+      roomEvents = roomEvents.concat(fileteredEvents);
+    });
+
+    return roomEvents;
   };
 
   return (
@@ -68,7 +80,7 @@ const MonthsViewComponent = props => {
       <div className={classNames(grid, "month")}>
         <BigCalendar
           toolbar={false}
-          events={monthEvents}
+          events={getRoomsEvents(roomList)}
           formats={{ weekdayFormat: "dddd" }}
           views={[type]}
           defaultView={BigCalendar.Views.MONTH}

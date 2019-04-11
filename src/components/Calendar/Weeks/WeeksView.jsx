@@ -67,6 +67,7 @@ const customEventContainerWrapper = eventWrapper => {
 const WeeksViewComponent = props => {
   const {
     bookings,
+    roomList,
     type,
     step,
     minDate,
@@ -78,8 +79,6 @@ const WeeksViewComponent = props => {
     classes: styleClasses
   } = props;
 
-  const weekEvents = formatEvents(bookings);
-
   const { gridContainer, grid } = styleClasses;
 
   const components = {
@@ -87,6 +86,19 @@ const WeeksViewComponent = props => {
     eventContainerWrapper: customEventContainerWrapper,
     event: props.components.event,
     timeSlotWrapper: customTimeSlotWrapper
+  };
+
+  const getRoomsEvents = rooms => {
+    const weekEvents = formatEvents(bookings);
+    let roomEvents = [];
+    rooms.forEach(room => {
+      const fileteredEvents = weekEvents.filter(
+        event => event.roomId === room.id
+      );
+      roomEvents = roomEvents.concat(fileteredEvents);
+    });
+
+    return roomEvents;
   };
 
   const viewType = type === "week" ? "work_week" : "week";
@@ -97,7 +109,7 @@ const WeeksViewComponent = props => {
         <BigCalendar
           selectable
           toolbar={false}
-          events={weekEvents}
+          events={getRoomsEvents(roomList)}
           views={[viewType]}
           step={step}
           defaultView={BigCalendar.Views.WORK_WEEK}

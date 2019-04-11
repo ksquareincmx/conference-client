@@ -7,10 +7,6 @@ import { Event } from "components/Calendar";
 import { withNotifications } from "hocs";
 
 class CalendarGridComponent extends React.Component {
-  state = {
-    rooms: []
-  };
-
   customEventView = content => {
     return (
       <Event
@@ -41,37 +37,23 @@ class CalendarGridComponent extends React.Component {
     this.props.onCreate(bookingInfo);
   };
 
-  fetchRooms = async () => {
-    const roomList = await roomService.getAll();
-    const ROOMS_PER_CALENDAR = 2;
-    roomList.length = ROOMS_PER_CALENDAR;
-    this.setState({ rooms: roomList });
-  };
-
-  componentDidMount() {
-    this.fetchRooms();
-  }
-
   render() {
     return (
-      // Why is a fragment here?
-      <Fragment>
-        <CalendarStrategy
-          type={this.props.type}
-          bookings={this.props.bookingsData}
-          roomList={this.state.rooms}
-          handleSelect={this.handleSelect}
-          components={{
-            event: this.customEventView
-          }}
-          localizer={Utils.localizer}
-          minDate={Utils.minDate}
-          maxDate={Utils.maxDate}
-          step={Utils.step}
-          timeSlots={Utils.timeSlots}
-          date={this.props.date}
-        />
-      </Fragment>
+      <CalendarStrategy
+        type={this.props.type}
+        bookings={this.props.bookingsData}
+        roomList={this.props.selectedRooms}
+        handleSelect={this.handleSelect}
+        components={{
+          event: this.customEventView
+        }}
+        localizer={Utils.localizer}
+        minDate={Utils.minDate}
+        maxDate={Utils.maxDate}
+        step={Utils.step}
+        timeSlots={Utils.timeSlots}
+        date={this.props.date}
+      />
     );
   }
 }
