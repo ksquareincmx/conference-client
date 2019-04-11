@@ -1,41 +1,19 @@
-.days-container {
+.day .rbc-time-view,
+.rbc-time-content {
+  border: 0px;
+  border-left: 1px, solid, lightgray;
+}
+
+.day .rbc-time-header {
+  display: none;
+}
+
+.day .rbc-event-content {
   display: flex;
-  flex-direction: row;
-  height: 500px;
-  margin: auto;
+  justify-content: center;
+  align-items: center;
 }
 
-.days-container .rbc-toolbar {
-  visibility: hidden;
-  width: 0%;
-  height: 0%;
-}
-
-.days-container .rbc-time-header {
-  visibility: hidden;
-  width: 0%;
-  height: 0%;
-}
-
-.days-container .rbc-calendar {
-  height: 92%;
-}
-
-.days-container .rbc-timeslot-group {
-  min-height: 30px;
-}
-
-.day-agenda {
-  width: 50%;
-}
-
-.day-header {
-  display: flex;
-  flex-direction: row;
-  height: 8%;
-}
-
-.conference-room-name {
-  width: 100%;
-  text-align: center;
+.day .rbc-event-label {
+  display: none;
 }

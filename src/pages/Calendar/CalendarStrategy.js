@@ -1,19 +1,16 @@
 import React from "react";
-import WeeksView from "components/Calendar/Weeks";
-import MonthsView from "components/Calendar/Months";
-import YearsView from "components/Calendar/Years";
-import DaysView from "components/Calendar/Days";
+import { WeeksView, MonthsView, DaysView } from "components/Calendar";
+import { CalendarViewSelectors } from "utils/Enums";
 
 export const CalendarStrategy = props => {
+  const { DAY, WEEK, MONTH } = CalendarViewSelectors;
   switch (props.type) {
-    case "day":
+    case DAY:
       return <DaysView {...props} />;
-    case "work_week":
+    case WEEK:
       return <WeeksView {...props} />;
-    case "month":
+    case MONTH:
       return <MonthsView {...props} />;
-    case "year":
-      return <YearsView {...props} />;
     default:
       return <DaysView {...props} />;
   }

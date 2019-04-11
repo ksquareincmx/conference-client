@@ -1,6 +1,5 @@
 import React from "react";
-import UserService from "services/UserService";
-import baseUri from "../../config/baseUri";
+import { userService } from "services";
 
 const UserContext = React.createContext({
   getUser: () => {},
@@ -8,22 +7,24 @@ const UserContext = React.createContext({
   modifyUser: () => {}
 });
 
-export const UserConsumer = UserContext.Consumer;
-export class UserProvider extends React.Component {
-  userService = UserService(baseUri + "User/", this.props.auth.jwt.token);
+class UserProvider extends React.Component {
   getUser = id => {
-    return this.userService.getOne(id);
+    const { token: authToken } = this.props.auth.jwt;
+    return userService.getOne(id, authToken);
   };
 
   getUsers = () => {
-    return this.userService.getAll();
+    const { token: authToken } = this.props.auth.jwt;
+    return userService.getAll(authToken);
   };
 
   modifyUser = (user, id) => {
-    return this.userService.updateOne(user, id);
+    const { token: authToken } = this.props.auth.jwt;
+    return userService.updateOne(user, id, authToken);
   };
 
   render() {
+    const { children } = this.props;
     return (
       <UserContext.Provider
         value={{
@@ -32,8 +33,11 @@ export class UserProvider extends React.Component {
           modifyUser: this.modifyUser
         }}
       >
-        {this.props.children}
+        {children}
       </UserContext.Provider>
     );
   }
 }
+
+const UserConsumer = UserContext.Consumer;
+export { UserProvider, UserConsumer };

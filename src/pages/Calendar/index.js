@@ -1,1 +1,1 @@
-export { default } from './Calendar';
+export { CalendarContainer as Calendar } from "./CalendarContainer";

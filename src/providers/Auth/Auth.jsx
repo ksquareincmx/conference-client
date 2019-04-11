@@ -1,54 +1,52 @@
 import React from "react";
-import AuthService from "services/AuthService";
-import StorageService from "services/StorageService"
-import baseUri from "../../config/baseUri";
+import { authService, storageService } from "services";
 
+// Context object template
 const AuthContext = React.createContext({
-  user: null,
-  jwt: null,
-  onLogin: () => { },
-  onLogout: () => { }
+  isAuth: false,
+  sessionInfo: null,
+  onLogin: () => {},
+  onLogout: () => {}
 });
 
-export const AuthConsumer = AuthContext.Consumer;
-
-export class AuthProvider extends React.Component {
-
+class AuthProvider extends React.Component {
   state = {
-    user: null,
-    jwt: null
+    sessionInfo: {
+      user: null,
+      jwt: null
+    },
+    isAuth: false
   };
 
-  authService = AuthService(baseUri + "auth/googlelogin");
-  localStorage = StorageService();
-
   componentDidMount() {
-    if (typeof Storage !== "undefined") {
+    const jwt = storageService.getJWT();
+    const user = storageService.getUserInfo();
 
-      const jwt = this.localStorage.getAuthToken();
-      const user = this.localStorage.getUserInfo();
-
-      if (jwt && user) {
-        this.setState({ jwt, user });
-        this.localStorage.update(jwt, user);
-      }
+    if (jwt && user) {
+      const sessionInfo = { jwt, user };
+      this.setState({ sessionInfo, isAuth: true });
+      storageService.updateInfoInStorage(sessionInfo);
     }
   }
 
   onLogin = async googleUser => {
     const idToken = googleUser.getAuthResponse().id_token;
     try {
-      const res = await this.authService.onLogin(idToken);
-      this.setState({
+      const { login } = authService;
+      const res = await login(idToken);
+      const { token, expires, refresh_token: refreshToken, user } = res;
+      const sessionInfo = {
         jwt: {
-          token: res.token,
-          expires: res.expires,
-          refreshToken: res.refresh_token
+          token,
+          expires,
+          refreshToken
         },
-        user: res.user // { id: number, email: string, name: string, role: string, picture: string }
-      }, () => {
-        const { jwt, user } = this.state;
-        this.localStorage.update(jwt, user);
+        user
+      };
+      this.setState({ sessionInfo, isAuth: true }, () => {
+        const { sessionInfo } = this.state;
+        const { updateInfoInStorage } = storageService;
+        updateInfoInStorage(sessionInfo);
       });
     } catch (err) {
       console.log(err);
@@ -56,27 +54,35 @@ export class AuthProvider extends React.Component {
   };
 
   onLogout = () => {
-    this.setState({
+    const sessionInfo = {
       user: null,
       jwt: null
-    }, () => {
-      const { jwt, user } = this.state;
-      this.localStorage.update(jwt, user);
+    };
+    this.setState({ sessionInfo, isAuth: false }, () => {
+      const { sessionInfo } = this.state;
+      const { updateInfoInStorage } = storageService;
+      updateInfoInStorage(sessionInfo);
     });
-    
   };
 
   render() {
+    const { children } = this.props;
+    const { isAuth, sessionInfo } = this.state;
     return (
       <AuthContext.Provider
         value={{
-          ...this.state,
+          isAuth,
+          sessionInfo,
           onLogin: this.onLogin,
           onLogout: this.onLogout
         }}
       >
-        {this.props.children}
+        {children}
       </AuthContext.Provider>
     );
   }
 }
+
+const AuthConsumer = AuthContext.Consumer;
+
+export { AuthConsumer, AuthProvider };

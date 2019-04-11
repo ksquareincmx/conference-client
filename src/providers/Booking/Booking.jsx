@@ -1,6 +1,5 @@
 import React from "react";
-import BookingService from "services/BookingService";
-import baseUri from "../../config/baseUri";
+import { bookingService } from "services";
 
 const BookingContext = React.createContext({
   createNewBooking: () => {},
@@ -11,37 +10,38 @@ const BookingContext = React.createContext({
   getDetailedListOfBooking: () => {}
 });
 
-export const BookingConsumer = BookingContext.Consumer;
-
-export class BookingProvider extends React.Component {
-  bookingService = BookingService(
-    baseUri + "Booking/",
-    this.props.auth.jwt.token
-  );
+class BookingProvider extends React.Component {
   createNewBooking = booking => {
-    return this.bookingService.createOne(booking);
+    const { token: authToken } = this.props.auth.jwt;
+    return bookingService.createOne(booking, authToken);
   };
 
   getBooking = id => {
-    return this.bookingService.getOne(id);
+    const { token: authToken } = this.props.auth.jwt;
+    return bookingService.getOne(id, authToken);
   };
 
   getsListOfBooking = () => {
-    return this.bookingService.getAll();
+    const { token: authToken } = this.props.auth.jwt;
+    return bookingService.getAll(authToken);
   };
 
-  getDetailedListOfBooking = () => {
-    return this.bookingService.getAllWithDetails();
+  getDetailedListOfBooking = filterDate => {
+    const { token: authToken } = this.props.auth.jwt;
+    return bookingService.getAllWithDetails(authToken, filterDate);
   };
   modifyBooking = (booking, id) => {
-    return this.bookingService.updateOne(booking, id);
+    const { token: authToken } = this.props.auth.jwt;
+    return bookingService.updateOneById(id, booking, authToken);
   };
 
   removeBooking = id => {
-    return this.bookingService.deleteOne(id);
+    const { token: authToken } = this.props.auth.jwt;
+    return bookingService.deleteOne(id, authToken);
   };
 
   render() {
+    const { children } = this.props;
     return (
       <BookingContext.Provider
         value={{
@@ -53,8 +53,11 @@ export class BookingProvider extends React.Component {
           removeBooking: this.removeBooking
         }}
       >
-        {this.props.children}
+        {children}
       </BookingContext.Provider>
     );
   }
 }
+
+const BookingConsumer = BookingContext.Consumer;
+export { BookingProvider, BookingConsumer };

@@ -1,24 +1,23 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles'
+import React from "react";
+import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   button: {
-    color: 'white',
+    color: "white",
     fontSize: 13,
     marginBottom: theme.spacing.unit * 2,
     marginLeft: theme.spacing.unit * 1,
-    marginRight: theme.spacing.unit * 1,
+    marginRight: theme.spacing.unit * 1
   }
-})
+});
 
 function MaterialButton(props) {
-
-  const { classes } = props
-  let backgroundColor = props.colorButton
+  const { classes } = props;
+  let backgroundColor = props.colorButton;
 
   if (props.disabled) {
-    backgroundColor = '#bbb'
+    backgroundColor = "#bbb";
   }
   return (
     <Button
@@ -27,10 +26,11 @@ function MaterialButton(props) {
       onClick={props.onClick}
       disabled={props.disabled}
       size={props.sizeButton}
-      style={{backgroundColor}}
+      style={{ backgroundColor }}
     >
       {props.textButton}
-    </Button>)
-};
+    </Button>
+  );
+}
 
 export default withStyles(styles)(MaterialButton);

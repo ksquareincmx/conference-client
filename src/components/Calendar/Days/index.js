@@ -1,1 +1,1 @@
-export { default } from "./DaysView";
+export { DaysView } from "./DaysView";

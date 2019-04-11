@@ -1,1 +1,1 @@
-export * from "providers/Auth/Auth";
+export { AuthcConsumer, AuthProvider } from "providers/Auth/Auth";

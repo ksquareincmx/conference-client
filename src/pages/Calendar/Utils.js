@@ -1,4 +1,3 @@
-import React from "react";
 import moment from "moment";
 import dates from "react-big-calendar/lib/utils/dates";
 import BigCalendar from "react-big-calendar";
@@ -43,7 +42,7 @@ export const minDate = dates.add(
 );
 export const maxDate = dates.add(dates.endOf(new Date(), "day"), -5, "hours");
 export const step = 15;
-export const timeSlots = 4;
+export const timeSlots = 2;
 
 export const getNameDay = date => daysNames[date.getDay()];
 export const getNameMonth = date => monthsNames[date.getMonth()];

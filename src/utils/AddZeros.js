@@ -1,8 +1,3 @@
-function addZeros(time) {
-  if (time < 10) {
-    return "0" + String(time);
-  }
-  return String(time);
-}
+const addZeros = number => (number < 10 ? "0" + number : number);
 
 export default addZeros;

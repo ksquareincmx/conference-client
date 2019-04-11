@@ -1,19 +1,20 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import LoginPage from "pages/Login";
-import HomePage from "pages/Home";
-import CalendarPage from "pages/Calendar";
-import DashboardPage from "pages/Dashboard";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from "react-router-dom";
+import { Calendar, Login } from "pages";
 
-const Routes = () => (
+export const Routes = () => (
   <Router>
-    <div>
-      <Route exact path="/" component={HomePage} />
-      <Route path="/login" component={LoginPage} />
-      <Route path="/dashboard" component={DashboardPage} />
-      <Route path="/calendar" component={CalendarPage} />
-    </div>
+    <Switch>
+      <Route path="/login" component={Login} />
+      <Route path="/calendar" component={Calendar} />
+      <Route path="/">
+        <Redirect to="/login" />
+      </Route>
+    </Switch>
   </Router>
 );
-
-export default Routes;

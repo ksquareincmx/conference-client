@@ -35,8 +35,7 @@ class TimeSelect extends React.Component {
     }
   };
 
-  TimeFormat() {
-    //let time = (this.state.hourSelected + ':' + this.state.minuteSelected + ':' + '00.000Z')
+  timeFormat() {
     let time = {
       hour: this.state.hourSelected,
       minute: this.state.minuteSelected
@@ -44,22 +43,25 @@ class TimeSelect extends React.Component {
     return time;
   }
 
-  HourChangedHandler = event => {
-    this.setState({
-      hourSelected: event.target.value,
-      disabledMinutes: false
-    });
+  hourChangedHandler = event => {
+    this.setState(
+      {
+        hourSelected: event.target.value,
+        disabledMinutes: false
+      },
+      () => this.props.setTime(this.timeFormat())
+    );
   };
 
-  MinuteChangedHandler = event => {
+  minuteChangedHandler = event => {
     this.setState({ minuteSelected: event.target.value }, () =>
-      this.props.SetTime(this.TimeFormat())
+      this.props.setTime(this.timeFormat())
     );
   };
 
   componentDidMount() {
-    const hoursArray = Array.from(new Array(24), (x, i) => [
-      addZeros(i),
+    const hoursArray = Array.from(new Array(11), (x, i) => [
+      addZeros(8 + i),
       false
     ]);
     const minutesArray = Array.from(new Array(4), (x, i) => [
@@ -109,31 +111,36 @@ class TimeSelect extends React.Component {
     ));
 
     return (
-      <Grid xs={6} container direction="row">
-        <FormControl className={classes.form}>
-          <InputLabel>Hour</InputLabel>
-          <Select
-            value={this.state.hourSelected}
-            onChange={this.HourChangedHandler}
-            className={classes.select}
-            MenuProps={this.MenuProps}
-            disabled={this.props.disabledHour}
-          >
-            {hours}
-          </Select>
-        </FormControl>
-
-        <FormControl className={classes.form}>
-          <InputLabel>Minutes</InputLabel>
-          <Select
-            value={this.state.minuteSelected}
-            onChange={this.MinuteChangedHandler}
-            className={classes.select}
-            disabled={this.state.disabledMinutes}
-          >
-            {minutes}
-          </Select>
-        </FormControl>
+      <Grid container direction="row">
+        <Grid item xs={6}>
+          <FormControl className={classes.form}>
+            <InputLabel>Hour</InputLabel>
+            <Select
+              value={this.state.hourSelected}
+              onChange={this.hourChangedHandler}
+              className={classes.select}
+              MenuProps={this.MenuProps}
+              disabled={this.props.disabledHour}
+              error={this.props.isInvalidHour}
+            >
+              {hours}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={6}>
+          <FormControl className={classes.form}>
+            <InputLabel>Minutes</InputLabel>
+            <Select
+              value={this.state.minuteSelected}
+              onChange={this.minuteChangedHandler}
+              className={classes.select}
+              disabled={this.state.disabledMinutes}
+              error={this.props.isInvalidHour}
+            >
+              {minutes}
+            </Select>
+          </FormControl>
+        </Grid>
       </Grid>
     );
   }

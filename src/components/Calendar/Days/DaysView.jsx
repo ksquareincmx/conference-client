@@ -1,38 +1,162 @@
-import React from "react";
+import React, { Children } from "react";
 import BigCalendar from "react-big-calendar";
+import { withStyles } from "@material-ui/core";
 import "./Days.css";
+import classNames from "classnames";
+import { mapEventsByRoom } from "mappers/AppointmentMapper";
+import { getEventColors } from "utils/Colors";
+import fp from "lodash/fp";
+import cuid from "cuid";
 
-const dayGrid = props => idConference => {
+const styles = theme => ({
+  gridContainer: {
+    display: "flex",
+    flexDirection: "row",
+    height: 564,
+    margin: "auto"
+  },
+  grid: {
+    width: "50%",
+    border: "1px solid lightgrey"
+  },
+  gridHeaderContainer: {
+    height: 40,
+    backgroundColor: "white",
+    boxShadow: "0px 5px 2px rgba(0,0,0,0.1)",
+    position: "relative",
+    zIndex: "1"
+  },
+  gridGutter: {
+    height: "100%",
+    width: 78,
+    borderRight: "1px solid lightgrey"
+  },
+  gridHeader: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-end"
+  },
+  gridHeaderTxt: {
+    margin: 0,
+    position: "absolute"
+  }
+});
+
+const customTimeSlotWrapper = ({ children }) =>
+  React.cloneElement(Children.only(children), {
+    style: {
+      ...children.style,
+      backgroundColor: "white",
+      borderStyle: "none",
+      color: "#7F7F7F",
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "flex-end"
+    }
+  });
+
+const customEventWrapper = eventWrapper => {
+  const { children, event } = eventWrapper;
+  const styles = getEventColors(event.color);
+  return React.cloneElement(Children.only(children), {
+    style: {
+      ...children.props.style,
+      backgroundColor: styles.backgroundColor,
+      border: `2px solid ${styles.borderColor}`,
+      color: styles.textColor,
+      borderRadius: 0,
+      opacity: 0.7
+    }
+  });
+};
+
+const customEventContainerWrapper = eventWrapper => {
+  const { children } = eventWrapper;
+  return React.cloneElement(Children.only(children), {
+    style: {
+      ...children.props.style,
+      marginRight: 0
+    }
+  });
+};
+
+const dayGrid = props => room => {
+  const {
+    bookings,
+    roomList,
+    type,
+    step,
+    minDate,
+    maxDate,
+    localizer,
+    handleSelect,
+    timeSlots,
+    date,
+    classes: styleClasses
+  } = props;
+
+  const {
+    grid,
+    gridHeaderContainer,
+    gridGutter,
+    gridHeader,
+    gridHeaderTxt
+  } = styleClasses;
+
+  const components = {
+    eventWrapper: customEventWrapper,
+    eventContainerWrapper: customEventContainerWrapper,
+    event: props.components.event,
+    timeSlotWrapper: customTimeSlotWrapper
+  };
+
+  const getRoomEvents = roomId => {
+    const events = mapEventsByRoom(bookings, roomList);
+    const eventsObj = events.find(
+      eventsByRoom => eventsByRoom.roomId === roomId
+    );
+    return eventsObj.roomEvents;
+  };
+
+  const roomEvents = room ? getRoomEvents(room.id) : [];
+
   return (
-    <div className="day-agenda" key={idConference}>
-      <div className="day-header">
-        <h2 className="conference-room-name">
-          Conference Room #{idConference + 1}
-        </h2>
+    <div className={classNames(grid, "day")} key={room ? room.id : cuid()}>
+      <div className={gridHeaderContainer}>
+        <div className={gridGutter} />
+        <div className={gridHeader}>
+          <h3 className={gridHeaderTxt}>
+            {room ? `Conference ${room.name}` : "Loading"}
+          </h3>
+        </div>
       </div>
       <BigCalendar
         selectable
-        events={props.events[idConference]}
-        views={[props.type]}
-        step={props.step}
+        toolbar={false}
+        scrollToTime={new Date(2000, 1, 1, 0)}
+        events={roomEvents}
+        views={[type]}
+        step={step}
         defaultView={BigCalendar.Views.DAY}
-        min={props.minDate}
-        max={props.maxDate}
+        min={minDate}
+        max={maxDate}
         formats={{ timeGutterFormat: "hh:mm A", dayFormat: "ddd D" }}
-        localizer={props.localizer}
-        onSelectEvent={event => alert(event.title)}
-        onSelectSlot={props.handleSelect(idConference)}
-        timeslots={props.timeSlots}
-        components={props.components}
-        date={props.date}
-        onNavigate={() => {}}
+        localizer={localizer}
+        onSelectSlot={room ? handleSelect(room.id, room.name) : null}
+        timeslots={timeSlots}
+        components={components}
+        date={date}
+        onNavigate={fp.noop}
       />
     </div>
   );
 };
 
-const DaysView = props => {
-  return <div className="days-container">{[0, 1].map(dayGrid(props))}</div>;
+const DaysViewComponent = props => {
+  const { roomList, classes: styleClasses } = props;
+  const { gridContainer } = styleClasses;
+
+  return <div className={gridContainer}>{roomList.map(dayGrid(props))}</div>;
 };
 
-export default DaysView;
+export const DaysView = withStyles(styles)(DaysViewComponent);
