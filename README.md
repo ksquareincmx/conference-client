@@ -4,8 +4,11 @@ User facing application to manage conference rooms and meetings
 
 ## Table of contents
 
-1. [Instalation](#installation)
-2. [Configuration](#configuration)
+1. [Instalation](###installation)
+
+- [Quick Install](####quick-install)
+
+2. [Configuration](###configuration)
 3. [Tets](#tests)
 4. [Docs](#docs)
 5. [License](#license)
@@ -73,10 +76,3 @@ TODO
 ### License
 
 [MIT](https://github.com/ksquareincmx/conference-client/blob/master/LICENSE)
-
-````
-
-```
-
-```
-````
