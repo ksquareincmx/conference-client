@@ -11,7 +11,9 @@ const style = theme => ({
     height: "100vh",
     width: "100vw",
     backgroundPosition: "center",
-    backgroundSize: "cover"
+    backgroundSize: "cover",
+    boxSizing: "border-box",
+    paddingTop: "10em"
   }
 });
 
