@@ -1,5 +1,6 @@
 import React from "react";
 import { ModalFormConsumer } from "providers/ModalForm";
+import { SelectRoom } from "./SelectRoom/SelectRoom";
 import { withStyles, Button } from "@material-ui/core";
 import classNames from "classnames";
 import { CalendarViewSelectors } from "utils/Enums";
@@ -98,6 +99,9 @@ const handleOnClick = clickFunc => event => {
 const HeaderViewComponent = props => {
   const {
     onClickViewButton,
+    pairedRooms,
+    selectedRooms,
+    onChangeRoomSelect,
     headerDateContainer,
     classes: styleClasses
   } = props;
@@ -117,6 +121,13 @@ const HeaderViewComponent = props => {
   return (
     <div>
       <div>{headerDateContainer}</div>
+      <div>
+        <SelectRoom
+          pairedRooms={pairedRooms}
+          selectedRooms={selectedRooms}
+          onChangeRoomSelect={onChangeRoomSelect}
+        />
+      </div>
       <div className={createBtnContainer}>
         <ModalFormConsumer>
           {modalForm => (
