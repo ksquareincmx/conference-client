@@ -15,6 +15,12 @@ const styles = theme => ({
     height: 564,
     margin: "auto"
   },
+  loadingContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "50vh"
+  },
   grid: {
     width: "50%",
     border: "1px solid lightgrey"
@@ -154,9 +160,17 @@ const dayGrid = props => room => {
 
 const DaysViewComponent = props => {
   const { roomList, classes: styleClasses } = props;
-  const { gridContainer } = styleClasses;
+  const { gridContainer, loadingContainer } = styleClasses;
 
-  return <div className={gridContainer}>{roomList.map(dayGrid(props))}</div>;
+  if (roomList) {
+    return <div className={gridContainer}>{roomList.map(dayGrid(props))}</div>;
+  }
+
+  return (
+    <div className={loadingContainer}>
+      <h1>LOADING...</h1>
+    </div>
+  );
 };
 
 export const DaysView = withStyles(styles)(DaysViewComponent);

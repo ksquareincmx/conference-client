@@ -5,6 +5,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { HeaderView } from "components/Calendar";
 import * as Utils from "./Utils.js";
 import HeaderStrategy from "./HeaderStrategy";
+import { roomService } from "services";
 import { Grid, withStyles } from "@material-ui/core";
 import { CalendarGrid } from "./CalendarGrid";
 import { ModalFormConsumer } from "providers";
@@ -18,7 +19,8 @@ const styles = theme => ({
 class CalendarPageLogicComponent extends React.Component {
   state = {
     selector: "day",
-    focusDate: new Date()
+    focusDate: new Date(),
+    selectedRooms: ""
   };
 
   handlerOnClickViewButton = buttonIdentifier => () => {
@@ -30,9 +32,11 @@ class CalendarPageLogicComponent extends React.Component {
 
   handleOnClickPrev = () => {
     const viewType = this.state.selector;
-    return this.setState(prevState => ({
-      focusDate: dates.add(prevState.focusDate, -1, viewType)
-    }));
+    return this.setState(prevState => {
+      return {
+        focusDate: dates.add(prevState.focusDate, -1, viewType)
+      };
+    });
   };
 
   handleOnClickNext = () => {
@@ -41,6 +45,28 @@ class CalendarPageLogicComponent extends React.Component {
       focusDate: dates.add(prevState.focusDate, 1, viewType)
     }));
   };
+
+  handleRoomChange = selectedRooms => {
+    this.setState({
+      selectedRooms
+    });
+  };
+
+  fetchRooms = async () => {
+    const roomList = await roomService.getAll();
+    const ROOMS_PER_CALENDAR = 2;
+    const pairedRooms = roomList.reduce((result, value, index, array) => {
+      if (index % 2 === 0) {
+        result.push(array.slice(index, index + ROOMS_PER_CALENDAR));
+      }
+      return result;
+    }, []);
+    this.setState({ pairedRooms, selectedRooms: pairedRooms[0] });
+  };
+
+  componentDidMount() {
+    this.fetchRooms();
+  }
 
   render() {
     const { calendarContainer } = this.props.classes;
@@ -51,6 +77,9 @@ class CalendarPageLogicComponent extends React.Component {
         <div className={calendarContainer}>
           <HeaderView
             onClickViewButton={this.handlerOnClickViewButton}
+            pairedRooms={this.state.pairedRooms}
+            selectedRooms={this.state.selectedRooms}
+            onChangeRoomSelect={this.handleRoomChange}
             headerDateContainer={
               <HeaderStrategy
                 type={this.state.selector}
@@ -71,6 +100,7 @@ class CalendarPageLogicComponent extends React.Component {
                 <CalendarGrid
                   type={this.state.selector}
                   date={this.state.focusDate}
+                  selectedRooms={this.state.selectedRooms}
                   bookingsData={bookingsData}
                   onBookingsDataChange={onBookingsDataChange}
                   onCreate={modalForm.handleOnClickCreateMeeting}
