@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Drawer, withStyles, Grid } from "@material-ui/core";
 import { DrawerBtn } from "./DrawerBtn";
 
-const drawerWidth = 461;
+const drawerWidth = 460;
 
 const styles = theme => ({
   drawer: {
@@ -22,8 +22,13 @@ const styles = theme => ({
     flexShrink: 0
   },
   drawerPaper: {
-    width: drawerWidth
-  }
+    width: drawerWidth,
+    overflowX: "hidden"
+  },
+  btnContainer: {
+    minHeight: "100%"
+  },
+  toolbar: theme.mixins.toolbar
 });
 
 class DrawerComponent extends React.Component {
@@ -40,7 +45,13 @@ class DrawerComponent extends React.Component {
   };
   render() {
     const { children, classes: styleClasses } = this.props;
-    const { drawer, drawerClosed, drawerPaper } = styleClasses;
+    const {
+      drawer,
+      drawerClosed,
+      drawerPaper,
+      toolbar,
+      btnContainer
+    } = styleClasses;
     const { isOpen } = this.state;
     return (
       <Fragment>
@@ -53,12 +64,16 @@ class DrawerComponent extends React.Component {
             paper: drawerPaper
           }}
         >
+          <div className={toolbar} />
           {children}
           {/* <DrawerBtn onClick={this.handleDrawerClose} /> */}
         </Drawer>
-        <DrawerBtn
-          onClick={isOpen ? this.handleDrawerClose : this.handleDrawerOpen}
-        />
+        <div className={btnContainer}>
+          <DrawerBtn
+            isOpen={isOpen}
+            onClick={isOpen ? this.handleDrawerClose : this.handleDrawerOpen}
+          />
+        </div>
       </Fragment>
     );
   }

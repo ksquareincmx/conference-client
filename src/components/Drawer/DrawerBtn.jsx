@@ -5,17 +5,24 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 
 const styles = theme => ({
   icon: {
-    width: 50,
-    height: 50,
-    color: "#5294e5"
+    width: 25,
+    height: 25,
+    color: "#808080"
   },
   button: {
-    backgroundColor: "white"
+    position: "absolute",
+    zIndex: 5,
+    // minHeight: "100%",
+    minHeight: `calc(100% - 64px)`,
+    minWidth: 30,
+    padding: 0,
+    backgroundColor: "white",
+    borderRadius: 0
   }
 });
 
 const DrawerBtnComponent = props => {
-  const { onClick: handleClick, classes: styleClasses } = props;
+  const { onClick: handleClick, isOpen, classes: styleClasses } = props;
   const { icon, button } = styleClasses;
   return (
     <Button
@@ -24,7 +31,11 @@ const DrawerBtnComponent = props => {
       color="default"
       className={button}
     >
-      <KeyboardArrowRight className={icon} />
+      {isOpen ? (
+        <KeyboardArrowLeft className={icon} />
+      ) : (
+        <KeyboardArrowRight className={icon} />
+      )}
     </Button>
   );
 };
