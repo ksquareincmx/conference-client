@@ -14,6 +14,7 @@ export function withNotifications(Component) {
   }) => {
     const content = buildContentFromBooking(bookingInfo, notificationType);
     showToast(content, notificationConfig);
+    return;
   };
 
   const handleErrorNotification = showToast => ({ title, body }) => {
@@ -28,7 +29,8 @@ export function withNotifications(Component) {
       },
       variant: "error"
     };
-    return showToast(content, notificationConfig);
+    showToast(content, notificationConfig);
+    return;
   };
 
   return function WrappedComponent(props) {
