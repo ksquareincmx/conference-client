@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import { CalendarPageLogic } from "./CalendarPageLogic";
 import { NavBar } from "components/NavBar";
+import { DrawerBookings } from "components/Drawer";
 import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar.jsx";
 import { withAuthContext } from "hocs";
 import { NotificationProvider, ModalFormProvider } from "providers";
@@ -22,16 +23,15 @@ const CalendarComponent = ({
     <Fragment>
       <NavBar authContext={authContext} />
       <NotificationProvider>
-        {/* This is SO UGLY */}
         <ModalFormProvider onBookingsDataChange={onBookingsDataChange}>
           <Grid container direction="row">
-            <Grid item xs={3}>
+            <DrawerBookings>
               <BookingsSideBar
                 bookingsData={bookingsData}
                 onBookingsDataChange={onBookingsDataChange}
               />
-            </Grid>
-            <Grid item xs={9}>
+            </DrawerBookings>
+            <Grid item xs={12}>
               {/* TODO: Pass the onNewBooking function to the Provider */}
               <CalendarPageLogic
                 auth={sessionInfo}

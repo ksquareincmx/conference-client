@@ -12,7 +12,8 @@ const styles = theme => ({
   gridContainer: {
     display: "flex",
     flexDirection: "row",
-    height: 564,
+    minHeight: "calc(100vh - 400px)",
+    maxHeight: "calc(100vh - 400px)",
     margin: "auto"
   },
   loadingContainer: {
