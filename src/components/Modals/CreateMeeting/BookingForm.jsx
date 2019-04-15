@@ -10,7 +10,8 @@ import {
   Grid,
   TextField,
   Typography,
-  withStyles
+  withStyles,
+  CircularProgress
 } from "@material-ui/core/";
 import compose from "lodash/fp/compose";
 import DatePicker from "./DatePicker";
@@ -60,6 +61,18 @@ const styles = theme => ({
     color: "#636363",
     fontWeight: "bold",
     fontSize: 15
+  },
+  saveBtnWrapper: {
+    margin: theme.spacing.unit,
+    position: "relative"
+  },
+  btnProgress: {
+    color: "blue",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -18,
+    marginLeft: -12
   }
 });
 
@@ -85,7 +98,8 @@ class BookingFormComponent extends React.Component {
     isInvalidDate: false,
     isInvalidHour: false,
     isInvalidReason: false,
-    isInvalidInvite: false
+    isInvalidInvite: false,
+    isLoading: false
   };
 
   enableStartTimeSelect = () => {
@@ -145,12 +159,8 @@ class BookingFormComponent extends React.Component {
     const { isBookingEdition } = this.state;
     const booking = mapToPost(this.state);
     const isBookingValid = this.validate(booking);
-    const {
-      onSuccessNotification,
-      onErrorNotification,
-      onModalClose,
-      onBookingsDataChange
-    } = this.props;
+    const { onErrorNotification } = this.props;
+    this.setState({ isLoading: true });
 
     try {
       if (isBookingValid) {
@@ -158,23 +168,12 @@ class BookingFormComponent extends React.Component {
           const { bookingForEdition } = this.props;
           const { id } = bookingForEdition;
           const bookingInfo = await this.doBookingEdition(id, booking);
-          onModalClose();
-          onSuccessNotification({
-            bookingInfo,
-            notificationType: "edit"
-          });
-          onBookingsDataChange();
-          return;
+          return this.saveBookingResponse(bookingInfo, isBookingEdition);
         }
         const bookingInfo = await this.doBookingCreation(booking);
-        onModalClose();
-        onSuccessNotification({
-          bookingInfo,
-          notificationType: "create"
-        });
-        onBookingsDataChange();
-        return;
+        return this.saveBookingResponse(bookingInfo, isBookingEdition);
       }
+      return this.setState({ isLoading: false });
     } catch (error) {
       const { title, body } = error;
       onErrorNotification({
@@ -190,11 +189,9 @@ class BookingFormComponent extends React.Component {
       const bookingCreated = await bookingService.createOne(bookingInfo);
       const { id } = bookingCreated;
       if (id) {
-        const bookingInfo = mapToNotificationContentFormat(bookingCreated);
-        return bookingInfo;
+        return mapToNotificationContentFormat(bookingCreated);
       }
-
-      return alert(bookingCreated);
+      return;
     } catch (error) {
       return Promise.reject({
         title: "Booking creation fail's",
@@ -210,15 +207,35 @@ class BookingFormComponent extends React.Component {
       if (bookingEditedId) {
         return mapToNotificationContentFormat(bookingEdited);
       }
-      // Can't edit for problems with the date or the schedule
-      // Change this for form validation
-      return alert(bookingEdited);
+      return;
     } catch (error) {
       return Promise.reject({
         title: "Booking edition fail's",
         body: "There was an error with the server"
       });
     }
+  };
+
+  saveBookingResponse = (bookingInfo, isEdit) => {
+    const {
+      onSuccessNotification,
+      onModalClose,
+      onBookingsDataChange
+    } = this.props;
+    if (bookingInfo) {
+      onModalClose();
+      onSuccessNotification({
+        bookingInfo,
+        notificationType: isEdit ? "edit" : "create"
+      });
+      onBookingsDataChange();
+      return;
+    }
+    return this.setState({
+      isLoading: false,
+      isInvalidHour: true,
+      invalidHourMessage: "This room is booked in this time"
+    });
   };
 
   handleChangeReason = event => {
@@ -301,6 +318,7 @@ class BookingFormComponent extends React.Component {
   }
 
   render() {
+    const { isLoading } = this.state;
     const { isBookingEdition, classes: styleClasses } = this.props;
     const {
       card,
@@ -309,7 +327,9 @@ class BookingFormComponent extends React.Component {
       content,
       subtitle,
       alertMessage,
-      helpText
+      helpText,
+      saveBtnWrapper,
+      btnProgress
     } = styleClasses;
 
     const formTitle = isBookingEdition ? "Edit Appointment" : "New Appointment";
@@ -435,13 +455,18 @@ class BookingFormComponent extends React.Component {
               colorButton="#909497"
               onClick={this.props.onModalClose}
             />
-            <MaterialButton
-              textButton={buttonSaveTxt}
-              sizeButton="large"
-              colorButton="#5094E3"
-              onClick={this.handleBookingOperation}
-              disabled={this.state.disabledNextButton}
-            />
+            <div className={saveBtnWrapper}>
+              <MaterialButton
+                textButton={buttonSaveTxt}
+                sizeButton="large"
+                colorButton="#5094E3"
+                onClick={this.handleBookingOperation}
+                disabled={this.state.disabledNextButton || isLoading}
+              />
+              {isLoading && (
+                <CircularProgress size={24} className={btnProgress} />
+              )}
+            </div>
           </CardActions>
         </Card>
       </Grid>

@@ -8,7 +8,6 @@ const styles = theme => {
     editBtn: {
       color: "white",
       width: 85,
-      height: 0,
       fontWeight: "bold",
       backgroundColor: "#5294e5",
       marginLeft: 10,
@@ -60,7 +59,7 @@ const ContentComponent = props => {
             onClick={onClickDelete}
             className={cancelBtn}
           >
-            Cancel
+            Delete
           </Button>
           <Button
             variant="contained"

@@ -44,6 +44,7 @@ const styles = theme => ({
     alignItems: "flex-end"
   },
   gridHeaderTxt: {
+    color: "#808080",
     margin: 0,
     position: "absolute"
   }

@@ -46,7 +46,8 @@ const styles = theme => ({
 class BookingItemComponent extends React.Component {
   state = {
     anchorEl: null,
-    isDialogOpen: false
+    isDialogOpen: false,
+    isLoading: false
   };
 
   handleMenuOpen = event => {
@@ -92,11 +93,12 @@ class BookingItemComponent extends React.Component {
   };
 
   doBookingDelete = async () => {
-    const { booking } = this.props;
+    const { booking, onErrorNotification } = this.props;
     const { userId, bookingId } = booking;
     const { id: sessionUserId } = storageService.getUserInfo();
     if (sessionUserId === userId) {
       try {
+        this.setState({ isLoading: true });
         const deleteResponse = await bookingService.deleteOneById(bookingId);
         const { ok } = deleteResponse;
         if (ok) {
@@ -112,6 +114,10 @@ class BookingItemComponent extends React.Component {
         });
       }
     }
+    return onErrorNotification({
+      title: "Appointment delete failed",
+      body: "Action not allowed"
+    });
   };
 
   handleBookingEditOperation = openBookingEditModal => () => {
@@ -121,7 +127,7 @@ class BookingItemComponent extends React.Component {
   };
 
   render() {
-    const { anchorEl, isDialogOpen } = this.state;
+    const { anchorEl, isDialogOpen, isLoading } = this.state;
     const { classes: styleClasses, booking } = this.props;
     const {
       itemCard,
@@ -166,6 +172,7 @@ class BookingItemComponent extends React.Component {
           </Grid>
         </Grid>
         <ConfirmationDialog
+          isLoading={isLoading}
           isOpen={isDialogOpen}
           bookingInfo={bookingForDialog}
           onConfirmation={this.handleBookingDeleteOperation}
