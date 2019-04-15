@@ -6,7 +6,8 @@ import {
   DialogActions,
   Dialog,
   Divider,
-  Typography
+  Typography,
+  CircularProgress
 } from "@material-ui/core";
 
 const styles = theme => ({
@@ -48,10 +49,23 @@ const styles = theme => ({
   btnsContainer: {
     display: "flex",
     justifyContent: "center"
+  },
+  saveBtnWrapper: {
+    margin: theme.spacing.unit,
+    position: "relative"
+  },
+  btnProgress: {
+    color: "blue",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -4
   }
 });
 
 const ConfirmationDialogComponent = ({
+  isLoading,
   isOpen,
   bookingInfo,
   onConfirmation,
@@ -67,7 +81,9 @@ const ConfirmationDialogComponent = ({
     remarkedTxt,
     btnsContainer,
     confirmationBtn,
-    cancelBtn
+    cancelBtn,
+    saveBtnWrapper,
+    btnProgress
   } = styleClasses;
 
   return (
@@ -95,14 +111,20 @@ const ConfirmationDialogComponent = ({
           <Button className={cancelBtn} variant="contained" onClick={onCancel}>
             Cancel
           </Button>
-          <Button
-            className={confirmationBtn}
-            variant="contained"
-            color="primary"
-            onClick={onConfirmation}
-          >
-            Yes
-          </Button>
+          <div className={saveBtnWrapper}>
+            <Button
+              className={confirmationBtn}
+              variant="contained"
+              color="primary"
+              onClick={onConfirmation}
+              disabled={isLoading}
+            >
+              Yes
+            </Button>
+            {isLoading && (
+              <CircularProgress size={24} className={btnProgress} />
+            )}
+          </div>
         </DialogActions>
       </div>
     </Dialog>
