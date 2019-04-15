@@ -12,7 +12,6 @@ const styles = theme => ({
   button: {
     position: "absolute",
     zIndex: 5,
-    // minHeight: "100%",
     minHeight: `calc(100% - 64px)`,
     minWidth: 30,
     padding: 0,

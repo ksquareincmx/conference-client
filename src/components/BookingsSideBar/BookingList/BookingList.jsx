@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import cuid from "cuid";
 import { GridList, withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem/BookingItem";
@@ -13,6 +13,14 @@ const styles = theme => ({
     flexDirection: "column",
     flexWrap: "nowrap",
     marginTop: 10
+  },
+  emptyList: {
+    height: "100%",
+    width: "100%",
+    color: "#808080",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 
@@ -23,7 +31,7 @@ const filterBookingsByTerm = (bookings, filterTerm) => {
 };
 
 const BookingListComponent = ({
-  classes: { gridList },
+  classes: { gridList, emptyList },
   filterTerm,
   bookingsData,
   onBookingsDataChange
@@ -35,17 +43,23 @@ const BookingListComponent = ({
   );
 
   return (
-    <GridList className={gridList}>
-      {filteredBookings
-        ? filteredBookings.map(booking => (
+    <Fragment>
+      {filteredBookings.length > 0 ? (
+        <GridList className={gridList}>
+          {filteredBookings.map(booking => (
             <BookingItem
               key={cuid()}
               booking={booking}
               onBookingsDataChange={onBookingsDataChange}
             />
-          ))
-        : ""}
-    </GridList>
+          ))}
+        </GridList>
+      ) : (
+        <div className={emptyList}>
+          <h2>No results found</h2>
+        </div>
+      )}
+    </Fragment>
   );
 };
 

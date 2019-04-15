@@ -66,7 +66,6 @@ class DrawerComponent extends React.Component {
         >
           <div className={toolbar} />
           {children}
-          {/* <DrawerBtn onClick={this.handleDrawerClose} /> */}
         </Drawer>
         <div className={btnContainer}>
           <DrawerBtn
