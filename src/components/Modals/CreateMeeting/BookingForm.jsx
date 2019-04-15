@@ -191,7 +191,7 @@ class BookingFormComponent extends React.Component {
       if (id) {
         return mapToNotificationContentFormat(bookingCreated);
       }
-      return;
+      return bookingCreated;
     } catch (error) {
       return Promise.reject({
         title: "Booking creation fail's",
@@ -207,7 +207,7 @@ class BookingFormComponent extends React.Component {
       if (bookingEditedId) {
         return mapToNotificationContentFormat(bookingEdited);
       }
-      return;
+      return bookingEdited;
     } catch (error) {
       return Promise.reject({
         title: "Booking edition fail's",
@@ -222,14 +222,13 @@ class BookingFormComponent extends React.Component {
       onModalClose,
       onBookingsDataChange
     } = this.props;
-    if (bookingInfo) {
+    if (bookingInfo.userName) {
       onModalClose();
       onSuccessNotification({
         bookingInfo,
         notificationType: isEdit ? "edit" : "create"
       });
-      onBookingsDataChange();
-      return;
+      return onBookingsDataChange();
     }
     return this.setState({
       isLoading: false,
