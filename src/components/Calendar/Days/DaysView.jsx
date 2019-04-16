@@ -12,7 +12,8 @@ const styles = theme => ({
   gridContainer: {
     display: "flex",
     flexDirection: "row",
-    height: 564,
+    minHeight: "calc(100vh - 400px)",
+    maxHeight: "calc(100vh - 400px)",
     margin: "auto"
   },
   loadingContainer: {
@@ -43,6 +44,7 @@ const styles = theme => ({
     alignItems: "flex-end"
   },
   gridHeaderTxt: {
+    color: "#808080",
     margin: 0,
     position: "absolute"
   }

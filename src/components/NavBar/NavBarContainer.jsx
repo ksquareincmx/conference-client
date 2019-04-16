@@ -6,7 +6,8 @@ const styles = theme => ({
     boxShadow: "none"
   },
   toolBar: {
-    backgroundColor: "#3049a1"
+    backgroundColor: "#3049a1",
+    zIndex: theme.zIndex.drawer + 1
   }
 });
 

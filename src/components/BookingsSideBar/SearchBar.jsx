@@ -11,7 +11,8 @@ const styles = theme => ({
     marginRight: 50
   },
   input: {
-    fontSize: 18
+    fontSize: 18,
+    width: "calc(100% - 48px)"
   },
   iconButton: {
     borderRadius: 5
@@ -22,7 +23,7 @@ const SearchBarComponent = ({ classes: styleClasses, onChange }) => {
   const { searchBar, iconButton, input } = styleClasses;
   return (
     <Paper className={searchBar} elevation={0}>
-      <IconButton className={iconButton}>
+      <IconButton className={iconButton} disabled>
         <SearchIcon />
       </IconButton>
       <InputBase

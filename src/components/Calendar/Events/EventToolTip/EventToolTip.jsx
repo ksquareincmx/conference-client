@@ -132,7 +132,8 @@ const getTooltipColor = (color, styles) => {
 class EventToolTipComponent extends React.Component {
   state = {
     arrowRef: null,
-    isDialogOpen: false
+    isDialogOpen: false,
+    isLoading: false
   };
 
   handleArrowRef = node => {
@@ -180,12 +181,14 @@ class EventToolTipComponent extends React.Component {
   };
 
   doBookingDelete = async () => {
-    const { booking } = this.props.content;
+    const { content, onErrorNotification } = this.props;
+    const { booking } = content;
     const { id: userId } = booking.user;
     const { id: bookingId } = booking;
     const { id: sessionUserId } = storageService.getUserInfo();
     if (sessionUserId === userId) {
       try {
+        this.setState({ isLoading: true });
         const deleteResponse = await bookingService.deleteOneById(bookingId);
         const { ok } = deleteResponse;
         if (ok) {
@@ -201,6 +204,10 @@ class EventToolTipComponent extends React.Component {
         });
       }
     }
+    return onErrorNotification({
+      title: "Appointment delete failed",
+      body: "Action not allowed"
+    });
   };
 
   render() {
@@ -273,6 +280,7 @@ class EventToolTipComponent extends React.Component {
           </Tooltip>
         </ClickAwayListener>
         <ConfirmationDialog
+          isLoading={this.state.isLoading}
           onConfirmation={this.handleBookingDeleteOperation}
           bookingInfo={bookingFormated}
           isOpen={this.state.isDialogOpen}
