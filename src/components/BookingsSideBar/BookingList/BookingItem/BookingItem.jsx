@@ -83,12 +83,11 @@ class BookingItemComponent extends React.Component {
       onBookingsDataChange();
       return;
     } catch (error) {
-      const { title, body } = error;
-      onErrorNotification({
-        title,
-        body
+      this.handleDialogClose();
+      return onErrorNotification({
+        title: "Action failed",
+        body: "There was an error with the server"
       });
-      return;
     }
   };
 
@@ -105,8 +104,10 @@ class BookingItemComponent extends React.Component {
           return mapToNotificationContentFormat(booking);
         }
 
-        // TODO: Check this kind fo errors
-        return alert(deleteResponse);
+        return onErrorNotification({
+          title: "Booking delete failed",
+          body: "There was an error while trying to delete"
+        });
       } catch (error) {
         return Promise.reject({
           title: "Booking delete fail's",
