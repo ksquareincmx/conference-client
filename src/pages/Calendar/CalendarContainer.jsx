@@ -15,7 +15,7 @@ export class CalendarContainer extends React.Component {
       this.setState({ bookingsData });
     } catch (error) {
       console.log(error);
-      return Promise.reject(new Error(err.message));
+      return Promise.reject(new Error(error.message));
     }
   };
 

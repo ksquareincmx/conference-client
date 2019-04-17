@@ -45,8 +45,7 @@ class AuthProvider extends React.Component {
       };
       this.setState({ sessionInfo, isAuth: true }, () => {
         const { sessionInfo } = this.state;
-        const { updateInfoInStorage } = storageService;
-        updateInfoInStorage(sessionInfo);
+        storageService.updateInfoInStorage(sessionInfo);
       });
     } catch (err) {
       console.log(err);
@@ -60,8 +59,7 @@ class AuthProvider extends React.Component {
     };
     this.setState({ sessionInfo, isAuth: false }, () => {
       const { sessionInfo } = this.state;
-      const { updateInfoInStorage } = storageService;
-      updateInfoInStorage(sessionInfo);
+      storageService.updateInfoInStorage(sessionInfo);
     });
   };
 

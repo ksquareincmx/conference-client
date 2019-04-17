@@ -36,17 +36,13 @@ import { apiGateway } from "gateways";
  */
 export const RoomService = storageService => {
   /**
-   * Room service require the auth token for requests
-   */
-  const { token: authToken } = storageService.getJWT();
-
-  /**
    * Create a new room and return it.
    * @memberof RoomService
    * @param {Room} room - room object.
    * @returns {RoomResponse} - created room information.
    */
   const createOne = async ({ name, color }) => {
+    const { token: authToken } = storageService.getJWT();
     const config = {
       createBody: { name, color },
       authToken
@@ -66,6 +62,7 @@ export const RoomService = storageService => {
    * @returns {RoomResponse} - found room information.
    */
   const getOneById = async id => {
+    const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
       const res = await apiGateway.doGet("getRoomById", config);
@@ -81,6 +78,7 @@ export const RoomService = storageService => {
    * @returns {RoomResponse[]} - found rooms information.
    */
   const getAll = async () => {
+    const { token: authToken } = storageService.getJWT();
     const config = { authToken };
     try {
       const res = await apiGateway.doGet("getAllRooms", config);
@@ -98,6 +96,7 @@ export const RoomService = storageService => {
    * @returns {RoomResponse} - room updated information.
    */
   const updateOneById = async (id, { name, color }) => {
+    const { token: authToken } = storageService.getJWT();
     const config = {
       id,
       updateBody: {
@@ -121,6 +120,7 @@ export const RoomService = storageService => {
    *  @returns {NotContentResponse} - request response.
    */
   const deleteOneById = async id => {
+    const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
       const res = await apiGateway.doDelete("deleteRoomById", config);
