@@ -62,7 +62,7 @@ export const APIGateway = () => {
         }
       });
     } catch (error) {
-      return Promise.reject(new Error("An error occurred in the POST request"));
+      return Promise.reject(new Error("POST error"));
     }
   };
 
@@ -87,7 +87,7 @@ export const APIGateway = () => {
         }
       });
     } catch (error) {
-      return Promise.reject(new Error("An error occurred in the PUT request"));
+      return Promise.reject(new Error("PUT error"));
     }
   };
 

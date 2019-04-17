@@ -53,15 +53,19 @@ class CalendarPageLogicComponent extends React.Component {
   };
 
   fetchRooms = async () => {
-    const roomList = await roomService.getAll();
-    const ROOMS_PER_CALENDAR = 2;
-    const pairedRooms = roomList.reduce((result, value, index, array) => {
-      if (index % 2 === 0) {
-        result.push(array.slice(index, index + ROOMS_PER_CALENDAR));
-      }
-      return result;
-    }, []);
-    this.setState({ pairedRooms, selectedRooms: pairedRooms[0] });
+    try {
+      const roomList = await roomService.getAll();
+      const ROOMS_PER_CALENDAR = 2;
+      const pairedRooms = roomList.reduce((result, value, index, array) => {
+        if (index % 2 === 0) {
+          result.push(array.slice(index, index + ROOMS_PER_CALENDAR));
+        }
+        return result;
+      }, []);
+      this.setState({ pairedRooms, selectedRooms: pairedRooms[0] });
+    } catch (error) {
+      this.setState({ selectedRooms: "" });
+    }
   };
 
   componentDidMount() {
