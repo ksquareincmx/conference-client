@@ -16,7 +16,7 @@ import {
 import compose from "lodash/fp/compose";
 import DatePicker from "./DatePicker";
 import TimeSelect from "./TimeSelect";
-import RoomSelect from "./RoomSelect";
+import { RoomSelect } from "./RoomSelect";
 import { validateBooking } from "./meetingValidations";
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList";
@@ -220,7 +220,8 @@ class BookingFormComponent extends React.Component {
     const {
       onSuccessNotification,
       onModalClose,
-      onBookingsDataChange
+      onBookingsDataChange,
+      onErrorNotification
     } = this.props;
     if (bookingInfo.userName) {
       onModalClose();
@@ -229,6 +230,16 @@ class BookingFormComponent extends React.Component {
         notificationType: isEdit ? "edit" : "create"
       });
       return onBookingsDataChange();
+    }
+    if (
+      bookingInfo.message === "POST error" ||
+      bookingInfo.message === "PUT error"
+    ) {
+      onModalClose();
+      return onErrorNotification({
+        title: "Action failed",
+        body: "There was an error with the server"
+      });
     }
     return this.setState({
       isLoading: false,

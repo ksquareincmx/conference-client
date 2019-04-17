@@ -4,8 +4,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Select, Grid } from "@material-ui/core/";
 import cuid from "cuid";
 import { roomService } from "services";
+import { withNotifications } from "hocs";
 
-class RoomSelect extends React.Component {
+class RoomSelectComponent extends React.Component {
   state = {
     rooms: [],
     roomSelected: ""
@@ -24,11 +25,19 @@ class RoomSelect extends React.Component {
   };
 
   async componentDidMount() {
-    const rooms = await roomService.getAll();
-    this.setState({ rooms });
+    try {
+      const rooms = await roomService.getAll();
+      this.setState({ rooms });
+    } catch (error) {
+      return onErrorNotification({
+        title: "Action failed",
+        body: "There was an error with the server"
+      });
+    }
   }
 
   render() {
+    const { rooms } = this.state;
     const { roomId } = this.props;
     const roomSelect = (
       <Select
@@ -45,11 +54,13 @@ class RoomSelect extends React.Component {
             Room
           </MenuItem>
         )}
-        {this.state.rooms.map(room => (
-          <MenuItem value={room.id} key={cuid()}>
-            {room.name}
-          </MenuItem>
-        ))}
+        {Array.isArray(rooms)
+          ? rooms.map(room => (
+              <MenuItem value={room.id} key={cuid()}>
+                {room.name}
+              </MenuItem>
+            ))
+          : null}
       </Select>
     );
 
@@ -61,4 +72,4 @@ class RoomSelect extends React.Component {
   }
 }
 
-export default RoomSelect;
+export const RoomSelect = withNotifications(RoomSelectComponent);

@@ -1,18 +1,26 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { bookingService } from "services";
 import { Calendar } from "./Calendar";
+import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
 
-export class CalendarContainer extends React.Component {
+class CalendarContainerComponent extends React.Component {
   state = {
-    bookingsData: []
+    bookingsData: [],
+    isServerDown: false
   };
 
   fetchBookings = async () => {
     try {
       const data = await bookingService.getAllWithDetails(getUTCDateFilter());
-      const { bookings: bookingsData } = data;
-      this.setState({ bookingsData });
+      console.log(data);
+      if (data.bookings) {
+        const { bookings: bookingsData } = data;
+        this.setState({ bookingsData, isServerDown: false });
+      } else {
+        this.setState({ isServerDown: true });
+      }
     } catch (error) {
       console.log(error);
       return Promise.reject(new Error(err.message));
@@ -28,7 +36,10 @@ export class CalendarContainer extends React.Component {
   };
 
   render() {
-    const { bookingsData } = this.state;
+    const { bookingsData, isServerDown } = this.state;
+    if (isServerDown) {
+      return <Error500 />;
+    }
     return (
       <Calendar
         bookingsData={bookingsData}
@@ -37,3 +48,5 @@ export class CalendarContainer extends React.Component {
     );
   }
 }
+
+export const CalendarContainer = withRouter(CalendarContainerComponent);
