@@ -30,14 +30,18 @@ const style = theme => ({
   }
 });
 
-export const LoginButtonComponent = ({ classes: styleClasses, onClick }) => {
+const LoginButtonComponent = ({
+  classes: styleClasses,
+  onSuccess,
+  onFailure
+}) => {
   const { loginButton, loginButtonText, loginButtonIcon } = styleClasses;
   return (
     <GoogleLogin
       clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
       className={loginButton}
-      onSuccess={onClick}
-      onFailure={e => console.log(e)}
+      onSuccess={onSuccess}
+      onFailure={onFailure}
     >
       <FontAwesomeIcon
         className={loginButtonIcon}
