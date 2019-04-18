@@ -45,7 +45,7 @@ const styles = theme => ({
     flexGrow: 1
   },
   header: {
-    fontSize: 40,
+    fontSize: "1.8em",
     color: "#5094E3"
   },
   content: {
