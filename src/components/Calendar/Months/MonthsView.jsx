@@ -16,6 +16,8 @@ const styles = theme => ({
     margin: "auto"
   },
   grid: {
+    minHeight: 422,
+    maxHeight: "auto",
     width: "100%"
   }
 });

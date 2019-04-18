@@ -23,8 +23,11 @@ const styles = theme => ({
     height: "50vh"
   },
   grid: {
+    minHeight: 380,
+    maxHeight: "auto",
     width: "50%",
-    border: "1px solid lightgrey"
+    border: "1px solid lightgrey",
+    borderBottom: 0
   },
   gridHeaderContainer: {
     height: 40,
