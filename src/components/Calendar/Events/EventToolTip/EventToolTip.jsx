@@ -172,11 +172,10 @@ class EventToolTipComponent extends React.Component {
     } catch (error) {
       const { title, body } = error;
       this.handleDialogClose();
-      onErrorNotification({
-        title,
-        body
+      return onErrorNotification({
+        title: "Action failed",
+        body: "There was an error with the server"
       });
-      return;
     }
   };
 
@@ -195,8 +194,10 @@ class EventToolTipComponent extends React.Component {
           return mapToNotificationContentFormat(booking);
         }
 
-        // TODO: Check this kind fo errors
-        return alert(deleteResponse);
+        return onErrorNotification({
+          title: "Booking delete failed",
+          body: "There was an error while trying to delete"
+        });
       } catch (error) {
         return Promise.reject({
           title: "Appointment delete fail's",
@@ -205,7 +206,7 @@ class EventToolTipComponent extends React.Component {
       }
     }
     return onErrorNotification({
-      title: "Appointment delete failed",
+      title: "Booking delete failed",
       body: "Action not allowed"
     });
   };

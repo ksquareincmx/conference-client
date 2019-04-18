@@ -1,12 +1,13 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { withStyles } from "@material-ui/core/";
+import background from "./login.jpg";
+import { LoginErrorCard } from "./LoginErrorCard";
 import { LoginCard } from "./LoginCard";
 import { withAuthContext } from "hocs";
-import background from "./login.jpg";
 
 const style = theme => ({
-  loginPage: {
+  loginContainer: {
     backgroundImage: `url(${background})`,
     height: "100vh",
     width: "100vw",
@@ -17,18 +18,39 @@ const style = theme => ({
   }
 });
 
-const Login = ({ authContext, classes: { loginPage } }) => {
-  const { isAuth } = authContext;
-  if (isAuth) {
-    return <Redirect to="/calendar" />;
-  }
+class Login extends React.Component {
+  state = {
+    anErrorOcurred: false
+  };
 
-  const { onLogin } = authContext;
-  return (
-    <div className={loginPage}>
-      <LoginCard onLogin={onLogin} />
-    </div>
-  );
-};
+  handleErrorCardShow = () => {
+    this.setState({ anErrorOcurred: true });
+  };
+
+  handleErrorCardHide = () => {
+    this.setState({ anErrorOcurred: false });
+  };
+
+  render() {
+    const { authContext, classes } = this.props;
+    const { loginContainer } = classes;
+    const { isAuth } = authContext;
+    if (isAuth) {
+      return <Redirect to="/calendar" />;
+    }
+
+    const { onLogin } = authContext;
+    const { anErrorOcurred } = this.state;
+    return (
+      <div className={loginContainer}>
+        <LoginCard onLogin={onLogin} onLoginError={this.handleErrorCardShow} />
+        <LoginErrorCard
+          isOpen={anErrorOcurred}
+          onClose={this.handleErrorCardHide}
+        />
+      </div>
+    );
+  }
+}
 
 export const LoginWithAuthContext = withStyles(style)(withAuthContext(Login));

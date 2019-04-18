@@ -11,12 +11,12 @@ import cuid from "cuid";
 
 const styles = theme => ({
   button: {
-    width: 200,
+    width: "auto",
     position: "absolute",
     top: 177,
     backgroundColor: "#5294e5",
     color: "white",
-    fontSize: 15
+    fontSize: "1em"
   },
   formControl: {
     margin: theme.spacing.unit,

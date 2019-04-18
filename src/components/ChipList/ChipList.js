@@ -8,18 +8,24 @@ import { isValidMail } from "components/Modals/CreateMeeting/meetingValidations"
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    maxHeight: 110,
-    overflow: "auto"
+    maxHeight: 50,
+    marginBottom: 25
   },
   chips: {
-    fontSize: 20
+    fontSize: "1em"
   },
   chip: {
-    fontSize: 20,
+    fontSize: "1em",
     margin: theme.spacing.unit / 4
   },
   invalid: {
     color: "red"
+  },
+  chipList: {
+    marginTop: 5,
+    maxHeight: 36,
+    maxWidth: 460,
+    overflow: "auto"
   }
 });
 
@@ -94,7 +100,7 @@ class ChipList extends React.Component {
   render() {
     const { value, isFocused, isInvalidMail, chipData } = this.state;
     const { classes: styleClasses, isInvalidInvite } = this.props;
-    const { root, chips, chip, invalid } = styleClasses;
+    const { root, chips, chip, invalid, chipList } = styleClasses;
     return (
       <Grid className={root}>
         <TextField
@@ -114,7 +120,7 @@ class ChipList extends React.Component {
         <Collapse in={isInvalidMail}>
           <small className={invalid}>Invalid email</small>
         </Collapse>
-        <div>
+        <div className={chipList}>
           {chipData.map(data => (
             <Chip
               className={chip}
