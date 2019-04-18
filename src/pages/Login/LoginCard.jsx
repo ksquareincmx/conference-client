@@ -20,12 +20,16 @@ const style = theme => ({
   }
 });
 
-const LoginCardComponent = ({ classes: { loginCard }, onLogin }) => (
+const LoginCardComponent = ({
+  classes: { loginCard },
+  onLogin,
+  onLoginError
+}) => (
   <Card className={loginCard}>
     <CardContent>
       <CardLogo />
       <CardMessage />
-      <LoginButton onClick={onLogin} />
+      <LoginButton onSuccess={onLogin} onFailure={onLoginError} />
     </CardContent>
   </Card>
 );
