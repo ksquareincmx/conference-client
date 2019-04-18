@@ -12,8 +12,9 @@ import {
 
 const styles = theme => ({
   dialog: {
-    padding: 40,
-    paddingTop: 20
+    padding: 30,
+    paddingTop: 20,
+    paddingBottom: 10
   },
   title: {
     color: "#5294e5",
