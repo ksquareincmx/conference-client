@@ -15,7 +15,7 @@ const styles = theme => ({
   },
   title: {
     height: 80,
-    fontSize: 60,
+    fontSize: "2.2em",
     fontWeight: "bold",
     color: "#3049a1"
   },
