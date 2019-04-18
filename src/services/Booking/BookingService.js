@@ -70,17 +70,13 @@ import { mapToRequestFormat } from "mappers/bookingMapper";
  */
 export const BookingService = storageService => {
   /**
-   * Booking service require the auth token for requests
-   */
-  const { token: authToken } = storageService.getJWT();
-
-  /**
    * Return the new Booking information.
    * @memberof BookingService
    * @param {BookingRequest} booking - booking information.
    * @return {BookingResponse} - created booking information.
    */
   const createOne = async booking => {
+    const { token: authToken } = storageService.getJWT();
     const createBody = mapToRequestFormat(booking);
     const config = {
       createBody,
@@ -101,6 +97,7 @@ export const BookingService = storageService => {
    * @return {BookingResponse} - found booking information.
    */
   const getOneById = async id => {
+    const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
       const res = await apiGateway.doGet("getBookingById", config);
@@ -116,6 +113,7 @@ export const BookingService = storageService => {
    * @return {BookingResponse[]} - found bookings information.
    */
   const getAll = async () => {
+    const { token: authToken } = storageService.getJWT();
     const config = { authToken };
     try {
       const res = await apiGateway.doGet("getAllBookings", config);
@@ -131,6 +129,7 @@ export const BookingService = storageService => {
    * @return {BookingWithDetails} - found bookigs and, room and user information.
    */
   const getAllWithDetails = async filterDate => {
+    const { token: authToken } = storageService.getJWT();
     const config = { filterDate, authToken };
     try {
       const res = await apiGateway.doGet("getDetailedBookings", config);
@@ -148,6 +147,7 @@ export const BookingService = storageService => {
    * @return {BookingResponse} - booking updated information.
    */
   const updateOneById = async (id, booking) => {
+    const { token: authToken } = storageService.getJWT();
     const updateBody = mapToRequestFormat(booking);
     const config = {
       id,
@@ -169,6 +169,7 @@ export const BookingService = storageService => {
    * @returns {NotContentResponse} - request response.
    */
   const deleteOneById = async id => {
+    const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
       const res = await apiGateway.doDelete("deleteBookingById", config);

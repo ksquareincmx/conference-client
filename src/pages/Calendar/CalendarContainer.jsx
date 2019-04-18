@@ -21,7 +21,7 @@ class CalendarContainerComponent extends React.Component {
         this.setState({ isServerDown: true });
       }
     } catch (error) {
-      return Promise.reject(new Error(err.message));
+      return Promise.reject(new Error(error.message));
     }
   };
 
