@@ -12,13 +12,14 @@ import {
 
 const styles = theme => ({
   dialog: {
-    padding: 40,
-    paddingTop: 20
+    padding: 30,
+    paddingTop: 20,
+    paddingBottom: 10
   },
   title: {
     color: "#5294e5",
     fontWeight: "bold",
-    padding: 20,
+    padding: 15,
     paddingLeft: 0,
     paddingTop: 0
   },
@@ -94,7 +95,7 @@ const ConfirmationDialogComponent = ({
       open={isOpen}
     >
       <div className={dialog}>
-        <Typography variant="h4" className={title}>
+        <Typography variant="h5" className={title}>
           Delete Meeting
         </Typography>
         <Divider className={divider} />
