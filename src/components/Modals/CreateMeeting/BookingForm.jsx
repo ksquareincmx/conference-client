@@ -38,7 +38,8 @@ const styles = theme => ({
     width: 500,
     maxWidth: 500,
     borderRadius: 5,
-    maxHeight: 760
+    maxHeight: 760,
+    overflowY: "auto"
   },
   root: {
     flexGrow: 1
