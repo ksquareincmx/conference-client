@@ -163,14 +163,15 @@ class EventToolTipComponent extends React.Component {
     try {
       const bookingInfo = await this.doBookingDelete();
       this.handleDialogClose();
-      onSuccessNotification({
-        bookingInfo,
-        notificationType: "delete"
-      });
-      onBookingsDataChange();
-      return;
+      if (bookingInfo) {
+        onSuccessNotification({
+          bookingInfo,
+          notificationType: "delete"
+        });
+        return onBookingsDataChange();
+      }
+      return bookingInfo;
     } catch (error) {
-      const { title, body } = error;
       this.handleDialogClose();
       return onErrorNotification({
         title: "Action failed",
@@ -183,9 +184,17 @@ class EventToolTipComponent extends React.Component {
     const { content, onErrorNotification } = this.props;
     const { booking } = content;
     const { id: userId } = booking.user;
+    const { _d: startTime } = formatDate(booking.start);
     const { id: bookingId } = booking;
     const { id: sessionUserId } = storageService.getUserInfo();
+
     if (sessionUserId === userId) {
+      if (new Date() > startTime) {
+        return onErrorNotification({
+          title: "Can't delete past bookings",
+          body: "A booking can't be deleted once it starts"
+        });
+      }
       try {
         this.setState({ isLoading: true });
         const deleteResponse = await bookingService.deleteOneById(bookingId);
@@ -206,8 +215,8 @@ class EventToolTipComponent extends React.Component {
       }
     }
     return onErrorNotification({
-      title: "Booking delete failed",
-      body: "Action not allowed"
+      title: "Action not allowed",
+      body: "You don't have permissions to delete this booking"
     });
   };
 
