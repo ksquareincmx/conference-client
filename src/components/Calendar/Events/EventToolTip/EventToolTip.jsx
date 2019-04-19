@@ -184,12 +184,12 @@ class EventToolTipComponent extends React.Component {
     const { content, onErrorNotification } = this.props;
     const { booking } = content;
     const { id: userId } = booking.user;
-    const { _d: startTime } = formatDate(booking.start);
+    const { _d: endTime } = formatDate(booking.end);
     const { id: bookingId } = booking;
     const { id: sessionUserId } = storageService.getUserInfo();
 
     if (sessionUserId === userId) {
-      if (new Date() > startTime) {
+      if (new Date() > endTime) {
         return onErrorNotification({
           title: "Can't delete past bookings",
           body: "A booking can't be deleted once it starts"

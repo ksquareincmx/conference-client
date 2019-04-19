@@ -97,10 +97,10 @@ class BookingItemComponent extends React.Component {
   doBookingDelete = async () => {
     const { booking, onErrorNotification } = this.props;
     const { userId, bookingId } = booking;
-    const { _d: startTime } = formatDate(booking.start);
+    const { _d: endTime } = formatDate(booking.end);
     const { id: sessionUserId } = storageService.getUserInfo();
     if (sessionUserId === userId) {
-      if (new Date() > startTime) {
+      if (new Date() > endTime) {
         return onErrorNotification({
           title: "Can't delete past bookings",
           body: "A booking can't be deleted once it starts"
