@@ -4,7 +4,7 @@ import { buildContentFromBooking } from "utils/notificationBuilder";
 
 export function withNotifications(Component) {
   const notificationConfig = {
-    autoDismissTimeout: 3000,
+    autoDismissTimeout: 3500,
     autoDismiss: true
   };
 

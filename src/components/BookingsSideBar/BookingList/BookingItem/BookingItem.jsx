@@ -9,6 +9,7 @@ import {
   mapToNotificationContentFormat,
   mapToConfirmationDialogFormat
 } from "mappers/bookingMapper";
+import { formatDate } from "utils/BookingFormater";
 import { ModalFormConsumer } from "providers";
 import { bookingService, storageService } from "services";
 import { withNotifications } from "hocs";
@@ -76,12 +77,14 @@ class BookingItemComponent extends React.Component {
     try {
       const bookingInfo = await this.doBookingDelete();
       this.handleDialogClose();
-      onSuccessNotification({
-        bookingInfo,
-        notificationType: "delete"
-      });
-      onBookingsDataChange();
-      return;
+      if (bookingInfo) {
+        onSuccessNotification({
+          bookingInfo,
+          notificationType: "delete"
+        });
+        return onBookingsDataChange();
+      }
+      return bookingInfo;
     } catch (error) {
       this.handleDialogClose();
       return onErrorNotification({
@@ -94,8 +97,15 @@ class BookingItemComponent extends React.Component {
   doBookingDelete = async () => {
     const { booking, onErrorNotification } = this.props;
     const { userId, bookingId } = booking;
+    const { _d: endTime } = formatDate(booking.end);
     const { id: sessionUserId } = storageService.getUserInfo();
     if (sessionUserId === userId) {
+      if (new Date() > endTime) {
+        return onErrorNotification({
+          title: "Can't delete past bookings",
+          body: "A booking can't be deleted once it starts"
+        });
+      }
       try {
         this.setState({ isLoading: true });
         const deleteResponse = await bookingService.deleteOneById(bookingId);
@@ -116,8 +126,8 @@ class BookingItemComponent extends React.Component {
       }
     }
     return onErrorNotification({
-      title: "Appointment delete failed",
-      body: "Action not allowed"
+      title: "Action not allowed",
+      body: "You don't have permissions to delete this booking"
     });
   };
 

@@ -29,8 +29,8 @@ class CalendarGridComponent extends React.Component {
 
     if (end < new Date()) {
       return onErrorNotification({
-        title: "Failed to create the appointment",
-        body: "An appointment can't be booked before today's date and time"
+        title: "Can't create bookings in the past",
+        body: "A booking can't be made before today's date and time"
       });
     }
 
