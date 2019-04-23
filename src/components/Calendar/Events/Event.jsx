@@ -36,12 +36,13 @@ class EventComponent extends React.Component {
 
     return (
       <ModalFormConsumer>
-        {({ handleOnClickEditMeeting }) => (
+        {({ handleOnClickEditMeeting, handleDeleteMeeting }) => (
           <EventToolTip
             content={content.event}
             handleTooltipClose={this.handleTooltipClose}
             handleTooltipOpen={this.handleTooltipOpen}
             onEdit={handleOnClickEditMeeting}
+            onDelete={handleDeleteMeeting}
             open={this.state.isOpen}
             onBookingsDataChange={onBookingsDataChange}
           >
