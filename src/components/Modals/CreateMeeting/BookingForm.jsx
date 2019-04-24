@@ -24,7 +24,8 @@ import {
   formatDate,
   formatDashedDate,
   formatHours,
-  formatMinutes
+  formatMinutes,
+  formatToday
 } from "utils/BookingFormater";
 import { mapToPost } from "mappers/AppointmentMapper";
 import addZeros from "utils/AddZeros";
@@ -79,7 +80,7 @@ const styles = theme => ({
 
 class BookingFormComponent extends React.Component {
   state = {
-    date: "",
+    date: formatDashedDate(formatToday()),
     startTime: "",
     endTime: "",
     room: "",
@@ -89,7 +90,7 @@ class BookingFormComponent extends React.Component {
     invalidDateMessage: "",
     invalidHourMessage: "",
     disabledEndTimeSelect: true,
-    disabledStartTimeSelect: true,
+    disabledStartTimeSelect: false,
     disabledConferenceSelect: true,
     disabledNextButton: true,
     disabledDate: false,
@@ -139,7 +140,7 @@ class BookingFormComponent extends React.Component {
   };
 
   setDate = date => {
-    this.setState({ date: date.target.value }, () =>
+    this.setState({ date: formatDashedDate(date) }, () =>
       this.enableStartTimeSelect()
     );
   };

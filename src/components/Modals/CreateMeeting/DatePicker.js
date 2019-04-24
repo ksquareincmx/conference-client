@@ -1,22 +1,22 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
+import { Grid } from "@material-ui/core";
 
 function DatePickers(props) {
   return (
-    <form noValidate>
-      <TextField
-        id="date"
-        label="date"
-        type="date"
-        value={props.date}
-        InputLabelProps={{
-          shrink: true
-        }}
-        disabled={props.disabled}
-        onChange={props.setDate}
-        error={props.isInvalidDate}
-      />
-    </form>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Grid container>
+        <DatePicker
+          margin="normal"
+          label="Date picker"
+          value={props.date ? props.date : new Date()}
+          disabled={props.disabled}
+          onChange={props.setDate}
+          error={props.isInvalidDate}
+        />
+      </Grid>
+    </MuiPickersUtilsProvider>
   );
 }
 
