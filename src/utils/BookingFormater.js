@@ -32,6 +32,8 @@ export const formatHours = date => date.format("HH");
 
 export const formatMinutes = date => date.format("mm");
 
+export const formatToday = () => moment();
+
 const abbreviate = name =>
   `${name.substring(0, 1)}${name.substring(name.length - 1)}`;
 
