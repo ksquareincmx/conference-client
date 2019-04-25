@@ -2,6 +2,7 @@ import React from "react";
 import { withStyles } from "@material-ui/core";
 import { EventToolTip } from "./EventToolTip/EventToolTip";
 import { ModalFormConsumer } from "providers";
+import { storageService } from "services";
 
 const styles = theme => {
   return {
@@ -18,7 +19,8 @@ const styles = theme => {
 
 class EventComponent extends React.Component {
   state = {
-    isOpen: false
+    isOpen: false,
+    isOwner: false
   };
 
   handleTooltipClose = () => {
@@ -26,10 +28,16 @@ class EventComponent extends React.Component {
   };
 
   handleTooltipOpen = () => {
-    this.setState({ isOpen: true });
+    const { id: userId } = this.props.content.event.booking.user;
+    const { id: sessionUserId } = storageService.getUserInfo();
+    if (sessionUserId === userId) {
+      return this.setState({ isOwner: true, isOpen: true });
+    }
+    return this.setState({ isOwner: false, isOpen: true });
   };
 
   render() {
+    const { isOpen, isOwner } = this.state;
     const { content, classes: styleClasses, onBookingsDataChange } = this.props;
     const { title } = content.event;
     const { eventContainter } = styleClasses;
@@ -43,7 +51,8 @@ class EventComponent extends React.Component {
             handleTooltipOpen={this.handleTooltipOpen}
             onEdit={handleOnClickEditMeeting}
             onDelete={handleDeleteMeeting}
-            open={this.state.isOpen}
+            open={isOpen}
+            isOwner={isOwner}
             onBookingsDataChange={onBookingsDataChange}
           >
             <div className={eventContainter} onClick={this.handleTooltipOpen}>

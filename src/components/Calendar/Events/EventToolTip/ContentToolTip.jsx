@@ -30,7 +30,13 @@ const styles = theme => {
 };
 
 const ContentComponent = props => {
-  const { content, onClickEdit, onClickDelete, classes: styleClasses } = props;
+  const {
+    content,
+    onClickEdit,
+    onClickDelete,
+    isOwner,
+    classes: styleClasses
+  } = props;
   const {
     start,
     end,
@@ -53,23 +59,27 @@ const ContentComponent = props => {
         <span>{`${desc} in conference 
               ${roomName} (from ${startTime} to ${endTime})
               `}</span>
-        <div className={actions}>
-          <Button
-            variant="contained"
-            onClick={onClickDelete}
-            className={cancelBtn}
-          >
-            Delete
-          </Button>
-          <Button
-            variant="contained"
-            onClick={onClickEdit}
-            color="primary"
-            className={editBtn}
-          >
-            Edit
-          </Button>
-        </div>
+        {isOwner ? (
+          <div className={actions}>
+            <Button
+              variant="contained"
+              onClick={onClickDelete}
+              className={cancelBtn}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="contained"
+              onClick={onClickEdit}
+              color="primary"
+              className={editBtn}
+            >
+              Edit
+            </Button>
+          </div>
+        ) : (
+          <div className={actions} />
+        )}
       </div>
     </Fragment>
   );
