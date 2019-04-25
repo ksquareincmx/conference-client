@@ -151,6 +151,7 @@ class EventToolTipComponent extends React.Component {
       content,
       handleTooltipClose,
       open: isOpen,
+      isOwner,
       children,
       classes: styleClasses
     } = this.props;
@@ -194,6 +195,7 @@ class EventToolTipComponent extends React.Component {
             title={
               <Fragment>
                 <ContentToolTip
+                  isOwner={isOwner}
                   content={content}
                   onClickEdit={this.handleEdit}
                   onClickDelete={this.handleDelete}
