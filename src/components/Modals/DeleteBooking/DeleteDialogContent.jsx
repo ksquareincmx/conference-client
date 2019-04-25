@@ -101,7 +101,7 @@ const DeleteDialogContentComponent = props => {
   return (
     <Dialog
       disableBackdropClick
-      disableEscapeKeyDown
+      disableEscapeKeyDown={false}
       onClose={onCancel}
       open={isOpen}
     >
