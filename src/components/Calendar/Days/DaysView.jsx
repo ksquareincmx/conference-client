@@ -137,7 +137,7 @@ const dayGrid = props => room => {
         <div className={gridGutter} />
         <div className={gridHeader}>
           <h3 className={gridHeaderTxt}>
-            {room ? `Conference ${room.name}` : "Loading"}
+            {room ? `${room.name} Room` : "Loading"}
           </h3>
         </div>
       </div>
