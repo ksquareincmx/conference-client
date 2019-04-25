@@ -146,6 +146,7 @@ class ModalFormProviderComponent extends React.Component {
             className={modal}
             open={isModalOpen}
             disableAutoFocus={true}
+            disableEscapeKeyDown={false}
             onClose={this.handleModalClose}
           >
             <BookingForm
