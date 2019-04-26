@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/";
 
 const style = theme => ({
   snackBarTextBox: {
-    top: 15,
+    top: 14,
     left: 90,
     width: 335,
     height: 65,
@@ -12,15 +12,12 @@ const style = theme => ({
   },
   snackBarTextBoxTitle: {
     color: "#535b66",
-    position: "absolute",
     fontWeight: "bold",
-    fontSize: 14,
-    marginTop: 10
+    fontSize: 14
   },
   snackBarTextBoxBody: {
     color: "#525860",
-    position: "absolute",
-    marginTop: 30,
+    marginTop: 4,
     fontSize: 13
   }
 });
