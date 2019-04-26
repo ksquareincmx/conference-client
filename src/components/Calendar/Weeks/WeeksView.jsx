@@ -119,7 +119,7 @@ const WeeksViewComponent = props => {
           min={minDate}
           max={maxDate}
           localizer={localizer}
-          formats={{ dayFormat: "dddd D" }}
+          formats={{ timeGutterFormat: "HH:mm ", dayFormat: "dddd D" }}
           onSelectSlot={handleSelect()}
           timeslots={timeSlots}
           components={components}

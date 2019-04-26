@@ -26,7 +26,7 @@ export const formatDate = date => normaliceTZ(date);
 
 export const formatDashedDate = date => date.format("YYYY-MM-DD");
 
-export const formatTime = time => time.format("LT");
+export const formatTime = time => time.format("HH:mm");
 
 export const formatHours = date => date.format("HH");
 
