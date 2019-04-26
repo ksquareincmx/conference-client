@@ -38,7 +38,7 @@ const styles = theme => ({
   },
   gridGutter: {
     height: "100%",
-    width: 78,
+    width: 49,
     borderRight: "1px solid lightgrey"
   },
   gridHeader: {
@@ -151,7 +151,7 @@ const dayGrid = props => room => {
         defaultView={BigCalendar.Views.DAY}
         min={minDate}
         max={maxDate}
-        formats={{ timeGutterFormat: "hh:mm A", dayFormat: "ddd D" }}
+        formats={{ timeGutterFormat: "HH:mm ", dayFormat: "ddd D" }}
         localizer={localizer}
         onSelectSlot={room ? handleSelect(room.id, room.name) : null}
         timeslots={timeSlots}
