@@ -5,6 +5,7 @@ import CalendarStrategy from "./CalendarStrategy";
 import { Event } from "components/Calendar";
 import { withNotifications } from "hocs";
 import { formatDate } from "utils/BookingFormater";
+import { isColliding } from "utils/CollisionChecker";
 import { isWorkingHour } from "components/Modals/CreateMeeting/meetingValidations";
 
 class CalendarGridComponent extends React.Component {
@@ -18,7 +19,7 @@ class CalendarGridComponent extends React.Component {
   };
 
   handleSelect = (roomId, roomName) => event => {
-    const { onErrorNotification } = this.props;
+    const { onErrorNotification, bookingsData } = this.props;
     const start = event.start;
     const end = event.end;
     const bookingInfo = {
@@ -40,7 +41,12 @@ class CalendarGridComponent extends React.Component {
         body: "A booking can be made from 8:00 to 18:00"
       });
     }
-
+    if (isColliding(bookingInfo, bookingsData)) {
+      return onErrorNotification({
+        title: "Time slot occupied",
+        body: "There is anothe booking in this time slot"
+      });
+    }
     this.props.onCreate(bookingInfo);
   };
 
