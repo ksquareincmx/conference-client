@@ -1,10 +1,7 @@
 import React, { Fragment } from "react";
 import { ContentToolTip } from "./ContentToolTip";
-import { ConfirmationDialog } from "components/Modals/DeleteBooking/ConfirmationDialog";
 import { withStyles, Tooltip, ClickAwayListener } from "@material-ui/core";
 import { getDateText, formatDate, formatTime } from "utils/BookingFormater";
-import { mapToNotificationContentFormat } from "mappers/bookingMapper";
-import { storageService, bookingService } from "services";
 import { withNotifications } from "hocs";
 
 const arrowGenerator = color => {
@@ -131,9 +128,7 @@ const getTooltipColor = (color, styles) => {
 
 class EventToolTipComponent extends React.Component {
   state = {
-    arrowRef: null,
-    isDialogOpen: false,
-    isLoading: false
+    arrowRef: null
   };
 
   handleArrowRef = node => {
@@ -142,82 +137,12 @@ class EventToolTipComponent extends React.Component {
     });
   };
 
-  handleDialogOpen = () => {
-    this.setState({ isDialogOpen: true });
-  };
-
-  handleDialogClose = () => {
-    this.setState({ isDialogOpen: false });
-  };
-
   handleEdit = () => {
     this.props.onEdit(this.props.content.booking);
   };
 
-  handleBookingDeleteOperation = async () => {
-    const {
-      onSuccessNotification,
-      onErrorNotification,
-      onBookingsDataChange
-    } = this.props;
-    try {
-      const bookingInfo = await this.doBookingDelete();
-      this.handleDialogClose();
-      if (bookingInfo) {
-        onSuccessNotification({
-          bookingInfo,
-          notificationType: "delete"
-        });
-        return onBookingsDataChange();
-      }
-      return bookingInfo;
-    } catch (error) {
-      this.handleDialogClose();
-      return onErrorNotification({
-        title: "Action failed",
-        body: "There was an error with the server"
-      });
-    }
-  };
-
-  doBookingDelete = async () => {
-    const { content, onErrorNotification } = this.props;
-    const { booking } = content;
-    const { id: userId } = booking.user;
-    const { _d: endTime } = formatDate(booking.end);
-    const { id: bookingId } = booking;
-    const { id: sessionUserId } = storageService.getUserInfo();
-
-    if (sessionUserId === userId) {
-      if (new Date() > endTime) {
-        return onErrorNotification({
-          title: "Can't delete past bookings",
-          body: "A booking can't be deleted once it starts"
-        });
-      }
-      try {
-        this.setState({ isLoading: true });
-        const deleteResponse = await bookingService.deleteOneById(bookingId);
-        const { ok } = deleteResponse;
-        if (ok) {
-          return mapToNotificationContentFormat(booking);
-        }
-
-        return onErrorNotification({
-          title: "Booking delete failed",
-          body: "There was an error while trying to delete"
-        });
-      } catch (error) {
-        return Promise.reject({
-          title: "Appointment delete fail's",
-          body: "There was an error with the server"
-        });
-      }
-    }
-    return onErrorNotification({
-      title: "Action not allowed",
-      body: "You don't have permissions to delete this booking"
-    });
+  handleDelete = () => {
+    this.props.onDelete(this.props.content.booking);
   };
 
   render() {
@@ -226,6 +151,7 @@ class EventToolTipComponent extends React.Component {
       content,
       handleTooltipClose,
       open: isOpen,
+      isOwner,
       children,
       classes: styleClasses
     } = this.props;
@@ -269,9 +195,10 @@ class EventToolTipComponent extends React.Component {
             title={
               <Fragment>
                 <ContentToolTip
+                  isOwner={isOwner}
                   content={content}
                   onClickEdit={this.handleEdit}
-                  onClickDelete={this.handleDialogOpen}
+                  onClickDelete={this.handleDelete}
                 />
                 <span className={arrow} ref={this.handleArrowRef} />
               </Fragment>
@@ -289,13 +216,6 @@ class EventToolTipComponent extends React.Component {
             {children}
           </Tooltip>
         </ClickAwayListener>
-        <ConfirmationDialog
-          isLoading={this.state.isLoading}
-          onConfirmation={this.handleBookingDeleteOperation}
-          bookingInfo={bookingFormated}
-          isOpen={this.state.isDialogOpen}
-          onCancel={this.handleDialogClose}
-        />
       </Fragment>
     );
   }

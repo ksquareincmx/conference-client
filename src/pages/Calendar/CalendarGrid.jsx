@@ -1,10 +1,11 @@
-import React, { Fragment } from "react";
+import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import * as Utils from "./Utils.js";
 import CalendarStrategy from "./CalendarStrategy";
-import { roomService } from "services";
 import { Event } from "components/Calendar";
 import { withNotifications } from "hocs";
+import { formatDate } from "utils/BookingFormater";
+import { isWorkingHour } from "components/Modals/CreateMeeting/meetingValidations";
 
 class CalendarGridComponent extends React.Component {
   customEventView = content => {
@@ -31,6 +32,12 @@ class CalendarGridComponent extends React.Component {
       return onErrorNotification({
         title: "Can't create bookings in the past",
         body: "A booking can't be made before today's date and time"
+      });
+    }
+    if (!isWorkingHour(formatDate(end))) {
+      return onErrorNotification({
+        title: "Can't create bookings after 18:00",
+        body: "A booking can be made from 8:00 to 18:00"
       });
     }
 

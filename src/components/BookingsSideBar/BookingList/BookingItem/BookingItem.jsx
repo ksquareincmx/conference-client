@@ -5,15 +5,9 @@ import { RoomSticker } from "./RoomSticker";
 import { BookingDetails } from "./BookingDetails";
 import { BookingItemMenu } from "./BookingItemMenu";
 import { BookingOptionsButton } from "./BookingOptionsButton";
-import {
-  mapToNotificationContentFormat,
-  mapToConfirmationDialogFormat
-} from "mappers/bookingMapper";
-import { formatDate } from "utils/BookingFormater";
+import { mapToConfirmationDialogFormat } from "mappers/bookingMapper";
 import { ModalFormConsumer } from "providers";
-import { bookingService, storageService } from "services";
 import { withNotifications } from "hocs";
-import { ConfirmationDialog } from "components/Modals/DeleteBooking/ConfirmationDialog";
 
 const styles = theme => ({
   itemCard: {
@@ -46,9 +40,7 @@ const styles = theme => ({
 
 class BookingItemComponent extends React.Component {
   state = {
-    anchorEl: null,
-    isDialogOpen: false,
-    isLoading: false
+    anchorEl: null
   };
 
   handleMenuOpen = event => {
@@ -59,86 +51,20 @@ class BookingItemComponent extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  handleDialogOpen = () => {
-    this.handleMenuClose();
-    this.setState({ isDialogOpen: true });
-  };
-
-  handleDialogClose = () => {
-    this.setState({ isDialogOpen: false });
-  };
-
-  handleBookingDeleteOperation = async () => {
-    const {
-      onSuccessNotification,
-      onErrorNotification,
-      onBookingsDataChange
-    } = this.props;
-    try {
-      const bookingInfo = await this.doBookingDelete();
-      this.handleDialogClose();
-      if (bookingInfo) {
-        onSuccessNotification({
-          bookingInfo,
-          notificationType: "delete"
-        });
-        return onBookingsDataChange();
-      }
-      return bookingInfo;
-    } catch (error) {
-      this.handleDialogClose();
-      return onErrorNotification({
-        title: "Action failed",
-        body: "There was an error with the server"
-      });
-    }
-  };
-
-  doBookingDelete = async () => {
-    const { booking, onErrorNotification } = this.props;
-    const { userId, bookingId } = booking;
-    const { _d: endTime } = formatDate(booking.end);
-    const { id: sessionUserId } = storageService.getUserInfo();
-    if (sessionUserId === userId) {
-      if (new Date() > endTime) {
-        return onErrorNotification({
-          title: "Can't delete past bookings",
-          body: "A booking can't be deleted once it starts"
-        });
-      }
-      try {
-        this.setState({ isLoading: true });
-        const deleteResponse = await bookingService.deleteOneById(bookingId);
-        const { ok } = deleteResponse;
-        if (ok) {
-          return mapToNotificationContentFormat(booking);
-        }
-
-        return onErrorNotification({
-          title: "Booking delete failed",
-          body: "There was an error while trying to delete"
-        });
-      } catch (error) {
-        return Promise.reject({
-          title: "Booking delete fail's",
-          body: "There was an error with the server"
-        });
-      }
-    }
-    return onErrorNotification({
-      title: "Action not allowed",
-      body: "You don't have permissions to delete this booking"
-    });
-  };
-
-  handleBookingEditOperation = openBookingEditModal => () => {
+  handleEdit = openBookingEditModal => () => {
     this.handleMenuClose();
     const { booking } = this.props;
     openBookingEditModal(booking);
   };
 
+  handleDelete = openDialog => () => {
+    this.handleMenuClose();
+    const { booking } = this.props;
+    openDialog(booking);
+  };
+
   render() {
-    const { anchorEl, isDialogOpen, isLoading } = this.state;
+    const { anchorEl } = this.state;
     const { classes: styleClasses, booking } = this.props;
     const {
       itemCard,
@@ -169,26 +95,17 @@ class BookingItemComponent extends React.Component {
             {dateText}
             <BookingOptionsButton onClick={this.handleMenuOpen} />
             <ModalFormConsumer>
-              {modalForm => (
+              {({ handleDeleteMeeting, handleOnClickEditMeeting }) => (
                 <BookingItemMenu
                   anchorEl={anchorEl}
                   onClose={this.handleMenuClose}
-                  onBookingDelete={this.handleDialogOpen}
-                  onBookingEdit={this.handleBookingEditOperation(
-                    modalForm.handleOnClickEditMeeting
-                  )}
+                  onBookingDelete={this.handleDelete(handleDeleteMeeting)}
+                  onBookingEdit={this.handleEdit(handleOnClickEditMeeting)}
                 />
               )}
             </ModalFormConsumer>
           </Grid>
         </Grid>
-        <ConfirmationDialog
-          isLoading={isLoading}
-          isOpen={isDialogOpen}
-          bookingInfo={bookingForDialog}
-          onConfirmation={this.handleBookingDeleteOperation}
-          onCancel={this.handleDialogClose}
-        />
       </Card>
     );
   }

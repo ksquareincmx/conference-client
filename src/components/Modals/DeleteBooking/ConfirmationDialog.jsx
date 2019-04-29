@@ -1,137 +1,106 @@
 import React from "react";
-import {
-  withStyles,
-  Button,
-  DialogContent,
-  DialogActions,
-  Dialog,
-  Divider,
-  Typography,
-  CircularProgress
-} from "@material-ui/core";
+import { getDateText, formatDate, formatTime } from "utils/BookingFormater";
+import { mapToNotificationContentFormat } from "mappers/bookingMapper";
+import { withNotifications } from "hocs";
+import { storageService, bookingService } from "services";
+import { DeleteDialogContent } from "./DeleteDialogContent";
 
-const styles = theme => ({
-  dialog: {
-    padding: 30,
-    paddingTop: 20,
-    paddingBottom: 10
-  },
-  title: {
-    color: "#5294e5",
-    fontWeight: "bold",
-    padding: 15,
-    paddingLeft: 0,
-    paddingTop: 0
-  },
-  content: {
-    color: "#696969",
-    paddingLeft: 0
-  },
-  divider: {
-    borderTop: "1px solid gray"
-  },
-  remarkedTxt: {
-    fontWeight: "bold"
-  },
-  confirmationBtn: {
-    color: "white",
-    width: 84,
-    fontWeight: "bold",
-    backgroundColor: "#5294e5",
-    marginLeft: 20
-  },
-  cancelBtn: {
-    color: "white",
-    width: 84,
-    fontWeight: "bold",
-    backgroundColor: "#696969",
-    marginRight: 20
-  },
-  btnsContainer: {
-    display: "flex",
-    justifyContent: "center"
-  },
-  saveBtnWrapper: {
-    margin: theme.spacing.unit,
-    position: "relative"
-  },
-  btnProgress: {
-    color: "blue",
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginTop: -12,
-    marginLeft: -4
+class ConfirmationDialogComponent extends React.Component {
+  handleConfirmation = () => {
+    this.props.onDeleteLoading();
+    this.handleDelete();
+  };
+
+  handleDelete = async () => {
+    const {
+      onSuccessNotification,
+      onErrorNotification,
+      onBookingsDataChange,
+      onCancel: handleDialogClose,
+      onAfterDelete
+    } = this.props;
+    try {
+      const bookingInfo = await this.doDelete();
+      handleDialogClose();
+      onAfterDelete();
+      if (bookingInfo) {
+        onSuccessNotification({
+          bookingInfo,
+          notificationType: "delete"
+        });
+        return onBookingsDataChange();
+      }
+      return bookingInfo;
+    } catch (error) {
+      handleDialogClose();
+      onAfterDelete();
+      return onErrorNotification({
+        title: "Action failed",
+        body: "There was an error with the server"
+      });
+    }
+  };
+
+  doDelete = async () => {
+    const { bookingInfo: booking, onErrorNotification } = this.props;
+    const { id: userId } = booking.user;
+    const { _d: endTime } = formatDate(booking.end);
+    const { id: bookingId } = booking;
+    const { id: sessionUserId } = storageService.getUserInfo();
+
+    if (sessionUserId === userId) {
+      if (new Date() > endTime) {
+        return onErrorNotification({
+          title: "Can't delete past bookings",
+          body: "A booking can't be deleted once it starts"
+        });
+      }
+      try {
+        const deleteResponse = await bookingService.deleteOneById(bookingId);
+        const { ok } = deleteResponse;
+        if (ok) {
+          return mapToNotificationContentFormat(booking);
+        }
+
+        return onErrorNotification({
+          title: "Booking delete failed",
+          body: "There was an error while trying to delete"
+        });
+      } catch (error) {
+        return Promise.reject({
+          title: "Appointment delete fail's",
+          body: "There was an error with the server"
+        });
+      }
+    }
+    return onErrorNotification({
+      title: "Action not allowed",
+      body: "You don't have permissions to delete this booking"
+    });
+  };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.isLoading !== nextProps.isLoading) {
+      return true;
+    }
+    return nextProps.update !== this.props.update;
   }
-});
 
-const ConfirmationDialogComponent = ({
-  isLoading,
-  isOpen,
-  bookingInfo,
-  onConfirmation,
-  onCancel,
-  classes: styleClasses
-}) => {
-  const { roomName, startTime, endTime, dateText } = bookingInfo;
-  const {
-    dialog,
-    title,
-    content,
-    divider,
-    remarkedTxt,
-    btnsContainer,
-    confirmationBtn,
-    cancelBtn,
-    saveBtnWrapper,
-    btnProgress
-  } = styleClasses;
+  render() {
+    const { isLoading, isOpen, bookingInfo, onCancel } = this.props;
 
-  return (
-    <Dialog
-      disableBackdropClick
-      disableEscapeKeyDown
-      onClose={onCancel}
-      open={isOpen}
-    >
-      <div className={dialog}>
-        <Typography variant="h5" className={title}>
-          Delete Meeting
-        </Typography>
-        <Divider className={divider} />
-        <DialogContent className={content}>
-          <p>
-            Are you sure you want to delete the meeting in{" "}
-            <span className={remarkedTxt}>{roomName}</span> from{" "}
-            <span className={remarkedTxt}>{startTime}</span> to{" "}
-            <span className={remarkedTxt}>{endTime}</span> for{" "}
-            <span className={remarkedTxt}>{dateText}</span>?
-          </p>
-        </DialogContent>
-        <DialogActions className={btnsContainer}>
-          <Button className={cancelBtn} variant="contained" onClick={onCancel}>
-            Cancel
-          </Button>
-          <div className={saveBtnWrapper}>
-            <Button
-              className={confirmationBtn}
-              variant="contained"
-              color="primary"
-              onClick={onConfirmation}
-              disabled={isLoading}
-            >
-              Yes
-            </Button>
-            {isLoading && (
-              <CircularProgress size={24} className={btnProgress} />
-            )}
-          </div>
-        </DialogActions>
-      </div>
-    </Dialog>
-  );
-};
+    return (
+      <DeleteDialogContent
+        isLoading={isLoading}
+        isOpen={isOpen}
+        bookingInfo={bookingInfo}
+        onConfirmation={this.handleConfirmation}
+        onCancel={onCancel}
+      />
+    );
+  }
+}
 
-export const ConfirmationDialog = withStyles(styles)(
+export const ConfirmationDialog = withNotifications(
   ConfirmationDialogComponent
 );

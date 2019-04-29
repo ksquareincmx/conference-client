@@ -10,7 +10,7 @@ const validateYear = (date, today) => date.year() >= today.year();
 
 const isCurrentYear = (date, today) => date.year() === today.year();
 
-const isWorkingHour = (time, isStart) => {
+export const isWorkingHour = (time, isStart) => {
   return isStart
     ? time.hours() < 18
     : time.hours() < 18
