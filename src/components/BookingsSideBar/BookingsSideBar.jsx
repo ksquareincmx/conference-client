@@ -12,7 +12,7 @@ const styles = theme => ({
     flexDirection: "column",
     flexWrap: "nowrap",
     justifyContent: "start",
-    overflowY: "auto"
+    overflowY: "hidden"
   },
   searchBarCard: {
     width: "100%",
