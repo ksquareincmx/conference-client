@@ -8,6 +8,7 @@ import { BookingOptionsButton } from "./BookingOptionsButton";
 import { mapToConfirmationDialogFormat } from "mappers/bookingMapper";
 import { ModalFormConsumer } from "providers";
 import { withNotifications } from "hocs";
+import { storageService } from "services";
 
 const styles = theme => ({
   itemCard: {
@@ -40,7 +41,8 @@ const styles = theme => ({
 
 class BookingItemComponent extends React.Component {
   state = {
-    anchorEl: null
+    anchorEl: null,
+    isOwner: false
   };
 
   handleMenuOpen = event => {
@@ -63,8 +65,17 @@ class BookingItemComponent extends React.Component {
     openDialog(booking);
   };
 
+  componentDidMount() {
+    const { id: userId } = this.props.booking.user;
+    const { id: sessionUserId } = storageService.getUserInfo();
+    if (sessionUserId === userId) {
+      return this.setState({ isOwner: true });
+    }
+    return this.setState({ isOwner: false });
+  }
+
   render() {
-    const { anchorEl } = this.state;
+    const { anchorEl, isOwner } = this.state;
     const { classes: styleClasses, booking } = this.props;
     const {
       itemCard,
@@ -93,7 +104,10 @@ class BookingItemComponent extends React.Component {
           </Grid>
           <Grid item xs={3} className={bookingDateGrid}>
             {dateText}
-            <BookingOptionsButton onClick={this.handleMenuOpen} />
+            <BookingOptionsButton
+              onClick={this.handleMenuOpen}
+              isOwner={isOwner}
+            />
             <ModalFormConsumer>
               {({ handleDeleteMeeting, handleOnClickEditMeeting }) => (
                 <BookingItemMenu

@@ -10,11 +10,18 @@ const styles = theme => ({
   }
 });
 
-const BookingOptionsButtonComponent = ({ classes: { menuIcon }, onClick }) => (
-  <IconButton className={menuIcon} onClick={onClick}>
-    <MoreVertIcon />
-  </IconButton>
-);
+const BookingOptionsButtonComponent = ({
+  classes: { menuIcon },
+  onClick,
+  isOwner
+}) =>
+  isOwner ? (
+    <IconButton className={menuIcon} onClick={onClick}>
+      <MoreVertIcon />
+    </IconButton>
+  ) : (
+    <div className={menuIcon} />
+  );
 
 export const BookingOptionsButton = withStyles(styles)(
   BookingOptionsButtonComponent
