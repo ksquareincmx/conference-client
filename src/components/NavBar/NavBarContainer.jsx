@@ -3,7 +3,9 @@ import { AppBar, Toolbar, Grid, withStyles } from "@material-ui/core/";
 
 const styles = theme => ({
   appBar: {
-    boxShadow: "none"
+    position: "fixed",
+    boxShadow: "none",
+    zIndex: theme.zIndex.drawer + 1
   },
   toolBar: {
     backgroundColor: "#3049a1",
