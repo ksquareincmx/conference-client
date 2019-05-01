@@ -10,9 +10,9 @@ const styles = theme => ({
     color: "#808080"
   },
   button: {
-    position: "absolute",
+    position: "fixed",
     zIndex: 5,
-    minHeight: `calc(100% - 64px)`,
+    minHeight: "100vh",
     minWidth: 30,
     padding: 0,
     backgroundColor: "white",

@@ -12,7 +12,7 @@ import { ModalFormConsumer } from "providers";
 
 const styles = theme => ({
   calendarContainer: {
-    margin: "0px 5% 0px 5%"
+    margin: "64px 5% 64px 5%"
   }
 });
 
