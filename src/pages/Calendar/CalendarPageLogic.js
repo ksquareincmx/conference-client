@@ -21,7 +21,6 @@ const styles = theme => ({
       duration: theme.transitions.duration.enteringScreen
     }),
     marginLeft: "36vw"
-    // marginLeft: "64px"
   },
   contentExpand: {
     transition: theme.transitions.create("margin-left", {
