@@ -1,11 +1,11 @@
-export const getOffsets = eventColor => {
-  switch (eventColor) {
-    case "green":
+export const getOffsets = eventIsRight => {
+  switch (eventIsRight) {
+    case true:
       return {
         left: "unset",
         right: "0%"
       };
-    case "blue":
+    case false:
       return {
         left: "0%",
         right: "unset"

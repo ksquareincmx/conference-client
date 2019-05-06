@@ -123,11 +123,12 @@ export const mapToListFormat = booking => {
  */
 export const mapToNotificationContentFormat = ({ user, room }) => {
   const { name: userName } = user;
-  const { color, name: roomName } = room;
+  const { bg_color: bgColor, txt_color: txtColor, name: roomName } = room;
   const abbvRoomName = abbreviateRoomName(roomName);
   return {
     userName,
-    color,
+    bgColor,
+    txtColor,
     abbvRoomName
   };
 };

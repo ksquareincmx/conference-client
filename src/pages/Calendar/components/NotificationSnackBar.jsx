@@ -9,10 +9,10 @@ export const NotificationSnackBar = ({
   children: { message, sticker, variant }
 }) => {
   const { title, body } = message;
-  const { text, color } = sticker;
+  const { text, bgColor, txtColor } = sticker;
   return (
     <SnackBar variant={variant}>
-      <SnackBarSticker color={color} text={text} />
+      <SnackBarSticker text={text} bgColor={bgColor} txtColor={txtColor} />
       <SnackBarTextBox title={title} body={body} />
     </SnackBar>
   );

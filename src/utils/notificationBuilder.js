@@ -23,7 +23,7 @@ const getMessageContent = (notificationType, userName) => {
 };
 
 export const buildContentFromBooking = (
-  { userName, color, abbvRoomName },
+  { userName, bgColor, txtColor, abbvRoomName },
   notificationType
 ) => {
   const { title, body } = getMessageContent(notificationType, userName);
@@ -33,7 +33,8 @@ export const buildContentFromBooking = (
       body
     },
     sticker: {
-      color,
+      bgColor,
+      txtColor,
       text: abbvRoomName
     },
     variant: "success"
