@@ -4,6 +4,7 @@ import {
   formatTime,
   abbreviateRoomName
 } from "utils/BookingFormater";
+import { toRoomColors } from "mappers/RoomMapper";
 
 /**
  * @typedef {Object} User
@@ -123,7 +124,8 @@ export const mapToListFormat = booking => {
  */
 export const mapToNotificationContentFormat = ({ user, room }) => {
   const { name: userName } = user;
-  const { bg_color: bgColor, txt_color: txtColor, name: roomName } = room;
+  const { name: roomName } = room;
+  const { bgColor, txtColor } = toRoomColors(room);
   const abbvRoomName = abbreviateRoomName(roomName);
   return {
     userName,

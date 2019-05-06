@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core";
 import "./Days.css";
 import classNames from "classnames";
 import { mapEventsByRoom } from "mappers/AppointmentMapper";
+import { toRoomColors } from "mappers/RoomMapper";
 import fp from "lodash/fp";
 import cuid from "cuid";
 
@@ -72,7 +73,7 @@ const customTimeSlotWrapper = ({ children }) =>
 
 const customEventWrapper = eventWrapper => {
   const { children, event } = eventWrapper;
-  const { txt_color: txtColor, bg_color: bgColor } = event.booking.room;
+  const { txtColor, bgColor } = toRoomColors(event.booking.room);
   return React.cloneElement(Children.only(children), {
     style: {
       ...children.props.style,

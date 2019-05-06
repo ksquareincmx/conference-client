@@ -6,6 +6,7 @@ import { BookingDetails } from "./BookingDetails";
 import { BookingItemMenu } from "./BookingItemMenu";
 import { BookingOptionsButton } from "./BookingOptionsButton";
 import { mapToConfirmationDialogFormat } from "mappers/bookingMapper";
+import { toRoomColors } from "mappers/RoomMapper";
 import { ModalFormConsumer } from "providers";
 import { withNotifications } from "hocs";
 import { storageService } from "services";
@@ -86,7 +87,7 @@ class BookingItemComponent extends React.Component {
     } = styleClasses;
 
     const { userName, roomColor, roomNameAbbrev, dateText, room } = booking;
-    const { bg_color: bgColor, txt_color: txtColor } = room;
+    const { bgColor, txtColor } = toRoomColors(room);
     const bookingForDialog = mapToConfirmationDialogFormat(booking);
     const { startTime, endTime } = bookingForDialog;
 

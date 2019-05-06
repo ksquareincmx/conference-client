@@ -5,6 +5,7 @@ import classNames from "classnames";
 import "./Weeks.css";
 import fp from "lodash/fp";
 import { formatEvents } from "mappers/AppointmentMapper";
+import { toRoomColors } from "mappers/RoomMapper";
 import { getOffsets } from "utils/OffSets";
 
 const styles = theme => ({
@@ -36,7 +37,7 @@ const customTimeSlotWrapper = ({ children }) =>
 
 const customEventWrapper = eventWrapper => {
   const { children, event } = eventWrapper;
-  const { txt_color: txtColor, bg_color: bgColor } = event.booking.room;
+  const { txtColor, bgColor } = toRoomColors(event.booking.room);
   const { right, left } = getOffsets(event.isRight);
   return React.cloneElement(Children.only(children), {
     style: {

@@ -11,3 +11,8 @@ export const toRoomsWithColor = rooms => {
     return room;
   });
 };
+
+export const toRoomColors = room => {
+  const { bg_color, txt_color } = room;
+  return { bgColor: bg_color, txtColor: txt_color };
+};

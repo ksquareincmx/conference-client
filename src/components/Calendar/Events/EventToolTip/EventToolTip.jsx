@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { ContentToolTip } from "./ContentToolTip";
 import { withStyles, Tooltip, ClickAwayListener } from "@material-ui/core";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { toRoomColors } from "mappers/RoomMapper";
 import { withNotifications } from "hocs";
 
 const theme = (bgColor, txtColor) =>
@@ -70,7 +71,7 @@ class EventToolTipComponent extends React.Component {
       bootstrapPlacementTop,
       bootstrapPlacementBottom
     } = styleClasses;
-    const { bg_color: bgColor, txt_color: txtColor } = content.booking.room;
+    const { bgColor, txtColor } = toRoomColors(content.booking.room);
     const toolTipClasses = {
       tooltipPlacementLeft: bootstrapPlacementLeft,
       tooltipPlacementRight: bootstrapPlacementRight,
