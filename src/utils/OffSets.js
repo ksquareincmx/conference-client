@@ -1,11 +1,7 @@
+const rightStyle = () => ({ left: "unset", right: "0%" });
+
+const leftStyle = () => ({ left: "0%", right: "unset" });
+
 export const getOffsets = eventIsRight => {
-  return eventIsRight
-    ? {
-        left: "unset",
-        right: "0%"
-      }
-    : {
-        left: "0%",
-        right: "unset"
-      };
+  return eventIsRight ? rightStyle() : leftStyle();
 };
