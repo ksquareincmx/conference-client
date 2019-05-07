@@ -32,19 +32,14 @@ const styles = theme => ({
 });
 
 class DrawerComponent extends React.Component {
-  state = {
-    isOpen: false
-  };
-
-  handleDrawerOpen = () => {
-    this.setState({ isOpen: true });
-  };
-
-  handleDrawerClose = () => {
-    this.setState({ isOpen: false });
-  };
   render() {
-    const { children, classes: styleClasses } = this.props;
+    const {
+      children,
+      isOpen,
+      handleOpen,
+      handleClose,
+      classes: styleClasses
+    } = this.props;
     const {
       drawer,
       drawerClosed,
@@ -52,7 +47,7 @@ class DrawerComponent extends React.Component {
       toolbar,
       btnContainer
     } = styleClasses;
-    const { isOpen } = this.state;
+
     return (
       <Fragment>
         <Drawer
@@ -70,7 +65,7 @@ class DrawerComponent extends React.Component {
         <div className={btnContainer}>
           <DrawerBtn
             isOpen={isOpen}
-            onClick={isOpen ? this.handleDrawerClose : this.handleDrawerOpen}
+            onClick={isOpen ? handleClose : handleOpen}
           />
         </div>
       </Fragment>

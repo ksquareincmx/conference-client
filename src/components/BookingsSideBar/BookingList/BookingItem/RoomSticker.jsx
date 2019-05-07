@@ -15,19 +15,19 @@ const styles = theme => ({
   }
 });
 
-const getStickerColor = color => {
+const getStickerColor = (bgColor, txtColor) => {
   const loadingColor = {
     background: "lightgray",
     color: "gray"
   };
 
   const realColor = {
-    background: "light" + color,
-    color: "dark" + color,
+    background: bgColor,
+    color: txtColor,
     opacity: 0.6
   };
 
-  return color ? realColor : loadingColor;
+  return bgColor ? realColor : loadingColor;
 };
 
 const getRoomSticker = name => {
@@ -37,13 +37,15 @@ const getRoomSticker = name => {
 const RoomStickerComponent = ({
   classes: { roomSticker },
   roomColor,
-  roomName
+  roomName,
+  txtColor,
+  bgColor
 }) => {
   return (
     <Paper
       elevation={0}
       className={roomSticker}
-      style={getStickerColor(roomColor)}
+      style={getStickerColor(bgColor, txtColor)}
     >
       {getRoomSticker(roomName)}
     </Paper>

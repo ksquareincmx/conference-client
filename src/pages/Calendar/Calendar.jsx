@@ -11,7 +11,16 @@ import { NoteCard } from "components/NoteCard";
 
 class CalendarComponent extends React.Component {
   state = {
-    isDBEmpty: false
+    isDBEmpty: false,
+    isDrawerOpen: false
+  };
+
+  handleDrawerOpen = () => {
+    this.setState({ isDrawerOpen: true });
+  };
+
+  handleDrawerClose = () => {
+    this.setState({ isDrawerOpen: false });
   };
 
   handleDBEmpty = () => {
@@ -19,7 +28,7 @@ class CalendarComponent extends React.Component {
   };
 
   render() {
-    const { isDBEmpty } = this.state;
+    const { isDBEmpty, isDrawerOpen } = this.state;
     const { authContext, bookingsData, onBookingsDataChange } = this.props;
     const { isAuth } = authContext;
     if (!isAuth) {
@@ -33,7 +42,11 @@ class CalendarComponent extends React.Component {
         <NotificationProvider>
           <ModalFormProvider onBookingsDataChange={onBookingsDataChange}>
             <Grid container direction="row">
-              <DrawerBookings>
+              <DrawerBookings
+                isOpen={isDrawerOpen}
+                handleOpen={this.handleDrawerOpen}
+                handleClose={this.handleDrawerClose}
+              >
                 <BookingsSideBar
                   bookingsData={bookingsData}
                   onBookingsDataChange={onBookingsDataChange}
@@ -48,6 +61,7 @@ class CalendarComponent extends React.Component {
                     bookingsData={bookingsData}
                     onBookingsDataChange={onBookingsDataChange}
                     handleDBEmpty={this.handleDBEmpty}
+                    isDrawerOpen={isDrawerOpen}
                   />
                 )}
               </Grid>

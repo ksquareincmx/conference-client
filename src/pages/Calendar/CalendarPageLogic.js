@@ -9,10 +9,25 @@ import { roomService } from "services";
 import { Grid, withStyles } from "@material-ui/core";
 import { CalendarGrid } from "./CalendarGrid";
 import { ModalFormConsumer } from "providers";
+import classNames from "classnames";
 
 const styles = theme => ({
   calendarContainer: {
     margin: "64px 5% 64px 5%"
+  },
+  contentShrink: {
+    transition: theme.transitions.create("margin-left", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+    marginLeft: "36vw"
+  },
+  contentExpand: {
+    transition: theme.transitions.create("margin-left", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+    marginLeft: "5%"
   }
 });
 
@@ -76,12 +91,21 @@ class CalendarPageLogicComponent extends React.Component {
   }
 
   render() {
-    const { calendarContainer } = this.props.classes;
-    const { bookingsData, onBookingsDataChange } = this.props;
+    const {
+      calendarContainer,
+      contentShrink,
+      contentExpand
+    } = this.props.classes;
+    const { bookingsData, onBookingsDataChange, isDrawerOpen } = this.props;
 
     return (
       <Grid container direction="column">
-        <div className={calendarContainer}>
+        <div
+          className={classNames(calendarContainer, {
+            [contentShrink]: isDrawerOpen,
+            [contentExpand]: !isDrawerOpen
+          })}
+        >
           <HeaderView
             onClickViewButton={this.handlerOnClickViewButton}
             pairedRooms={this.state.pairedRooms}

@@ -6,6 +6,7 @@ import { BookingDetails } from "./BookingDetails";
 import { BookingItemMenu } from "./BookingItemMenu";
 import { BookingOptionsButton } from "./BookingOptionsButton";
 import { mapToConfirmationDialogFormat } from "mappers/bookingMapper";
+import { toRoomColors } from "mappers/RoomMapper";
 import { ModalFormConsumer } from "providers";
 import { withNotifications } from "hocs";
 import { storageService } from "services";
@@ -85,7 +86,8 @@ class BookingItemComponent extends React.Component {
       bookingDateGrid
     } = styleClasses;
 
-    const { userName, roomColor, roomNameAbbrev, dateText } = booking;
+    const { userName, roomColor, roomNameAbbrev, dateText, room } = booking;
+    const { bgColor, txtColor } = toRoomColors(room);
     const bookingForDialog = mapToConfirmationDialogFormat(booking);
     const { startTime, endTime } = bookingForDialog;
 
@@ -93,7 +95,12 @@ class BookingItemComponent extends React.Component {
       <Card elevation={1} square className={itemCard}>
         <Grid container direction={"row"} className={bookingContainer}>
           <Grid item xs={3} className={roomStickerGrid}>
-            <RoomSticker roomName={roomNameAbbrev} roomColor={roomColor} />
+            <RoomSticker
+              roomName={roomNameAbbrev}
+              roomColor={roomColor}
+              bgColor={bgColor}
+              txtColor={txtColor}
+            />
           </Grid>
           <Grid item xs={6} className={bookingInfoGrid}>
             <BookingDetails
