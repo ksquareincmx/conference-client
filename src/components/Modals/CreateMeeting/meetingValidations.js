@@ -2,8 +2,6 @@ import moment from "moment";
 
 const validateReason = reason => reason !== "";
 
-const validateInvite = attendeesList => attendeesList.length > 0;
-
 const validateIsWeekDay = day => day > 0 && day < 6;
 
 const validateYear = (date, today) => date.year() >= today.year();
@@ -55,7 +53,6 @@ const validateWorkingHours = (timeStart, timeEnd) => {
 
 const validateBooking = bookingObj => {
   const isValidReason = validateReason(bookingObj.description);
-  const isValidInvite = validateInvite(bookingObj.attendees);
 
   const startDate = moment(bookingObj.start);
   const endDate = moment(bookingObj.end);
@@ -112,10 +109,9 @@ const validateBooking = bookingObj => {
       invalidHourMessage: hourMessage,
       isInvalidDate: !isValidDate,
       isInvalidHour: !isValidHour,
-      isInvalidReason: !isValidReason,
-      isInvalidInvite: !isValidInvite
+      isInvalidReason: !isValidReason
     },
-    isValidBooking: isValidDate && isValidHour && isValidReason && isValidInvite
+    isValidBooking: isValidDate && isValidHour && isValidReason
   };
 };
 

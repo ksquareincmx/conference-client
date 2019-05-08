@@ -50,9 +50,11 @@ class ChipList extends React.Component {
   };
 
   handleEnterPress = e => {
+    const { handleChangeInviteField } = this.props;
     const input = e.target.value;
     if (e.key === "Enter" && input !== "") {
       if (isValidMail(input)) {
+        handleChangeInviteField(true);
         this.setState({ isInvalidMail: false });
         this.handleBlur();
         const attendee = { key: cuid(), email: input };
@@ -67,12 +69,18 @@ class ChipList extends React.Component {
         });
       }
       this.setState({ isInvalidMail: true });
+      handleChangeInviteField(false);
     }
   };
 
   handleChangeValue = e => {
+    const input = e.target.value;
     this.handleFocus();
-    this.setState({ value: e.target.value });
+    this.props.handleChangeInviteField(input === "");
+    this.setState({ value: input });
+    if (input === "") {
+      return this.setState({ isInvalidMail: false });
+    }
   };
 
   handleDelete = data => () => {
@@ -106,7 +114,7 @@ class ChipList extends React.Component {
         <TextField
           fullWidth
           value={value}
-          placeholder="Enter Email"
+          placeholder="Enter Email (Optional)"
           className={chips}
           onKeyPress={this.handleEnterPress}
           onChange={this.handleChangeValue}
@@ -119,6 +127,11 @@ class ChipList extends React.Component {
         </Collapse>
         <Collapse in={isInvalidMail}>
           <small className={invalid}>Invalid email</small>
+        </Collapse>
+        <Collapse in={isInvalidInvite}>
+          <small className={invalid}>
+            Add mail pressing enter or delete this field's content
+          </small>
         </Collapse>
         <div className={chipList}>
           {chipData.map(data => (
