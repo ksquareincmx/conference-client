@@ -21,14 +21,18 @@ const style = theme => ({
   }
 });
 
+const textColor = txtColor => ({ color: txtColor });
+const backgroundColor = bgColor => ({ background: bgColor ? bgColor : "gray" });
+
 const SnackBarStickerComponent = ({
-  color,
+  bgColor,
+  txtColor,
   text,
   classes: { snackBarSticker, snackBarStickerContent }
 }) => {
   return (
-    <div className={snackBarSticker} style={{ background: `light${color}` }}>
-      <div className={snackBarStickerContent} style={{ color: `dark${color}` }}>
+    <div className={snackBarSticker} style={backgroundColor(bgColor)}>
+      <div className={snackBarStickerContent} style={textColor(txtColor)}>
         {text}
       </div>
     </div>

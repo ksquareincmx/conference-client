@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core";
 import "./Days.css";
 import classNames from "classnames";
 import { mapEventsByRoom } from "mappers/AppointmentMapper";
-import { getEventColors } from "utils/Colors";
+import { toRoomColors } from "mappers/RoomMapper";
 import fp from "lodash/fp";
 import cuid from "cuid";
 
@@ -12,9 +12,10 @@ const styles = theme => ({
   gridContainer: {
     display: "flex",
     flexDirection: "row",
-    minHeight: "calc(100vh - 400px)",
-    maxHeight: "calc(100vh - 400px)",
-    margin: "auto"
+    minHeight: "100%",
+    margin: "auto",
+    marginBottom: 46,
+    border: "1px solid lightgrey"
   },
   loadingContainer: {
     display: "flex",
@@ -26,7 +27,6 @@ const styles = theme => ({
     minHeight: 380,
     maxHeight: "auto",
     width: "50%",
-    border: "1px solid lightgrey",
     borderBottom: 0
   },
   gridHeaderContainer: {
@@ -38,8 +38,13 @@ const styles = theme => ({
   },
   gridGutter: {
     height: "100%",
-    width: 49,
+    width: 49.5,
     borderRight: "1px solid lightgrey"
+  },
+  gridGutterless: {
+    height: "100%",
+    width: 49,
+    borderLeft: "1px solid lightgrey"
   },
   gridHeader: {
     display: "flex",
@@ -68,13 +73,13 @@ const customTimeSlotWrapper = ({ children }) =>
 
 const customEventWrapper = eventWrapper => {
   const { children, event } = eventWrapper;
-  const styles = getEventColors(event.color);
+  const { txtColor, bgColor } = toRoomColors(event.booking.room);
   return React.cloneElement(Children.only(children), {
     style: {
       ...children.props.style,
-      backgroundColor: styles.backgroundColor,
-      border: `2px solid ${styles.borderColor}`,
-      color: styles.textColor,
+      backgroundColor: bgColor,
+      border: `2px solid ${txtColor}`,
+      color: txtColor,
       borderRadius: 0,
       opacity: 0.7
     }
@@ -110,6 +115,7 @@ const dayGrid = props => room => {
     grid,
     gridHeaderContainer,
     gridGutter,
+    gridGutterless,
     gridHeader,
     gridHeaderTxt
   } = styleClasses;
@@ -130,11 +136,21 @@ const dayGrid = props => room => {
   };
 
   const roomEvents = room ? getRoomEvents(room.id) : [];
+  const roomObj = roomList.find(obj => obj.id === room.id);
+  const isGutterless = roomList.indexOf(roomObj) === 1;
+  const gutterless = isGutterless ? "gutterless" : null;
 
   return (
-    <div className={classNames(grid, "day")} key={room ? room.id : cuid()}>
+    <div
+      className={classNames(grid, "day", gutterless)}
+      key={room ? room.id : cuid()}
+    >
       <div className={gridHeaderContainer}>
-        <div className={gridGutter} />
+        {isGutterless ? (
+          <div className={gridGutterless} />
+        ) : (
+          <div className={gridGutter} />
+        )}
         <div className={gridHeader}>
           <h3 className={gridHeaderTxt}>
             {room ? `${room.name} Room` : "Loading"}

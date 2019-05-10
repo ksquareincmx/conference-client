@@ -101,6 +101,7 @@ class BookingFormComponent extends React.Component {
     isInvalidHour: false,
     isInvalidReason: false,
     isInvalidInvite: false,
+    isInviteEmpty: true,
     isLoading: false
   };
 
@@ -158,14 +159,14 @@ class BookingFormComponent extends React.Component {
   };
 
   handleBookingOperation = async () => {
-    const { isBookingEdition } = this.state;
+    const { isBookingEdition, isInviteEmpty } = this.state;
     const booking = mapToPost(this.state);
     const isBookingValid = this.validate(booking);
     const { onErrorNotification } = this.props;
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, isInvalidInvite: false });
 
     try {
-      if (isBookingValid) {
+      if (isBookingValid && isInviteEmpty) {
         if (isBookingEdition) {
           const { bookingForEdition } = this.props;
           const { id } = bookingForEdition;
@@ -175,7 +176,10 @@ class BookingFormComponent extends React.Component {
         const bookingInfo = await this.doBookingCreation(booking);
         return this.saveBookingResponse(bookingInfo, isBookingEdition);
       }
-      return this.setState({ isLoading: false });
+      return this.setState({
+        isLoading: false,
+        isInvalidInvite: !isInviteEmpty
+      });
     } catch (error) {
       const { title, body } = error;
       onErrorNotification({
@@ -252,6 +256,10 @@ class BookingFormComponent extends React.Component {
 
   handleChangeReason = event => {
     this.setState({ bookingReason: event.target.value });
+  };
+
+  handleChangeInviteField = isEmpty => {
+    this.setState({ isInviteEmpty: isEmpty });
   };
 
   handleChangeInvite = attendeesList => {
@@ -447,17 +455,11 @@ class BookingFormComponent extends React.Component {
               </Typography>
               <ChipList
                 handleChangeInvite={this.handleChangeInvite}
+                handleChangeInviteField={this.handleChangeInviteField}
                 attendeesList={this.state.attendees}
                 isInvalidInvite={this.state.isInvalidInvite}
                 refresh={this.state.refreshChipList}
               />
-              <Fragment>
-                <Collapse in={this.state.isInvalidInvite}>
-                  <small className={alertMessage}>
-                    You need to invite at least one person
-                  </small>
-                </Collapse>
-              </Fragment>
             </Grid>
           </CardContent>
           <CardActions style={{ justifyContent: "center" }}>

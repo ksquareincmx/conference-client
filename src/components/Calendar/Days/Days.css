@@ -17,3 +17,7 @@
 .day .rbc-event-label {
   display: none;
 }
+
+.gutterless .rbc-time-gutter {
+  display: none;
+}

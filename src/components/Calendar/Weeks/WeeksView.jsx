@@ -5,15 +5,14 @@ import classNames from "classnames";
 import "./Weeks.css";
 import fp from "lodash/fp";
 import { formatEvents } from "mappers/AppointmentMapper";
-import { getEventColors } from "utils/Colors";
+import { toRoomColors } from "mappers/RoomMapper";
 import { getOffsets } from "utils/OffSets";
 
 const styles = theme => ({
   gridContainer: {
     display: "flex",
     flexDirection: "row",
-    minHeight: "calc(100vh - 360px)",
-    maxHeight: "calc(100vh - 360px)",
+    minHeight: "100%",
     margin: "auto"
   },
   grid: {
@@ -38,8 +37,8 @@ const customTimeSlotWrapper = ({ children }) =>
 
 const customEventWrapper = eventWrapper => {
   const { children, event } = eventWrapper;
-  const styles = getEventColors(event.color);
-  const { right, left } = getOffsets(event.color);
+  const { txtColor, bgColor } = toRoomColors(event.booking.room);
+  const { right, left } = getOffsets(event.isRight);
   return React.cloneElement(Children.only(children), {
     style: {
       ...children.props.style,
@@ -48,9 +47,9 @@ const customEventWrapper = eventWrapper => {
       width: "50%",
       fontSize: "0.8em",
       textAlign: "center",
-      backgroundColor: styles.backgroundColor,
-      border: `2px solid ${styles.borderColor}`,
-      color: styles.textColor,
+      backgroundColor: bgColor,
+      border: `2px solid ${txtColor}`,
+      color: txtColor,
       borderRadius: 0,
       opacity: 0.7
     }
@@ -98,6 +97,11 @@ const WeeksViewComponent = props => {
       const fileteredEvents = weekEvents.filter(
         event => event.roomId === room.id
       );
+      fileteredEvents.forEach(event => {
+        const roomObj = rooms.find(obj => obj.id === event.booking.room.id);
+        const isRight = rooms.indexOf(roomObj) === 1;
+        event.isRight = isRight;
+      });
       roomEvents = roomEvents.concat(fileteredEvents);
     });
 

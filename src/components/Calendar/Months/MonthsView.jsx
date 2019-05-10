@@ -5,14 +5,13 @@ import BigCalendar from "react-big-calendar";
 import "./Months.css";
 import fp from "lodash/fp";
 import { formatEvents } from "mappers/AppointmentMapper";
-import { getEventColors } from "utils/Colors";
+import { toRoomColors } from "mappers/RoomMapper";
 
 const styles = theme => ({
   gridContainer: {
     display: "flex",
     flexDirection: "row",
-    minHeight: "calc(100vh - 360px)",
-    maxHeight: "calc(100vh - 360px)",
+    minHeight: 900,
     margin: "auto"
   },
   grid: {
@@ -32,13 +31,13 @@ const customDateCellWrapper = ({ children }) =>
 
 const customEventWrapper = eventWrapper => {
   const { children, event } = eventWrapper;
-  const styles = getEventColors(event.color);
+  const { txtColor, bgColor } = toRoomColors(event.booking.room);
   return React.cloneElement(Children.only(children), {
     style: {
       ...children.props.style,
-      backgroundColor: styles.backgroundColor,
-      border: `2px solid ${styles.borderColor}`,
-      color: styles.textColor,
+      backgroundColor: bgColor,
+      border: `2px solid ${txtColor}`,
+      color: txtColor,
       borderRadius: "5px",
       opacity: 0.7
     }
