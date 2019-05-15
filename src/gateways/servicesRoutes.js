@@ -70,6 +70,12 @@ export const servicesRoutes = {
       return `${bookingServiceURI}${query}`;
     }
   },
+  getDetailedBookingsByRoom: {
+    getServiceURI: ({ filterDate, roomId }) => {
+      const query = `?page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}&roomId[eq]=${roomId}`;
+      return `${bookingServiceURI}${query}`;
+    }
+  },
   updateBookingById: {
     getServiceURI: ({ id }) => `${bookingServiceURI}${id}`
   },
