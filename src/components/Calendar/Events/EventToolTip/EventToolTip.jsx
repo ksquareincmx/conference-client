@@ -61,6 +61,7 @@ class EventToolTipComponent extends React.Component {
       content,
       handleTooltipClose,
       open: isOpen,
+      isSingleGrid,
       isOwner,
       children,
       classes: styleClasses
@@ -95,7 +96,7 @@ class EventToolTipComponent extends React.Component {
                 </Fragment>
               }
               classes={{ ...toolTipClasses }}
-              placement={"right"}
+              placement={isSingleGrid ? "bottom" : "right"}
               interactive
               onClose={handleTooltipClose}
               open={isOpen}

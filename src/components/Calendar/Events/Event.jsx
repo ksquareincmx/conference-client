@@ -38,7 +38,12 @@ class EventComponent extends React.Component {
 
   render() {
     const { isOpen, isOwner } = this.state;
-    const { content, classes: styleClasses, onBookingsDataChange } = this.props;
+    const {
+      content,
+      classes: styleClasses,
+      onBookingsDataChange,
+      isSingleGrid
+    } = this.props;
     const { title } = content.event;
     const { eventContainter } = styleClasses;
 
@@ -54,6 +59,7 @@ class EventComponent extends React.Component {
             open={isOpen}
             isOwner={isOwner}
             onBookingsDataChange={onBookingsDataChange}
+            isSingleGrid={isSingleGrid}
           >
             <div className={eventContainter} onClick={this.handleTooltipOpen}>
               <strong>{title}</strong>

@@ -50,20 +50,34 @@ class SelectRoomComponent extends React.Component {
     this.setState({ isOpen: true });
   };
 
-  formatOptions = options => {
+  formatOptions = (options, isSingular) => {
     return options.map(rooms => {
-      const pairedTxt = this.getRoomNames(rooms);
-      return { rooms, pairedTxt };
+      const optionTxt = isSingular ? rooms.name : this.getRoomNames(rooms);
+      return { rooms, optionTxt };
     });
   };
 
   getRoomNames = rooms =>
     rooms.reduce((acc, curr) => `${acc.name} and ${curr.name}`);
 
+  getOptions = isSingleGrid => {
+    const { pairedRooms, roomList } = this.props;
+    if (isSingleGrid) {
+      return roomList ? this.formatOptions(roomList, isSingleGrid) : null;
+    }
+    return pairedRooms ? this.formatOptions(pairedRooms) : null;
+  };
+
   render() {
-    const { selectedRooms, pairedRooms, classes: styleClasses } = this.props;
+    const {
+      selectedRooms,
+      pairedRooms,
+      selectedRoom,
+      isSingleGrid,
+      classes: styleClasses
+    } = this.props;
     const { button, formControl, select } = styleClasses;
-    const options = pairedRooms ? this.formatOptions(pairedRooms) : null;
+    const options = this.getOptions(isSingleGrid);
 
     return (
       <form autoComplete="off">
@@ -73,7 +87,13 @@ class SelectRoomComponent extends React.Component {
           variant={"contained"}
           className={button}
         >
-          {selectedRooms ? this.getRoomNames(selectedRooms) : "Loading..."}
+          {isSingleGrid
+            ? selectedRoom[0]
+              ? selectedRoom[0].name
+              : "Loading..."
+            : selectedRooms
+            ? this.getRoomNames(selectedRooms)
+            : "Loading..."}
         </Button>
         <FormControl className={formControl}>
           <Select
@@ -89,9 +109,9 @@ class SelectRoomComponent extends React.Component {
             className={select}
           >
             {options
-              ? options.map(pair => (
-                  <MenuItem value={pair.rooms} key={cuid()}>
-                    {pair.pairedTxt}
+              ? options.map(option => (
+                  <MenuItem value={option.rooms} key={cuid()}>
+                    {option.optionTxt}
                   </MenuItem>
                 ))
               : null}
