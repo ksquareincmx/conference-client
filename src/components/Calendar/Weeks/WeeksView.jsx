@@ -56,6 +56,24 @@ const customEventWrapper = eventWrapper => {
   });
 };
 
+const bigCustomEventWrapper = eventWrapper => {
+  const { children, event } = eventWrapper;
+  const { txtColor, bgColor } = toRoomColors(event.booking.room);
+  return React.cloneElement(Children.only(children), {
+    style: {
+      ...children.props.style,
+      width: "100%",
+      fontSize: "0.8em",
+      textAlign: "center",
+      backgroundColor: bgColor,
+      border: `2px solid ${txtColor}`,
+      color: txtColor,
+      borderRadius: 0,
+      opacity: 0.7
+    }
+  });
+};
+
 const customEventContainerWrapper = eventWrapper => {
   const { children } = eventWrapper;
   return React.cloneElement(Children.only(children), {
@@ -70,6 +88,7 @@ const WeeksViewComponent = props => {
   const {
     bookings,
     roomList,
+    isSingleGrid,
     type,
     step,
     minDate,
@@ -84,7 +103,7 @@ const WeeksViewComponent = props => {
   const { gridContainer, grid } = styleClasses;
 
   const components = {
-    eventWrapper: customEventWrapper,
+    eventWrapper: isSingleGrid ? bigCustomEventWrapper : customEventWrapper,
     eventContainerWrapper: customEventContainerWrapper,
     event: props.components.event,
     timeSlotWrapper: customTimeSlotWrapper

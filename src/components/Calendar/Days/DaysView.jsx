@@ -29,6 +29,12 @@ const styles = theme => ({
     width: "50%",
     borderBottom: 0
   },
+  bigGrid: {
+    minHeight: 380,
+    maxHeight: "auto",
+    width: "100%",
+    borderBottom: 0
+  },
   gridHeaderContainer: {
     height: 40,
     backgroundColor: "white",
@@ -100,6 +106,7 @@ const dayGrid = props => room => {
   const {
     bookings,
     roomList,
+    isSingleGrid,
     type,
     step,
     minDate,
@@ -113,6 +120,7 @@ const dayGrid = props => room => {
 
   const {
     grid,
+    bigGrid,
     gridHeaderContainer,
     gridGutter,
     gridGutterless,
@@ -139,10 +147,11 @@ const dayGrid = props => room => {
   const roomObj = roomList.find(obj => obj.id === room.id);
   const isGutterless = roomList.indexOf(roomObj) === 1;
   const gutterless = isGutterless ? "gutterless" : null;
+  const gridStyle = isSingleGrid ? bigGrid : grid;
 
   return (
     <div
-      className={classNames(grid, "day", gutterless)}
+      className={classNames(gridStyle, "day", gutterless)}
       key={room ? room.id : cuid()}
     >
       <div className={gridHeaderContainer}>
@@ -180,8 +189,14 @@ const dayGrid = props => room => {
 };
 
 const DaysViewComponent = props => {
-  const { roomList, classes: styleClasses } = props;
+  const { roomList, classes: styleClasses, isSingleGrid, roomSelected } = props;
   const { gridContainer, loadingContainer } = styleClasses;
+
+  if (isSingleGrid && roomSelected) {
+    return (
+      <div className={gridContainer}>{roomSelected.map(dayGrid(props))}</div>
+    );
+  }
 
   if (roomList) {
     return <div className={gridContainer}>{roomList.map(dayGrid(props))}</div>;

@@ -100,7 +100,10 @@ const HeaderViewComponent = props => {
   const {
     onClickViewButton,
     pairedRooms,
+    roomList,
     selectedRooms,
+    selectedRoom,
+    isSingleGrid,
     onChangeRoomSelect,
     headerDateContainer,
     classes: styleClasses
@@ -124,7 +127,10 @@ const HeaderViewComponent = props => {
       <div>
         <SelectRoom
           pairedRooms={pairedRooms}
+          roomList={roomList}
           selectedRooms={selectedRooms}
+          selectedRoom={selectedRoom}
+          isSingleGrid={isSingleGrid}
           onChangeRoomSelect={onChangeRoomSelect}
         />
       </div>

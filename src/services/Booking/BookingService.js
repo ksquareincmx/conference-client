@@ -63,6 +63,13 @@ import { mapToRequestFormat } from "mappers/bookingMapper";
  */
 
 /**
+ * @typedef {Object} BookingWithDetailsByRoom
+ * @property {BookingResponse[]} - booking information.
+ * @property {User} - user information.
+ * @property {Room} - room information.
+ */
+
+/**
  * @version 1.0
  * @exports BookingService
  * @namespace BookingService
@@ -140,6 +147,22 @@ export const BookingService = storageService => {
   };
 
   /**
+   * Return all the bookings of one room with all their details (Room and User information).
+   * @memberof BookingService
+   * @return {BookingWithDetailsByRoom} - found bookigs and, room and user information.
+   */
+  const getAllWithDetailsByRoom = async (filterDate, roomId) => {
+    const { token: authToken } = storageService.getJWT();
+    const config = { filterDate, roomId, authToken };
+    try {
+      const res = await apiGateway.doGet("getDetailedBookingsByRoom", config);
+      return await res.json();
+    } catch (error) {
+      return new Error(error.message);
+    }
+  };
+
+  /**
    * Update the booking information and return it.
    * @memberof BookingService
    * @param {number} id - booking id.
@@ -184,6 +207,7 @@ export const BookingService = storageService => {
     getOneById,
     getAll,
     getAllWithDetails,
+    getAllWithDetailsByRoom,
     updateOneById,
     deleteOneById
   };
