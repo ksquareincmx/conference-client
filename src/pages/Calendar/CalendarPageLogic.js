@@ -9,6 +9,7 @@ import { roomService } from "services";
 import { Grid, withStyles } from "@material-ui/core";
 import { CalendarGrid } from "./CalendarGrid";
 import { ModalFormConsumer } from "providers";
+import { EasterEgg } from "./components/EasterEgg";
 import classNames from "classnames";
 
 const styles = theme => ({
@@ -139,6 +140,7 @@ class CalendarPageLogicComponent extends React.Component {
               );
             }}
           </ModalFormConsumer>
+          <EasterEgg />
         </div>
       </Grid>
     );
