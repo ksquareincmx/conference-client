@@ -14,12 +14,11 @@ class CalendarContainerComponent extends React.Component {
   fetchBookings = async () => {
     try {
       const data = await bookingService.getAllWithDetails(getUTCDateFilter());
-      if (data.bookings) {
-        const { bookings: bookingsData } = data;
-        this.setState({ bookingsData, isServerDown: false });
-      } else {
-        this.setState({ isServerDown: true });
+      const { bookings: bookingsData } = data;
+      if (bookingsData) {
+        return this.setState({ bookingsData, isServerDown: false });
       }
+      return this.setState({ isServerDown: true });
     } catch (error) {
       return Promise.reject(new Error(error.message));
     }
