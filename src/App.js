@@ -5,7 +5,7 @@ import { AuthProvider } from "providers";
 import Konami from "react-konami";
 
 export class App extends React.Component {
-  easterEgg = () => {
+  handleEasterEgg = () => {
     alert(
       "What? How you do this? This is going to drop the production database!"
     );
@@ -15,7 +15,7 @@ export class App extends React.Component {
     return (
       <AuthProvider>
         <Routes />
-        <Konami easterEgg={this.easterEgg} />
+        <Konami easterEgg={this.handleEasterEgg} />
       </AuthProvider>
     );
   }
