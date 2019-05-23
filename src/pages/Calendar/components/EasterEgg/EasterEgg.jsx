@@ -16,7 +16,9 @@ const EasterEggComponent = ({ classes }) => {
   const { EasterEggContainer, EasterEggText } = classes;
   return (
     <div className={EasterEggContainer}>
-      <p className={EasterEggText}>{process.env.REACT_APP_EASTER_EGG}</p>
+      <p className={EasterEggText}>
+        cHRzcy4uLiB0eXBlIGtvbmFtaSBjb2RlIOKGkSDihpEg4oaTIOKGkyDihpAg4oaSIOKGkCDihpIgQiBBIGFuZCBzZWUgdGhlIG1hZ2ljIQ==
+      </p>
     </div>
   );
 };
