@@ -57,10 +57,13 @@ const validateBooking = bookingObj => {
   const startDate = moment(bookingObj.start);
   const endDate = moment(bookingObj.end);
 
+  const areHoursValidForDate = startDate.isValid() && endDate.isValid();
+
   const isWeekDay = validateIsWeekDay(startDate.day());
-  const weekendMessage = isWeekDay
-    ? ""
-    : "A meeting can't be booked on weekends";
+
+  let weekendMessage = isWeekDay ? "" : "A meeting can't be booked on weekends";
+
+  weekendMessage = areHoursValidForDate ? weekendMessage : "";
 
   const isCoherentDate = validateIsCoherentDate(startDate);
 
@@ -68,7 +71,11 @@ const validateBooking = bookingObj => {
     ? ""
     : "A meeting can't be booked before today's date";
 
-  const isValidDate = isWeekDay && isCoherentDate;
+  dateMessage = areHoursValidForDate
+    ? dateMessage
+    : "Set a valid reservation time for this date down below";
+
+  const isValidDate = isWeekDay && isCoherentDate && areHoursValidForDate;
 
   const isDiferentHour = validateIsDiferentHour(
     startDate.unix(),
@@ -84,8 +91,15 @@ const validateBooking = bookingObj => {
     ? validateIsAfterCurrentHour(startDate.unix(), moment().unix())
     : true;
 
+  const areHoursNumbers =
+    !Number.isNaN(startDate.unix()) && !Number.isNaN(endDate.unix());
+
   const isValidHour =
-    isDiferentHour && isCoherentHour && isWorkingHours && isAfterCurrentHour;
+    isDiferentHour &&
+    isCoherentHour &&
+    isWorkingHours &&
+    isAfterCurrentHour &&
+    areHoursNumbers;
 
   let hourMessage = isDiferentHour
     ? ""
@@ -101,6 +115,8 @@ const validateBooking = bookingObj => {
   hourMessage = isWorkingHours
     ? hourMessage
     : "A meeting can't start or finish after 18:00";
+
+  hourMessage = areHoursNumbers ? hourMessage : "Invalid time";
 
   return {
     InfoValidations: {
