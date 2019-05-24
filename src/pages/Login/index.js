@@ -1,1 +1,1 @@
-export { LoginWithAuthContext as Login } from "./Login";
+export { LoginPage as Login } from "./Login";
