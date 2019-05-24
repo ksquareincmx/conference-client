@@ -14,7 +14,7 @@ const CalendarPage = props => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
-    setIsDrawerOpen(isDrawerOpen);
+    setIsDrawerOpen(false);
   };
 
   const handleDrawerClose = () => {

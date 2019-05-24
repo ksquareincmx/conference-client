@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import { CalendarPageLogic } from "./CalendarPageLogic.jsx";
@@ -10,9 +10,9 @@ import { NotificationProvider, ModalFormProvider } from "providers";
 import { NoteCard } from "components/NoteCard";
 
 const CalendarPage = props => {
-  const [isDBEmpty, setIsDBEmpty] = React.useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isDBEmpty, setIsDBEmpty] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
@@ -26,7 +26,7 @@ const CalendarPage = props => {
     setIsDBEmpty(true);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsLoading(false);
   }, []);
 
