@@ -9,79 +9,70 @@ import { withAuthContext } from "hocs";
 import { NotificationProvider, ModalFormProvider } from "providers";
 import { NoteCard } from "components/NoteCard";
 
-class CalendarComponent extends React.Component {
-  state = {
-    isDBEmpty: false,
-    isDrawerOpen: false,
-    isLoading: true
+const CalendarPage = props => {
+  const [isDBEmpty, setIsDBEmpty] = React.useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  const handleDrawerOpen = () => {
+    setIsDrawerOpen(true);
   };
 
-  handleDrawerOpen = () => {
-    this.setState({ isDrawerOpen: true });
+  const handleDrawerClose = () => {
+    setIsDrawerOpen(false);
   };
 
-  handleDrawerClose = () => {
-    this.setState({ isDrawerOpen: false });
+  const handleDBEmpty = () => {
+    setIsDBEmpty(true);
   };
 
-  handleDBEmpty = () => {
-    this.setState({ isDBEmpty: true });
-  };
+  React.useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
-  componentDidMount() {
-    this.setState({ isLoading: false });
+  const { authContext, bookingsData, onBookingsDataChange, URLRoomId } = props;
+  const { isAuth } = authContext;
+
+  if (!isAuth && !isLoading) {
+    return <Redirect to="/login" />;
   }
 
-  render() {
-    const { isDBEmpty, isDrawerOpen, isLoading } = this.state;
-    const {
-      authContext,
-      bookingsData,
-      onBookingsDataChange,
-      URLRoomId
-    } = this.props;
-    const { isAuth } = authContext;
-    if (!isAuth && !isLoading) {
-      return <Redirect to="/login" />;
-    }
+  const { sessionInfo } = authContext;
+  return (
+    <Fragment>
+      <NavBar authContext={authContext} />
+      <NotificationProvider>
+        <ModalFormProvider onBookingsDataChange={onBookingsDataChange}>
+          <Grid container direction="row">
+            <DrawerBookings
+              isOpen={isDrawerOpen}
+              handleOpen={handleDrawerOpen}
+              handleClose={handleDrawerClose}
+            >
+              <BookingsSideBar
+                bookingsData={bookingsData}
+                onBookingsDataChange={onBookingsDataChange}
+              />
+            </DrawerBookings>
+            <Grid item xs={12}>
+              {isDBEmpty && <NoteCard />}
 
-    const { sessionInfo } = authContext;
-    return (
-      <Fragment>
-        <NavBar authContext={authContext} />
-        <NotificationProvider>
-          <ModalFormProvider onBookingsDataChange={onBookingsDataChange}>
-            <Grid container direction="row">
-              <DrawerBookings
-                isOpen={isDrawerOpen}
-                handleOpen={this.handleDrawerOpen}
-                handleClose={this.handleDrawerClose}
-              >
-                <BookingsSideBar
+              {!isDBEmpty && (
+                <CalendarPageLogic
+                  auth={sessionInfo}
+                  URLRoomId={URLRoomId}
                   bookingsData={bookingsData}
                   onBookingsDataChange={onBookingsDataChange}
+                  handleDBEmpty={handleDBEmpty}
+                  isDrawerOpen={isDrawerOpen}
                 />
-              </DrawerBookings>
-              <Grid item xs={12}>
-                {isDBEmpty ? (
-                  <NoteCard />
-                ) : (
-                  <CalendarPageLogic
-                    auth={sessionInfo}
-                    URLRoomId={URLRoomId}
-                    bookingsData={bookingsData}
-                    onBookingsDataChange={onBookingsDataChange}
-                    handleDBEmpty={this.handleDBEmpty}
-                    isDrawerOpen={isDrawerOpen}
-                  />
-                )}
-              </Grid>
+              )}
             </Grid>
-          </ModalFormProvider>
-        </NotificationProvider>
-      </Fragment>
-    );
-  }
-}
+          </Grid>
+        </ModalFormProvider>
+      </NotificationProvider>
+    </Fragment>
+  );
+};
 
-export const Calendar = withAuthContext(CalendarComponent);
+export const Calendar = withAuthContext(CalendarPage);
