@@ -86,21 +86,16 @@ class BookingItemComponent extends React.Component {
       bookingDateGrid
     } = styleClasses;
 
-    const { userName, roomColor, roomNameAbbrev, dateText, room } = booking;
-    const { bgColor, txtColor } = toRoomColors(room);
+    const { userName, dateText, room } = booking;
     const bookingForDialog = mapToConfirmationDialogFormat(booking);
     const { startTime, endTime } = bookingForDialog;
+    const { name: roomName } = room;
 
     return (
       <Card elevation={1} square className={itemCard}>
         <Grid container direction={"row"} className={bookingContainer}>
           <Grid item xs={3} className={roomStickerGrid}>
-            <RoomSticker
-              roomName={roomNameAbbrev}
-              roomColor={roomColor}
-              bgColor={bgColor}
-              txtColor={txtColor}
-            />
+            <RoomSticker roomName={roomName} />
           </Grid>
           <Grid item xs={6} className={bookingInfoGrid}>
             <BookingDetails
