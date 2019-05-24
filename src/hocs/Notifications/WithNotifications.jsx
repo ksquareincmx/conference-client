@@ -23,8 +23,7 @@ export function withNotifications(Component) {
         body
       },
       sticker: {
-        color: "gray",
-        text: "X"
+        roomName: "error"
       },
       variant: "error"
     };

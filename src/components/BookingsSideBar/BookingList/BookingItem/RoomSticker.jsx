@@ -1,54 +1,23 @@
 import React from "react";
-import { Paper, withStyles } from "@material-ui/core";
-import capitalize from "lodash/fp/capitalize";
+import { withStyles } from "@material-ui/core";
 
 const styles = theme => ({
+  roomStickerContainer: {
+    height: "3.125rem",
+    width: "3.125rem",
+    margin: "1.25rem"
+  },
   roomSticker: {
-    height: 50,
-    width: 50,
-    margin: 20,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 25,
-    fontWeight: "bold"
+    height: "100%"
   }
 });
 
-const getStickerColor = (bgColor, txtColor) => {
-  const loadingColor = {
-    background: "lightgray",
-    color: "gray"
-  };
-
-  const realColor = {
-    background: bgColor,
-    color: txtColor,
-    opacity: 0.6
-  };
-
-  return bgColor ? realColor : loadingColor;
-};
-
-const getRoomSticker = name => {
-  return name ? capitalize(name) : "...";
-};
-
-const RoomStickerComponent = ({
-  classes: { roomSticker },
-  roomColor,
-  roomName,
-  txtColor,
-  bgColor
-}) => {
+const RoomStickerComponent = ({ roomName, classes }) => {
+  const { roomStickerContainer, roomSticker } = classes;
   return (
-    <Paper
-      elevation={0}
-      className={roomSticker}
-      style={getStickerColor(bgColor, txtColor)}
-    >
-      {getRoomSticker(roomName)}
-    </Paper>
+    <div className={roomStickerContainer}>
+      <img className={roomSticker} src={`/assets/${roomName}.png`} />
+    </div>
   );
 };
 
