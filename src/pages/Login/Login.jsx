@@ -34,7 +34,7 @@ const Login = props => {
   const { isAuth } = authContext;
 
   if (isAuth) {
-    return <Redirect to="/calendar" />;
+    return <Redirect to="/room/1" />;
   }
 
   const { onLogin } = authContext;

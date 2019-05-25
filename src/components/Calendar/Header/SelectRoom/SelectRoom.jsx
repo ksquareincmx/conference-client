@@ -2,21 +2,29 @@ import React from "react";
 import {
   Button,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   withStyles
 } from "@material-ui/core";
+import { SelectContent } from "./SelectContent";
 import cuid from "cuid";
 
 const styles = theme => ({
   button: {
+    minWidth: "190px",
     width: "auto",
+    height: "52px",
     position: "absolute",
     top: 177,
-    backgroundColor: "#5294e5",
-    color: "white",
-    fontSize: "1em"
+    backgroundColor: "transparent",
+    color: "#808080",
+    boxShadow: "none",
+    border: "1px solid #808080",
+    fontWeight: "bold",
+    fontSize: "1rem",
+    padding: "6px",
+    display: "flex",
+    justifyContent: "flex-start"
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -26,6 +34,11 @@ const styles = theme => ({
     height: 0,
     width: 0,
     visibility: "hidden"
+  },
+  optionImg: {
+    height: "2.4rem",
+    borderRadius: "5px",
+    marginRight: "10px"
   }
 });
 
@@ -69,31 +82,20 @@ class SelectRoomComponent extends React.Component {
   };
 
   render() {
-    const {
-      selectedRooms,
-      pairedRooms,
-      selectedRoom,
-      isSingleGrid,
-      classes: styleClasses
-    } = this.props;
-    const { button, formControl, select } = styleClasses;
+    const { selectedRoom, isSingleGrid, classes: styleClasses } = this.props;
+    const { button, formControl, select, optionImg } = styleClasses;
     const options = this.getOptions(isSingleGrid);
 
     return (
       <form autoComplete="off">
         <Button
           onClick={this.handleOpen}
-          color="primary"
           variant={"contained"}
           className={button}
         >
-          {isSingleGrid
-            ? selectedRoom[0]
-              ? selectedRoom[0].name
-              : "Loading..."
-            : selectedRooms
-            ? this.getRoomNames(selectedRooms)
-            : "Loading..."}
+          <SelectContent
+            roomName={selectedRoom[0] ? selectedRoom[0].name : null}
+          />
         </Button>
         <FormControl className={formControl}>
           <Select
@@ -109,9 +111,13 @@ class SelectRoomComponent extends React.Component {
             className={select}
           >
             {options
-              ? options.map(option => (
-                  <MenuItem value={option.rooms} key={cuid()}>
-                    {option.optionTxt}
+              ? options.map(({ rooms, optionTxt }) => (
+                  <MenuItem value={rooms} key={cuid()}>
+                    <img
+                      className={optionImg}
+                      src={`/assets/${optionTxt}.png`}
+                    />
+                    {optionTxt}
                   </MenuItem>
                 ))
               : null}

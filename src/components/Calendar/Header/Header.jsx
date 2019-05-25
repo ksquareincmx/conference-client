@@ -11,6 +11,7 @@ const styles = theme => ({
   },
   createButton: {
     width: 200,
+    height: 42,
     position: "absolute",
     right: 0,
     top: -60,
