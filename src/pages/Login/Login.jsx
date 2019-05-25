@@ -36,7 +36,7 @@ class Login extends React.Component {
     const { loginContainer } = classes;
     const { isAuth } = authContext;
     if (isAuth) {
-      return <Redirect to="/calendar" />;
+      return <Redirect to="/room/1" />;
     }
 
     const { onLogin } = authContext;
