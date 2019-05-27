@@ -1,40 +1,28 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/";
-import classNames from "classnames";
 
 const style = theme => ({
-  snackBarSticker: {
-    width: 65,
-    height: 65,
-    marginLeft: 10,
-    marginTop: 10,
+  snackBarStickerContainer: {
+    width: "4.0625rem",
+    height: "4.0625rem",
+    marginLeft: "0.625rem",
+    marginTop: "0.625rem",
     position: "absolute",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     opacity: 0.6,
-    borderRadius: 5
+    borderRadius: "5px"
   },
-  snackBarStickerContent: {
-    fontSize: 40,
-    fontWeight: "bold"
+  snackBarSticker: {
+    height: "100%"
   }
 });
 
-const textColor = txtColor => ({ color: txtColor });
-const backgroundColor = bgColor => ({ background: bgColor ? bgColor : "gray" });
-
 const SnackBarStickerComponent = ({
-  bgColor,
-  txtColor,
-  text,
-  classes: { snackBarSticker, snackBarStickerContent }
+  roomName,
+  classes: { snackBarStickerContainer, snackBarSticker }
 }) => {
   return (
-    <div className={snackBarSticker} style={backgroundColor(bgColor)}>
-      <div className={snackBarStickerContent} style={textColor(txtColor)}>
-        {text}
-      </div>
+    <div className={snackBarStickerContainer}>
+      <img className={snackBarSticker} src={`/assets/${roomName}.png`} />
     </div>
   );
 };

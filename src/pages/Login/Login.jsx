@@ -6,7 +6,7 @@ import { LoginErrorCard } from "./LoginErrorCard";
 import { LoginCard } from "./LoginCard";
 import { withAuthContext } from "hocs";
 
-const style = theme => ({
+const style = () => ({
   loginContainer: {
     backgroundImage: `url(${background})`,
     height: "100vh",
@@ -18,39 +18,33 @@ const style = theme => ({
   }
 });
 
-class Login extends React.Component {
-  state = {
-    anErrorOcurred: false
+const Login = props => {
+  const [anErrorOcurred, setAnErrorOcurred] = React.useState(false);
+
+  const handleErrorCardShow = () => {
+    setAnErrorOcurred(true);
   };
 
-  handleErrorCardShow = () => {
-    this.setState({ anErrorOcurred: true });
+  const handleErrorCardHide = () => {
+    setAnErrorOcurred(false);
   };
 
-  handleErrorCardHide = () => {
-    this.setState({ anErrorOcurred: false });
-  };
+  const { authContext, classes } = props;
+  const { loginContainer } = classes;
+  const { isAuth } = authContext;
 
-  render() {
-    const { authContext, classes } = this.props;
-    const { loginContainer } = classes;
-    const { isAuth } = authContext;
-    if (isAuth) {
-      return <Redirect to="/calendar" />;
-    }
-
-    const { onLogin } = authContext;
-    const { anErrorOcurred } = this.state;
-    return (
-      <div className={loginContainer}>
-        <LoginCard onLogin={onLogin} onLoginError={this.handleErrorCardShow} />
-        <LoginErrorCard
-          isOpen={anErrorOcurred}
-          onClose={this.handleErrorCardHide}
-        />
-      </div>
-    );
+  if (isAuth) {
+    return <Redirect to="/room/1" />;
   }
-}
 
-export const LoginWithAuthContext = withStyles(style)(withAuthContext(Login));
+  const { onLogin } = authContext;
+
+  return (
+    <div className={loginContainer}>
+      <LoginCard onLogin={onLogin} onLoginError={handleErrorCardShow} />
+      <LoginErrorCard isOpen={anErrorOcurred} onClose={handleErrorCardHide} />
+    </div>
+  );
+};
+
+export const LoginPage = withStyles(style)(withAuthContext(Login));

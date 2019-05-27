@@ -7,6 +7,7 @@ import { withNotifications } from "hocs";
 import { formatDate } from "utils/BookingFormater";
 import { isColliding } from "utils/CollisionChecker";
 import { isWorkingHour } from "components/Modals/CreateMeeting/meetingValidations";
+import Hotkeys from "react-hot-keys";
 
 class CalendarGridComponent extends React.Component {
   customEventView = content => {
@@ -52,21 +53,23 @@ class CalendarGridComponent extends React.Component {
 
   render() {
     return (
-      <CalendarStrategy
-        type={this.props.type}
-        bookings={this.props.bookingsData}
-        roomList={this.props.selectedRooms}
-        handleSelect={this.handleSelect}
-        components={{
-          event: this.customEventView
-        }}
-        localizer={Utils.localizer}
-        minDate={Utils.minDate}
-        maxDate={Utils.maxDate}
-        step={Utils.step}
-        timeSlots={Utils.timeSlots}
-        date={this.props.date}
-      />
+      <Hotkeys keyName="ctrl+b,command+b" onKeyDown={this.props.onCreate}>
+        <CalendarStrategy
+          type={this.props.type}
+          bookings={this.props.bookingsData}
+          roomList={this.props.selectedRooms}
+          handleSelect={this.handleSelect}
+          components={{
+            event: this.customEventView
+          }}
+          localizer={Utils.localizer}
+          minDate={Utils.minDate}
+          maxDate={Utils.maxDate}
+          step={Utils.step}
+          timeSlots={Utils.timeSlots}
+          date={this.props.date}
+        />
+      </Hotkeys>
     );
   }
 }

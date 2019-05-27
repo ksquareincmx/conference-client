@@ -12,7 +12,6 @@ export const Routes = () => (
     <Switch>
       <Route exact path="/room/:roomId" component={RoomPage} />
       <Route path="/login" component={Login} />
-      <Route path="/calendar" component={Calendar} />
       <Route path="/">
         <Redirect to="/login" />
       </Route>
