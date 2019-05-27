@@ -11,7 +11,6 @@ import { CalendarGrid } from "./CalendarGrid";
 import { ModalFormConsumer } from "providers";
 import { EasterEgg } from "./components/EasterEgg";
 import classNames from "classnames";
-import { ESPIPE } from "constants";
 
 const styles = theme => ({
   calendarContainer: {
