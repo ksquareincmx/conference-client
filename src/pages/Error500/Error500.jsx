@@ -1,38 +1,59 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 
-const styles = theme => ({
+const styles = () => ({
   container: {
-    height: "100%",
     margin: 50,
-    display: "flex",
-    flexDirection: "column",
-    textAlign: "left",
-    alignItems: "center"
+    textAlign: "center",
+    backgroundColor: "white",
+    boxSizing: "border-box",
+    padding: "2rem"
   },
   title: {
-    fontSize: "6em",
-    fontWight: "bold",
-    color: "#808080"
+    fontSize: "3rem",
+    fontWeight: "bold",
+    color: "#2F49A1"
   },
-  content: {
-    fontSize: "2em",
-    color: "#e9e9e9",
-    textShadow:
-      "-1px 0 4px grey, 0 1px 4px grey, 1px 0 4px grey, 0 -1px 4px grey"
+  subTitle: {
+    fontSize: "1.5rem"
+  },
+  pictureList: {
+    display: "flex",
+    justifyContent: "space-evenly",
+    marginTop: "3rem"
+  },
+  picture: {
+    border: "4px solid transparent",
+    borderRadius: "100%",
+    height: "10rem",
+    width: "10rem",
+    "&:hover": {
+      borderColor: "#00fff9"
+    }
   }
 });
 
 const Error500Component = props => {
   const { classes: styleClasses } = props;
-  const { container, title, content } = styleClasses;
+  const { container, title, subTitle, picture, pictureList } = styleClasses;
 
   return (
     <div className={container}>
-      <h1 className={title}>Error: 500</h1>
-      <div className={content}>
-        <h2>We can't connect with the server at this moment.</h2>
-        <h2>Try again later.</h2>
+      <h1 className={title}>Whoops... something went wrong</h1>
+      <h2 className={subTitle}>Which one of our engineers we should fire?</h2>
+      <div className={pictureList}>
+        <div>
+          <img className={picture} src="/assets/basultos.png" alt="Basultos" />
+          <p>Basultos</p>
+        </div>
+        <div>
+          <img className={picture} src="/assets/mijangos.png" alt="Mijangos" />
+          <p>Mijangos</p>
+        </div>
+        <div>
+          <img className={picture} src="/assets/salas.png" alt="Salas" />
+          <p>Salas</p>
+        </div>
       </div>
     </div>
   );
