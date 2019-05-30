@@ -5,7 +5,7 @@ import {
   Redirect,
   Switch
 } from "react-router-dom";
-import { Calendar, RoomPage, Login } from "pages";
+import { RoomPage, Login } from "pages";
 
 export const Routes = () => (
   <Router>
