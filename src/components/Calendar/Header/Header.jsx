@@ -122,6 +122,12 @@ const HeaderViewComponent = props => {
 
   const { DAY, WEEK, MONTH } = CalendarViewSelectors;
 
+  //TODO: change for only 1 room when calendarpage is removed
+  const booking = {
+    roomName: selectedRoom[0] ? selectedRoom[0].name : "",
+    roomId: selectedRoom[0] ? selectedRoom[0].id : ""
+  };
+
   return (
     <div>
       <div>{headerDateContainer}</div>
@@ -141,7 +147,7 @@ const HeaderViewComponent = props => {
             <Button
               color="primary"
               className={createButton}
-              onClick={modalForm.handleOnClickCreateMeeting}
+              onClick={modalForm.handleOnClickCreateMeeting(booking)}
               variant={"contained"}
             >
               CREATE APPOINTMENT

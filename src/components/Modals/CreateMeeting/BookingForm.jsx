@@ -284,7 +284,7 @@ class BookingFormComponent extends React.Component {
         const startDate = formatDate(start);
         const endDate = formatDate(end);
 
-        this.setState({
+        return this.setState({
           quickAppointment: true,
           room: roomName,
           roomId: roomId,
@@ -332,9 +332,19 @@ class BookingFormComponent extends React.Component {
           disabledNextButton: false
         });
 
-        this.refreshChipList();
+        return this.refreshChipList();
       }
     }
+    console.log("THIS");
+    const { roomName, roomId } = this.props.bookingForEdition;
+
+    this.setState({
+      room: roomName,
+      roomId: roomId,
+      disabledStartTimeSelect: false,
+      disabledConferenceSelect: false,
+      disabledNextButton: roomName ? false : true
+    });
   }
 
   render() {

@@ -49,7 +49,9 @@ class CalendarGridComponent extends React.Component {
         body: "There is anothe booking in this time slot"
       });
     }
-    this.props.onCreate(bookingInfo);
+
+    const triggerOpenModal = this.props.onCreate(bookingInfo);
+    triggerOpenModal();
   };
 
   render() {
