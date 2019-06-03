@@ -88,6 +88,7 @@ const WeeksViewComponent = props => {
   const {
     bookings,
     roomList,
+    roomSelected,
     isSingleGrid,
     type,
     step,
@@ -99,6 +100,9 @@ const WeeksViewComponent = props => {
     date,
     classes: styleClasses
   } = props;
+
+  //TODO: Make to receive only the current room once CalendarPage is removed
+  const room = roomSelected[0];
 
   const { gridContainer, grid } = styleClasses;
 
@@ -143,7 +147,7 @@ const WeeksViewComponent = props => {
           max={maxDate}
           localizer={localizer}
           formats={{ timeGutterFormat: "HH:mm ", dayFormat: "dddd D" }}
-          onSelectSlot={handleSelect()}
+          onSelectSlot={handleSelect(room.id, room.name)}
           timeslots={timeSlots}
           components={components}
           date={date}

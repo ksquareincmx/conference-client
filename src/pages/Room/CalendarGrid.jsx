@@ -10,6 +10,11 @@ import { isWorkingHour } from "components/Modals/CreateMeeting/meetingValidation
 import Hotkeys from "react-hot-keys";
 
 class CalendarGridComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.calendar = React.createRef();
+  }
+
   customEventView = content => {
     return (
       <Event
@@ -49,31 +54,48 @@ class CalendarGridComponent extends React.Component {
         body: "There is anothe booking in this time slot"
       });
     }
-    this.props.onCreate(bookingInfo);
+
+    const triggerOpenModal = this.props.onCreate(bookingInfo);
+    triggerOpenModal();
   };
+
+  handleOpenEmptyModal = () => {
+    const { id, name } = this.props.selectedRoom[0];
+    const roomData = { roomId: id, roomName: name };
+    if (id) {
+      const triggerOpenModal = this.props.onCreate(roomData);
+      triggerOpenModal();
+    }
+  };
+
+  componentDidMount() {
+    this.calendar.current.focus();
+  }
 
   render() {
     const { bookingsData, type, selectedRoom, date } = this.props;
     const { localizer, minDate, maxDate, step, timeSlots } = Utils;
     return (
-      <Hotkeys keyName="ctrl+b,command+b" onKeyDown={this.props.onCreate}>
-        <CalendarStrategy
-          type={type}
-          bookings={bookingsData}
-          roomList={selectedRoom}
-          roomSelected={selectedRoom}
-          handleSelect={this.handleSelect}
-          components={{
-            event: this.customEventView
-          }}
-          localizer={localizer}
-          minDate={minDate}
-          maxDate={maxDate}
-          step={step}
-          timeSlots={timeSlots}
-          date={date}
-          isSingleGrid={true}
-        />
+      <Hotkeys keyName="ctrl+b,command+b" onKeyDown={this.handleOpenEmptyModal}>
+        <div ref={this.calendar}>
+          <CalendarStrategy
+            type={type}
+            bookings={bookingsData}
+            roomList={selectedRoom}
+            roomSelected={selectedRoom}
+            handleSelect={this.handleSelect}
+            components={{
+              event: this.customEventView
+            }}
+            localizer={localizer}
+            minDate={minDate}
+            maxDate={maxDate}
+            step={step}
+            timeSlots={timeSlots}
+            date={date}
+            isSingleGrid={true}
+          />
+        </div>
       </Hotkeys>
     );
   }
