@@ -335,7 +335,6 @@ class BookingFormComponent extends React.Component {
         return this.refreshChipList();
       }
     }
-    console.log("THIS");
     const { roomName, roomId } = this.props.bookingForEdition;
 
     this.setState({
