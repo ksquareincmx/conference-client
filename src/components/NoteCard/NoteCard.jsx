@@ -22,16 +22,16 @@ const styles = theme => ({
 
 function NoteCardComponent(props) {
   const { container, note, txt } = props.classes;
+  const { title, content } = props;
 
   return (
     <div className={container}>
       <Paper className={note} elevation={1}>
         <Typography className={txt} variant="h5" component="h3">
-          Rooms not found
+          {title}
         </Typography>
         <Typography className={txt} component="p">
-          The data base of the application needs to have rooms registered to
-          work.
+          {content}
         </Typography>
       </Paper>
     </div>
