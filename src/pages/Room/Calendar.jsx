@@ -30,7 +30,14 @@ const CalendarPage = props => {
     setIsLoading(false);
   }, []);
 
-  const { authContext, bookingsData, onBookingsDataChange, URLRoomId } = props;
+  const {
+    authContext,
+    allBookingsData,
+    bookingsData,
+    onBookingsDataChange,
+    URLRoomId,
+    isLoading: isMainLoading
+  } = props;
   const { isAuth } = authContext;
 
   if (!isAuth && !isLoading) {
@@ -50,14 +57,27 @@ const CalendarPage = props => {
               handleClose={handleDrawerClose}
             >
               <BookingsSideBar
-                bookingsData={bookingsData}
+                bookingsData={allBookingsData}
                 onBookingsDataChange={onBookingsDataChange}
               />
             </DrawerBookings>
             <Grid item xs={12}>
-              {isDBEmpty && <NoteCard />}
+              {isMainLoading && <div>Loading...</div>}
 
-              {!isDBEmpty && (
+              {isDBEmpty && !isMainLoading && (
+                <NoteCard
+                  title={"Rooms not found"}
+                  content={
+                    "The data base of the application needs to have rooms registered to work."
+                  }
+                />
+              )}
+
+              {!isDBEmpty && !URLRoomId && !isMainLoading && (
+                <NoteCard title={"Error 404: Room not found."} content={""} />
+              )}
+
+              {!isDBEmpty && URLRoomId && !isMainLoading && (
                 <CalendarPageLogic
                   auth={sessionInfo}
                   URLRoomId={URLRoomId}

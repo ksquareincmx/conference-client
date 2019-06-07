@@ -15,7 +15,7 @@ const styles = theme => ({
     width: "auto",
     height: "52px",
     position: "absolute",
-    top: 177,
+    top: 166,
     backgroundColor: "transparent",
     color: "#808080",
     boxShadow: "none",

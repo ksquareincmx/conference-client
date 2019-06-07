@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { bookingService } from "services";
+import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
@@ -8,22 +8,35 @@ import { getUTCDateFilter } from "utils/BookingFilters";
 class CalendarContainerComponent extends React.Component {
   state = {
     bookingsData: [],
-    isServerDown: false
+    allBookingsData: [],
+    isServerDown: false,
+    roomId: "",
+    isLoading: true
   };
 
   fetchBookings = async () => {
     try {
       const { URLRoomId } = this.props;
+      const reqRoom = await roomService.getOneById(URLRoomId);
+      const allData = await bookingService.getAllWithDetails(
+        getUTCDateFilter()
+      );
       const data = await bookingService.getAllWithDetailsByRoom(
         getUTCDateFilter(),
         URLRoomId
       );
-      if (data.bookings) {
+      if (data.bookings && allData.bookings) {
+        const { bookings: allBookingsData } = allData;
         const { bookings: bookingsData } = data;
-        this.setState({ bookingsData, isServerDown: false });
+        this.setState({ bookingsData, allBookingsData, isServerDown: false });
       } else {
         this.setState({ isServerDown: true });
       }
+
+      if (typeof reqRoom === "object") {
+        return this.setState({ roomId: URLRoomId, isLoading: false });
+      }
+      return this.setState({ roomId: "", isLoading: false });
     } catch (error) {
       return Promise.reject(new Error(error.message));
     }
@@ -38,16 +51,23 @@ class CalendarContainerComponent extends React.Component {
   };
 
   render() {
-    const { bookingsData, isServerDown } = this.state;
-    const { URLRoomId } = this.props;
+    const {
+      allBookingsData,
+      bookingsData,
+      isServerDown,
+      roomId,
+      isLoading
+    } = this.state;
     if (isServerDown) {
       return <Error500 />;
     }
     return (
       <Calendar
+        allBookingsData={allBookingsData}
         bookingsData={bookingsData}
         onBookingsDataChange={this.handleBookingsDataChange}
-        URLRoomId={URLRoomId}
+        URLRoomId={roomId}
+        isLoading={isLoading}
       />
     );
   }

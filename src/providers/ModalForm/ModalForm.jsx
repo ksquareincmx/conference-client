@@ -25,12 +25,12 @@ class ModalFormProviderComponent extends React.Component {
     shouldUpdate: false
   };
 
-  handleClickCreateBooking = booking => {
+  handleClickCreateBooking = booking => () => {
     if (booking.start) {
       this.handleCreationFromCalendar(booking);
       return;
     }
-    this.handleCreationFromButton();
+    this.handleCreationFromButton(booking);
     return;
   };
 
@@ -47,14 +47,16 @@ class ModalFormProviderComponent extends React.Component {
     return;
   };
 
-  handleCreationFromButton = () => {
+  handleCreationFromButton = booking => {
+    const { roomName } = booking;
     this.setState({
       isModalOpen: true,
       isDelete: false,
-      room: null,
+      room: roomName,
       bookingClicked: false,
       quickAppointment: false,
-      roomId: null
+      roomId: null,
+      bookingClickedObj: booking
     });
     return;
   };
@@ -145,7 +147,6 @@ class ModalFormProviderComponent extends React.Component {
           <Modal
             className={modal}
             open={isModalOpen}
-            disableAutoFocus={true}
             disableEscapeKeyDown={false}
             onClose={this.handleModalClose}
           >
