@@ -32,6 +32,7 @@ const CalendarPage = props => {
 
   const {
     authContext,
+    allBookingsData,
     bookingsData,
     onBookingsDataChange,
     URLRoomId,
@@ -56,7 +57,7 @@ const CalendarPage = props => {
               handleClose={handleDrawerClose}
             >
               <BookingsSideBar
-                bookingsData={bookingsData}
+                bookingsData={allBookingsData}
                 onBookingsDataChange={onBookingsDataChange}
               />
             </DrawerBookings>
