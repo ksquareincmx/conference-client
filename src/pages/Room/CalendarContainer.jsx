@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { withRouter, Redirect } from "react-router-dom";
+import compose from "lodash/fp/compose";
 import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { Error500 } from "pages/Error500";
@@ -36,7 +37,6 @@ class CalendarContainerComponent extends React.Component {
         const { bookings: bookingsData } = data;
         this.setState({ bookingsData, allBookingsData, isServerDown: false });
       } else {
-        console.error({ CalendarError: data });
         const { name } = data;
         // The webtoken is invalid for any reason
         if (name === "JsonWebTokenError") {
@@ -85,6 +85,7 @@ class CalendarContainerComponent extends React.Component {
   }
 }
 
-export const CalendarContainer = withRouter(
-  withAuthContext(CalendarContainerComponent)
-);
+export const CalendarContainer = compose(
+  withRouter,
+  withAuthContext
+)(CalendarContainerComponent);
