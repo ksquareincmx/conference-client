@@ -1,28 +1,28 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import { withRouter, Redirect } from "react-router-dom";
 import compose from "lodash/fp/compose";
+=======
+import React, { useState, useContext, useEffect } from "react";
+import { withRouter } from "react-router-dom";
+>>>>>>> refactor(Calendar): convert to hooks #1
 import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
 import { withAuthContext } from "hocs/Auth";
+import { AuthContext } from "context/AuthContext";
 
-class CalendarContainerComponent extends React.Component {
-  state = {
-    bookingsData: [],
-    allBookingsData: [],
-    isServerDown: false,
-    roomId: "",
-    isLoading: true
-  };
+function CalendarContainerComponent({ URLRoomId, history }) {
+  const [bookingsData, setBookingsData] = useState([]);
+  const [allBookingsData, setAllBookingsData] = useState([]);
+  const [isServerDown, setIsServerDown] = useState(false);
+  const [roomId, setRoomId] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const authContext = useContext(AuthContext);
 
-  componentDidMount() {
-    this.fetchBookings();
-  }
-
-  fetchBookings = async () => {
+  const fetchBookings = async () => {
     try {
-      const { URLRoomId, authContext, history } = this.props;
       const { onLogout } = authContext;
       const reqRoom = await roomService.getOneById(URLRoomId);
       const allData = await bookingService.getAllWithDetails(
@@ -35,7 +35,8 @@ class CalendarContainerComponent extends React.Component {
       if (data.bookings && allData.bookings) {
         const { bookings: allBookingsData } = allData;
         const { bookings: bookingsData } = data;
-        this.setState({ bookingsData, allBookingsData, isServerDown: false });
+        setAllBookingsData(allBookingsData);
+        setBookingsData(bookingsData);
       } else {
         const { name } = data;
         // The webtoken is invalid for any reason
@@ -43,46 +44,34 @@ class CalendarContainerComponent extends React.Component {
           onLogout();
           return history.push("/login");
         } else {
-          this.setState({ isServerDown: true });
+          setIsServerDown(true);
         }
       }
-
       if (typeof reqRoom === "object") {
-        return this.setState({ roomId: URLRoomId, isLoading: false });
+        setIsLoading(false);
+        return setRoomId(URLRoomId);
       }
-      return this.setState({ roomId: "", isLoading: false });
+      return setIsLoading(true);
     } catch (error) {
       return Promise.reject(new Error(error.message));
     }
   };
 
-  handleBookingsDataChange = () => {
-    this.fetchBookings();
-  };
-
-  render() {
-    const {
-      allBookingsData,
-      bookingsData,
-      isServerDown,
-      roomId,
-      isLoading
-    } = this.state;
-
-    if (isServerDown) {
-      return <Error500 />;
-    }
-
-    return (
-      <Calendar
-        allBookingsData={allBookingsData}
-        bookingsData={bookingsData}
-        onBookingsDataChange={this.handleBookingsDataChange}
-        URLRoomId={roomId}
-        isLoading={isLoading}
-      />
-    );
+  // fetchBookings can't be called as `useEffect` param because it's async
+  useEffect(() => fetchBookings(), []);
+  if (isServerDown) {
+    return <Error500 />;
   }
+
+  return (
+    <Calendar
+      allBookingsData={allBookingsData}
+      bookingsData={bookingsData}
+      onBookingsDataChange={fetchBookings}
+      URLRoomId={roomId}
+      isLoading={isLoading}
+    />
+  );
 }
 
 export const CalendarContainer = compose(
