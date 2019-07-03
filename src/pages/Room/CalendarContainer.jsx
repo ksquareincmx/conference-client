@@ -1,9 +1,11 @@
-import React from "react";
-import { withRouter } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { withRouter, Redirect } from "react-router-dom";
+import compose from "lodash/fp/compose";
 import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
+import { withAuthContext } from "hocs/Auth";
 
 class CalendarContainerComponent extends React.Component {
   state = {
@@ -14,9 +16,14 @@ class CalendarContainerComponent extends React.Component {
     isLoading: true
   };
 
+  componentDidMount() {
+    this.fetchBookings();
+  }
+
   fetchBookings = async () => {
     try {
-      const { URLRoomId } = this.props;
+      const { URLRoomId, authContext, history } = this.props;
+      const { onLogout } = authContext;
       const reqRoom = await roomService.getOneById(URLRoomId);
       const allData = await bookingService.getAllWithDetails(
         getUTCDateFilter()
@@ -30,7 +37,14 @@ class CalendarContainerComponent extends React.Component {
         const { bookings: bookingsData } = data;
         this.setState({ bookingsData, allBookingsData, isServerDown: false });
       } else {
-        this.setState({ isServerDown: true });
+        const { name } = data;
+        // The webtoken is invalid for any reason
+        if (name === "JsonWebTokenError") {
+          onLogout();
+          return history.push("/login");
+        } else {
+          this.setState({ isServerDown: true });
+        }
       }
 
       if (typeof reqRoom === "object") {
@@ -41,10 +55,6 @@ class CalendarContainerComponent extends React.Component {
       return Promise.reject(new Error(error.message));
     }
   };
-
-  componentDidMount() {
-    this.fetchBookings();
-  }
 
   handleBookingsDataChange = () => {
     this.fetchBookings();
@@ -58,9 +68,11 @@ class CalendarContainerComponent extends React.Component {
       roomId,
       isLoading
     } = this.state;
+
     if (isServerDown) {
       return <Error500 />;
     }
+
     return (
       <Calendar
         allBookingsData={allBookingsData}
@@ -73,4 +85,7 @@ class CalendarContainerComponent extends React.Component {
   }
 }
 
-export const CalendarContainer = withRouter(CalendarContainerComponent);
+export const CalendarContainer = compose(
+  withRouter,
+  withAuthContext
+)(CalendarContainerComponent);
