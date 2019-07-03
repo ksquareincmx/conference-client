@@ -1,6 +1,6 @@
 import React from "react";
 import { authService, storageService } from "services";
-
+import { AuthContext } from "context/AuthContext";
 // Context object template
 
 class AuthProvider extends React.Component {
@@ -75,6 +75,5 @@ class AuthProvider extends React.Component {
   }
 }
 
-const AuthConsumer = AuthContext.Consumer;
-
+const { Consumer: AuthConsumer } = AuthContext;
 export { AuthConsumer, AuthProvider };
