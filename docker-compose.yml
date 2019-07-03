@@ -1,0 +1,7 @@
+# TODO: take env vars from files and inject it to the app
+version: "3"
+services:
+  frontend:
+    build: .
+    ports:
+      - "8081:80"
