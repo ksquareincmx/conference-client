@@ -21,7 +21,7 @@ function CalendarContainerComponent({ URLRoomId, history }) {
   const [shouldFetch, setShouldFetch] = useState(false);
   const authContext = useContext(AuthContext);
 
-  // fetchBookings can't be called as `useEffect` param because it's async
+  // fetchBookings can't be called as `useEffect` first param because it's async
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -65,6 +65,7 @@ function CalendarContainerComponent({ URLRoomId, history }) {
     };
 
     fetchBookings();
+    // whenever shouldFetch changes, it will call `fetchBookings`
   }, [shouldFetch]);
 
   if (isServerDown) {
