@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from "react";
-import { withRouter, Redirect } from "react-router-dom";
-import compose from "lodash/fp/compose";
-=======
 import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router-dom";
->>>>>>> refactor(Calendar): convert to hooks #1
 import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { Error500 } from "pages/Error500";
@@ -85,11 +79,4 @@ function CalendarContainerComponent({ URLRoomId, history }) {
   );
 }
 
-<<<<<<< HEAD
-export const CalendarContainer = compose(
-  withRouter,
-  withAuthContext
-)(CalendarContainerComponent);
-=======
 export const CalendarContainer = withRouter(CalendarContainerComponent);
->>>>>>> refactor(Calendar): convert to hooks #2
