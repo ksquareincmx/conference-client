@@ -1,13 +1,7 @@
 import React from "react";
 import { authService, storageService } from "services";
-
+import { AuthContext } from "context/AuthContext";
 // Context object template
-const AuthContext = React.createContext({
-  isAuth: false,
-  sessionInfo: null,
-  onLogin: () => {},
-  onLogout: () => {}
-});
 
 class AuthProvider extends React.Component {
   state = {
@@ -81,6 +75,5 @@ class AuthProvider extends React.Component {
   }
 }
 
-const AuthConsumer = AuthContext.Consumer;
-
+const { Consumer: AuthConsumer } = AuthContext;
 export { AuthConsumer, AuthProvider };

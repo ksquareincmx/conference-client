@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthConsumer } from "providers/Auth/Auth";
+import { AuthConsumer } from "providers/AuthProvider";
 
 // Change the prop name for authContext
 export function withAuthContext(Component) {

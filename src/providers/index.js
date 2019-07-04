@@ -1,3 +1,3 @@
-export { AuthProvider, AuthcConsumer } from "./Auth";
+export { AuthProvider, AuthcConsumer } from "./AuthProvider";
 export { ModalFormProvider, ModalFormConsumer } from "./ModalForm";
 export { NotificationProvider } from "./Notifications";
