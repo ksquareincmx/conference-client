@@ -6,13 +6,13 @@ import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
 import { AuthContext } from "../../context/AuthContext";
 
-function CalendarContainerComponent({ URLRoomId, history }) {
-  const [bookingsData, setBookingsData] = useState([]);
-  const [allBookingsData, setAllBookingsData] = useState([]);
-  const [isServerDown, setIsServerDown] = useState(false);
-  const [roomId, setRoomId] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [shouldFetch, setShouldFetch] = useState(false);
+const CalendarContainerComponent = ({ URLRoomId, history }) => {
+  const [bookingsData, updateBookingsData] = useState([]);
+  const [allBookingsData, updateAllBookingsData] = useState([]);
+  const [isServerDown, updateIsServerDown] = useState(false);
+  const [roomId, updateRoomId] = useState("");
+  const [isLoading, updateIsLoading] = useState(true);
+  const [shouldFetch, updateShouldFetch] = useState(false);
   const authContext = useContext(AuthContext);
 
   // fetchBookings can't be called as `useEffect` first param because it's async
@@ -31,8 +31,8 @@ function CalendarContainerComponent({ URLRoomId, history }) {
         if (data.bookings && allData.bookings) {
           const { bookings: allBookingsData } = allData;
           const { bookings: bookingsData } = data;
-          setAllBookingsData(allBookingsData);
-          setBookingsData(bookingsData);
+          updateAllBookingsData(allBookingsData);
+          updateBookingsData(bookingsData);
         } else {
           const { name } = data;
           // The webtoken is invalid for any reason
@@ -41,15 +41,15 @@ function CalendarContainerComponent({ URLRoomId, history }) {
             history.push("/login");
             return undefined;
           } else {
-            setIsServerDown(true);
+            updateIsServerDown(true);
           }
         }
         if (typeof reqRoom === "object") {
-          setIsLoading(false);
-          setRoomId(URLRoomId);
+          updateIsLoading(false);
+          updateRoomId(URLRoomId);
           return undefined;
         }
-        setIsLoading(true);
+        updateIsLoading(true);
         return undefined;
       } catch (error) {
         // Don't know how to do this with hooks
@@ -66,7 +66,7 @@ function CalendarContainerComponent({ URLRoomId, history }) {
     return <Error500 />;
   }
 
-  const onBookingsDataChange = () => setShouldFetch(true);
+  const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
 
   return (
     <Calendar
@@ -77,6 +77,6 @@ function CalendarContainerComponent({ URLRoomId, history }) {
       isLoading={isLoading}
     />
   );
-}
+};
 
 export const CalendarContainer = withRouter(CalendarContainerComponent);
