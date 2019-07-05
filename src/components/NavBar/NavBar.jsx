@@ -1,43 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavBarRightSide } from "./NavBarRightSide";
-import { NavBarContainer } from "./NavBarContainer";
+import { NavBarContainer } from "./NavBarWrapper";
 import { AvatarButton } from "./AvatarButton";
 import { UserNameLabel } from "./UsernameLabel";
 import { NavBarMenu } from "./NavBarMenu";
 import { storageService } from "services";
 
-export class NavBar extends React.Component {
-  state = {
-    anchorEl: null
-  };
+export const NavBar = ({ authContext: { onLogout } }) => {
+  const [anchorEl, updateAnchorEl] = useState(null);
 
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
+  const handleClick = ({ currentTarget }) => updateAnchorEl(currentTarget);
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
+  const handleClose = () => updateAnchorEl(null);
 
-  render() {
-    const { anchorEl } = this.state;
-    const {
-      authContext: { onLogout }
-    } = this.props;
-    const username = storageService.getUserName();
+  const username = storageService.getUserName();
 
-    return (
-      <NavBarContainer>
-        <NavBarRightSide>
-          <UserNameLabel username={username} />
-          <AvatarButton onClick={this.handleClick} />
-          <NavBarMenu
-            anchorEl={anchorEl}
-            onClose={this.handleClose}
-            onLogout={onLogout}
-          />
-        </NavBarRightSide>
-      </NavBarContainer>
-    );
-  }
-}
+  return (
+    <NavBarContainer>
+      <NavBarRightSide>
+        <UserNameLabel username={username} />
+        <AvatarButton onClick={this.handleClick} />
+        <NavBarMenu
+          anchorEl={anchorEl}
+          onClose={this.handleClose}
+          onLogout={onLogout}
+        />
+      </NavBarRightSide>
+    </NavBarContainer>
+  );
+};
