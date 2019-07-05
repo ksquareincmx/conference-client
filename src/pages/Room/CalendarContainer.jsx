@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { withRouter } from "react-router-dom";
 import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
@@ -6,72 +6,109 @@ import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
 import { AuthContext } from "../../context/AuthContext";
 
+// https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+const useInterval = (callback, delay) => {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+};
+
 const CalendarContainerComponent = ({ URLRoomId, history }) => {
-  const [bookingsData, updateBookingsData] = useState([]);
-  const [allBookingsData, updateAllBookingsData] = useState([]);
+  const [bookings, updateBookings] = useState([]);
+  const [allBookings, updateAllBookings] = useState([]);
   const [isServerDown, updateIsServerDown] = useState(false);
   const [roomId, updateRoomId] = useState("");
   const [isLoading, updateIsLoading] = useState(true);
   const [shouldFetch, updateShouldFetch] = useState(false);
   const authContext = useContext(AuthContext);
+  const [bookingsHash, updateBookingsHash] = useState("initial");
+  const [allBookingsHash, updateAllBookingsHash] = useState("initial");
 
-  // fetchBookings can't be called as `useEffect` first param because it's async
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const { onLogout } = authContext;
-        const reqRoom = await roomService.getOneById(URLRoomId);
-        const allData = await bookingService.getAllWithDetails(
-          getUTCDateFilter()
-        );
-        const data = await bookingService.getAllWithDetailsByRoom(
-          getUTCDateFilter(),
-          URLRoomId
-        );
-        if (data.bookings && allData.bookings) {
-          const { bookings: allBookingsData } = allData;
-          const { bookings: bookingsData } = data;
-          updateAllBookingsData(allBookingsData);
-          updateBookingsData(bookingsData);
-        } else {
-          const { name } = data;
-          // The webtoken is invalid for any reason
-          if (name === "JsonWebTokenError") {
-            onLogout();
-            history.push("/login");
-            return undefined;
-          } else {
-            updateIsServerDown(true);
-          }
+  const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
+
+  const fetchBookings = async () => {
+    try {
+      const { onLogout } = authContext;
+      const reqRoom = await roomService.getOneById(URLRoomId);
+      const allData = await bookingService.getAllWithDetails(
+        getUTCDateFilter()
+      );
+      const data = await bookingService.getAllWithDetailsByRoom(
+        getUTCDateFilter(),
+        URLRoomId
+      );
+      if (data.bookings && allData.bookings) {
+        const { bookings: allBookingsData } = allData;
+        const { bookings: bookingsData } = data;
+        // We avoid extra rendering if the data is the same, since this function runs every 1.5 seconds
+        const allBookingsDataStr = JSON.stringify(allBookingsData);
+        const bookingsDataStr = JSON.stringify(bookingsData);
+        if (allBookingsDataStr !== allBookingsHash) {
+          updateAllBookings(allBookingsData);
+          updateAllBookingsHash(allBookingsDataStr);
         }
-        if (typeof reqRoom === "object") {
-          updateIsLoading(false);
-          updateRoomId(URLRoomId);
+
+        if (bookingsDataStr !== bookingsHash) {
+          updateBookings(bookingsData);
+          updateBookingsHash(bookingsDataStr);
+        }
+      } else {
+        const { name } = data;
+        // The webtoken is invalid for any reason
+        if (name === "JsonWebTokenError") {
+          onLogout();
+          history.push("/login");
           return undefined;
+        } else {
+          updateIsServerDown(true);
         }
-        updateIsLoading(true);
-        return undefined;
-      } catch (error) {
-        // Don't know how to do this with hooks
-        Promise.reject(new Error(error.message));
+      }
+      if (typeof reqRoom === "object") {
+        updateIsLoading(false);
+        updateRoomId(URLRoomId);
         return undefined;
       }
-    };
+      // updateIsLoading(true);
+      return undefined;
+    } catch (error) {
+      // Don't know how to do this with hooks
+      Promise.reject(new Error(error.message));
+      return undefined;
+    }
+  };
 
+  useEffect(() => {
+    // TODO: update state ONLY if there's no data;
     fetchBookings();
     // whenever shouldFetch changes, it will call `fetchBookings`
   }, [shouldFetch]);
+
+  useInterval(() => {
+    fetchBookings();
+  }, 1500);
 
   if (isServerDown) {
     return <Error500 />;
   }
 
-  const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
-
   return (
     <Calendar
-      allBookingsData={allBookingsData}
-      bookingsData={bookingsData}
+      allBookingsData={allBookings}
+      bookingsData={bookings}
       onBookingsDataChange={onBookingsDataChange}
       URLRoomId={roomId}
       isLoading={isLoading}
