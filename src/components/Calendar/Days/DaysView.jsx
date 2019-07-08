@@ -137,9 +137,7 @@ const dayGrid = props => room => {
 
   const getRoomEvents = roomId => {
     const events = mapEventsByRoom(bookings, roomList);
-    const eventsObj = events.find(
-      eventsByRoom => eventsByRoom.roomId === roomId
-    );
+    const eventsObj = events.find(eventsByRoom => eventsByRoom.roomId === roomId);
     return eventsObj.roomEvents;
   };
 
@@ -150,20 +148,11 @@ const dayGrid = props => room => {
   const gridStyle = isSingleGrid ? bigGrid : grid;
 
   return (
-    <div
-      className={classNames(gridStyle, "day", gutterless)}
-      key={room ? room.id : cuid()}
-    >
+    <div className={classNames(gridStyle, "day", gutterless)} key={room ? room.id : cuid()}>
       <div className={gridHeaderContainer}>
-        {isGutterless ? (
-          <div className={gridGutterless} />
-        ) : (
-          <div className={gridGutter} />
-        )}
+        {isGutterless ? <div className={gridGutterless} /> : <div className={gridGutter} />}
         <div className={gridHeader}>
-          <h3 className={gridHeaderTxt}>
-            {room ? `${room.name} Room` : "Loading"}
-          </h3>
+          <h3 className={gridHeaderTxt}>{room ? `${room.name} Room` : "Loading"}</h3>
         </div>
       </div>
       <BigCalendar
@@ -193,9 +182,7 @@ const DaysViewComponent = props => {
   const { gridContainer, loadingContainer } = styleClasses;
 
   if (isSingleGrid && roomSelected) {
-    return (
-      <div className={gridContainer}>{roomSelected.map(dayGrid(props))}</div>
-    );
+    return <div className={gridContainer}>{roomSelected.map(dayGrid(props))}</div>;
   }
 
   if (roomList) {

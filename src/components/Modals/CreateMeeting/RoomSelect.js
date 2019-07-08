@@ -29,10 +29,11 @@ class RoomSelectComponent extends React.Component {
       const rooms = await roomService.getAll();
       this.setState({ rooms });
     } catch (error) {
-      return onErrorNotification({
-        title: "Action failed",
-        body: "There was an error with the server"
-      });
+      // Do not exist
+      // return onErrorNotification({
+      //   title: "Action failed",
+      //   body: "There was an error with the server"
+      // });
     }
   }
 

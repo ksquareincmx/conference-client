@@ -1,6 +1,7 @@
 import React, { Children } from "react";
 import { withStyles } from "@material-ui/core";
 import BigCalendar from "react-big-calendar";
+
 import classNames from "classnames";
 import "./Weeks.css";
 import fp from "lodash/fp";
@@ -117,9 +118,7 @@ const WeeksViewComponent = props => {
     const weekEvents = formatEvents(bookings);
     let roomEvents = [];
     rooms.forEach(room => {
-      const fileteredEvents = weekEvents.filter(
-        event => event.roomId === room.id
-      );
+      const fileteredEvents = weekEvents.filter(event => event.roomId === room.id);
       fileteredEvents.forEach(event => {
         const roomObj = rooms.find(obj => obj.id === event.booking.room.id);
         const isRight = rooms.indexOf(roomObj) === 1;

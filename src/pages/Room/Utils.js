@@ -1,6 +1,6 @@
 import moment from "moment";
 import dates from "react-big-calendar/lib/utils/dates";
-import BigCalendar from "react-big-calendar";
+import { momentLocalizer } from "react-big-calendar";
 
 export const addZeros = number => {
   if (number < 10) {
@@ -34,12 +34,8 @@ export const monthsNames = [
 ];
 
 // Constants for CalendarStrategy
-export const localizer = BigCalendar.momentLocalizer(moment);
-export const minDate = dates.add(
-  dates.startOf(new Date(), "day"),
-  -16,
-  "hours"
-);
+export const localizer = momentLocalizer(moment);
+export const minDate = dates.add(dates.startOf(new Date(), "day"), -16, "hours");
 export const maxDate = dates.add(dates.endOf(new Date(), "day"), -5, "hours");
 export const step = 15;
 export const timeSlots = 2;
