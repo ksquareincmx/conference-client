@@ -24,6 +24,7 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
   const fetchBookings = async () => {
     try {
       const { onLogout } = authContext;
+
       const reqRoom = await roomService.getOneById(URLRoomId);
       const allData = await bookingService.getAllWithDetails(
         getUTCDateFilter()
