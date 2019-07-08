@@ -2,7 +2,7 @@ import React from "react";
 import dates from "react-big-calendar/lib/utils/dates";
 import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { HeaderView } from "components/Calendar";
+import { HeaderView } from "components/Calendar/HeaderView";
 import * as Utils from "./Utils.js";
 import { HeaderStrategy } from "./HeaderStrategy.jsx";
 import { roomService } from "services";
@@ -119,7 +119,6 @@ class CalendarPageLogicComponent extends React.Component {
       classes: styleClasses
     } = this.props;
     const { calendarContainer, contentShrink, contentExpand } = styleClasses;
-
     return (
       <Grid container direction="column">
         <div
@@ -136,6 +135,7 @@ class CalendarPageLogicComponent extends React.Component {
             selectedRoom={selectedRoom}
             isSingleGrid={true}
             onChangeRoomSelect={this.handleRoomChange}
+            focusDate={focusDate}
             headerDateContainer={
               <HeaderStrategy
                 type={selector}

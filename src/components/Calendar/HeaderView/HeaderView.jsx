@@ -107,6 +107,7 @@ const HeaderViewComponent = props => {
     isSingleGrid,
     onChangeRoomSelect,
     headerDateContainer,
+    focusDate,
     classes: styleClasses
   } = props;
 
@@ -126,7 +127,8 @@ const HeaderViewComponent = props => {
   // How to get the date?
   const booking = {
     roomName: selectedRoom[0] ? selectedRoom[0].name : "",
-    roomId: selectedRoom[0] ? selectedRoom[0].id : ""
+    roomId: selectedRoom[0] ? selectedRoom[0].id : "",
+    start: focusDate
   };
 
   const showCtrl = !/Mac.*/.test(window.navigator.platform);
