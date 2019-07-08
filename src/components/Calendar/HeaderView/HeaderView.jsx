@@ -154,7 +154,7 @@ const HeaderViewComponent = props => {
                 color="primary"
                 className={createButton}
                 onClick={modalForm.handleOnClickCreateMeeting(booking)}
-                variant={"contained"}
+                variant="contained"
               >
                 Create appointment
               </Button>
