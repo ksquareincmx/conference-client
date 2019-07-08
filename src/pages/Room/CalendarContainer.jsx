@@ -4,7 +4,7 @@ import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "context/AuthContext";
 
 const CalendarContainerComponent = ({ URLRoomId, history }) => {
   const [bookingsData, updateBookingsData] = useState([]);
@@ -15,7 +15,6 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
   const [shouldFetch, updateShouldFetch] = useState(false);
   const authContext = useContext(AuthContext);
 
-  // fetchBookings can't be called as `useEffect` first param because it's async
   useEffect(() => {
     const fetchBookings = async () => {
       try {
