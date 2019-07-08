@@ -5,13 +5,14 @@ import { CalendarPageLogic } from "./CalendarPageLogic";
 import { NavBar } from "components/NavBar";
 import { DrawerBookings } from "components/Drawer";
 import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar.jsx";
-import { withAuthContext } from "hocs";
 import { NotificationProvider, ModalFormProvider } from "providers";
 import { NoteCard } from "components/NoteCard";
+import { AuthContext } from "context/AuthContext";
 
-const CalendarPage = props => {
+export const Calendar = ({ bookingsData, onBookingsDataChange }) => {
   const [isDBEmpty, setIsDBEmpty] = React.useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const { isAuth } = React.useContext(AuthContext);
 
   const handleDrawerOpen = () => {
     setIsDrawerOpen(false);
@@ -24,9 +25,6 @@ const CalendarPage = props => {
   const handleDBEmpty = () => {
     setIsDBEmpty(true);
   };
-
-  const { authContext, bookingsData, onBookingsDataChange } = props;
-  const { isAuth } = authContext;
 
   if (!isAuth) {
     return <Redirect to="/login" />;
@@ -68,5 +66,3 @@ const CalendarPage = props => {
     </Fragment>
   );
 };
-
-export const Calendar = withAuthContext(CalendarPage);

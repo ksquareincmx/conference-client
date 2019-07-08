@@ -1,22 +1,30 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
+import { AuthContext } from "context/AuthContext";
+import { useInterval } from "hooks/useInterval";
 
-class CalendarContainerComponent extends React.Component {
-  state = {
-    bookingsData: [],
-    allBookingsData: [],
-    isServerDown: false,
-    roomId: "",
-    isLoading: true
-  };
+const CalendarContainerComponent = ({ URLRoomId, history }) => {
+  const [bookings, updateBookings] = useState([]);
+  const [allBookings, updateAllBookings] = useState([]);
+  const [isServerDown, updateIsServerDown] = useState(false);
+  const [roomId, updateRoomId] = useState("");
+  const [isLoading, updateIsLoading] = useState(true);
+  const [shouldFetch, updateShouldFetch] = useState(false);
+  const authContext = useContext(AuthContext);
+  const [bookingsHash, updateBookingsHash] = useState("initial");
+  const [allBookingsHash, updateAllBookingsHash] = useState("initial");
+  const [delay, updateDelay] = useState(5000);
 
-  fetchBookings = async () => {
+  const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
+
+  const fetchBookings = async () => {
     try {
-      const { URLRoomId } = this.props;
+      const { onLogout } = authContext;
+
       const reqRoom = await roomService.getOneById(URLRoomId);
       const allData = await bookingService.getAllWithDetails(
         getUTCDateFilter()
@@ -28,49 +36,66 @@ class CalendarContainerComponent extends React.Component {
       if (data.bookings && allData.bookings) {
         const { bookings: allBookingsData } = allData;
         const { bookings: bookingsData } = data;
-        this.setState({ bookingsData, allBookingsData, isServerDown: false });
+        // We avoid extra rendering if the data is the same, since this function runs every 1.5 seconds
+        const allBookingsDataStr = JSON.stringify(allBookingsData);
+        const bookingsDataStr = JSON.stringify(bookingsData);
+        if (allBookingsDataStr !== allBookingsHash) {
+          updateAllBookings(allBookingsData);
+          updateAllBookingsHash(allBookingsDataStr);
+        }
+
+        if (bookingsDataStr !== bookingsHash) {
+          updateBookings(bookingsData);
+          updateBookingsHash(bookingsDataStr);
+        }
       } else {
-        this.setState({ isServerDown: true });
+        const { name } = data;
+        // The webtoken is invalid for any reason
+        if (name === "JsonWebTokenError") {
+          onLogout();
+          history.push("/login");
+          return undefined;
+        } else {
+          updateIsServerDown(true);
+        }
       }
-
       if (typeof reqRoom === "object") {
-        return this.setState({ roomId: URLRoomId, isLoading: false });
+        updateIsLoading(false);
+        updateRoomId(URLRoomId);
+        return undefined;
       }
-      return this.setState({ roomId: "", isLoading: false });
+      // updateIsLoading(true);
+      return undefined;
     } catch (error) {
-      return Promise.reject(new Error(error.message));
+      // Don't know how to do this with hooks
+      Promise.reject(new Error(error.message));
+      return undefined;
     }
   };
 
-  componentDidMount() {
-    this.fetchBookings();
+  useEffect(() => {
+    // TODO: update state ONLY if there's no data;
+    fetchBookings();
+    // whenever shouldFetch changes, it will call `fetchBookings`
+  }, [shouldFetch]);
+
+  useInterval(() => {
+    fetchBookings();
+  }, delay);
+
+  if (isServerDown) {
+    return <Error500 />;
   }
 
-  handleBookingsDataChange = () => {
-    this.fetchBookings();
-  };
-
-  render() {
-    const {
-      allBookingsData,
-      bookingsData,
-      isServerDown,
-      roomId,
-      isLoading
-    } = this.state;
-    if (isServerDown) {
-      return <Error500 />;
-    }
-    return (
-      <Calendar
-        allBookingsData={allBookingsData}
-        bookingsData={bookingsData}
-        onBookingsDataChange={this.handleBookingsDataChange}
-        URLRoomId={roomId}
-        isLoading={isLoading}
-      />
-    );
-  }
-}
+  return (
+    <Calendar
+      allBookingsData={allBookings}
+      bookingsData={bookings}
+      onBookingsDataChange={onBookingsDataChange}
+      URLRoomId={roomId}
+      isLoading={isLoading}
+    />
+  );
+};
 
 export const CalendarContainer = withRouter(CalendarContainerComponent);

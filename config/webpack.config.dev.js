@@ -9,6 +9,7 @@ const eslintFormatter = require("react-dev-utils/eslintFormatter");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getClientEnvironment = require("./env");
 const paths = require("./paths");
+const { customAlias } = require("./customWebpackConfig");
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -81,20 +82,9 @@ module.exports = {
     // `web` extension prefixes have been added for better support
     // for React Native Web.
     extensions: [".web.js", ".mjs", ".js", ".json", ".web.jsx", ".jsx"],
-    alias: {
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      components: path.resolve("src/components"),
-      pages: path.resolve("src/pages"),
-      providers: path.resolve("src/providers"),
-      services: path.resolve("src/services"),
-      config: path.resolve("src/config"),
-      mappers: path.resolve("src/mappers"),
-      utils: path.resolve("src/utils"),
-      hocs: path.resolve("src/hocs"),
-      gateways: path.resolve("src/gateways"),
-      "react-native": "react-native-web"
-    },
+    // Support React Native Web
+    // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
+    alias: customAlias("dev"),
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
       // This often causes confusion because we only process files within src/ with babel.

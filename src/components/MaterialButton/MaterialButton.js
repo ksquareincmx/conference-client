@@ -12,23 +12,29 @@ const styles = theme => ({
   }
 });
 
-function MaterialButton(props) {
-  const { classes } = props;
-  let backgroundColor = props.colorButton;
+function MaterialButton({
+  classes,
+  disabled,
+  colorButton: backgroundColor,
+  onClick,
+  sizeButton,
+  textButton
+}) {
+  const { button: buttonClases } = classes;
 
-  if (props.disabled) {
+  if (disabled) {
     backgroundColor = "#bbb";
   }
   return (
     <Button
-      className={classes.button}
+      className={buttonClases}
       variant="contained"
-      onClick={props.onClick}
-      disabled={props.disabled}
-      size={props.sizeButton}
+      onClick={onClick}
+      disabled={disabled}
+      size={sizeButton}
       style={{ backgroundColor }}
     >
-      {props.textButton}
+      {textButton}
     </Button>
   );
 }

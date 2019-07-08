@@ -1,6 +1,5 @@
 import React from "react";
 import { Typography, withStyles } from "@material-ui/core/";
-import capitalize from "lodash/fp/capitalize";
 
 const styles = theme => ({
   label: {
@@ -11,7 +10,7 @@ const styles = theme => ({
 });
 
 export const UserNameLabelComponent = ({ username, classes: { label } }) => (
-  <Typography className={label}>{capitalize(username)}</Typography>
+  <Typography className={label}>{username}</Typography>
 );
 
 export const UserNameLabel = withStyles(styles)(UserNameLabelComponent);
