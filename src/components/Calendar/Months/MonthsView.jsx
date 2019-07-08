@@ -2,6 +2,7 @@ import React, { Children } from "react";
 import { withStyles } from "@material-ui/core";
 import classNames from "classnames";
 import BigCalendar from "react-big-calendar";
+
 import "./Months.css";
 import fp from "lodash/fp";
 import { formatEvents } from "mappers/AppointmentMapper";
@@ -68,9 +69,7 @@ const MonthsViewComponent = props => {
     const monthEvents = formatEvents(bookings);
     let roomEvents = [];
     rooms.forEach(room => {
-      const fileteredEvents = monthEvents.filter(
-        event => event.roomId === room.id
-      );
+      const fileteredEvents = monthEvents.filter(event => event.roomId === room.id);
       roomEvents = roomEvents.concat(fileteredEvents);
     });
 
