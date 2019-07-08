@@ -12,6 +12,7 @@ module.exports = {
     utils: path.resolve("src/utils"),
     hocs: path.resolve("src/hocs"),
     gateways: path.resolve("src/gateways"),
-    context: path.resolve("src/context")
+    context: path.resolve("src/context"),
+    hooks: path.resolve("src/hooks")
   })
 };

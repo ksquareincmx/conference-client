@@ -13,10 +13,7 @@ const styles = theme => ({
   }
 });
 
-const NavBarContainerComponent = ({
-  children,
-  classes: { appBar, toolBar }
-}) => {
+const NavBarWrapperComponent = ({ children, classes: { appBar, toolBar } }) => {
   return (
     <Fragment>
       <AppBar className={appBar} position="static">
@@ -30,4 +27,4 @@ const NavBarContainerComponent = ({
   );
 };
 
-export const NavBarContainer = withStyles(styles)(NavBarContainerComponent);
+export const NavBarWrapper = withStyles(styles)(NavBarWrapperComponent);
