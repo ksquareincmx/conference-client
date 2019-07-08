@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
@@ -17,6 +17,7 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
   const authContext = useContext(AuthContext);
   const [bookingsHash, updateBookingsHash] = useState("initial");
   const [allBookingsHash, updateAllBookingsHash] = useState("initial");
+  const [delay, updateDelay] = useState(5000);
 
   const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
 
@@ -79,7 +80,7 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
 
   useInterval(() => {
     fetchBookings();
-  }, 1500);
+  }, delay);
 
   if (isServerDown) {
     return <Error500 />;
