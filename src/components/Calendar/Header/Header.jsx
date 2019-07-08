@@ -1,7 +1,7 @@
 import React from "react";
-import { ModalFormConsumer } from "providers/ModalForm";
+import { ModalFormConsumer } from "providers/ModalFormProvider";
 import { SelectRoom } from "./SelectRoom/SelectRoom";
-import { withStyles, Button } from "@material-ui/core";
+import { withStyles, Button, Tooltip } from "@material-ui/core";
 import classNames from "classnames";
 import { CalendarViewSelectors } from "utils/Enums";
 
@@ -123,10 +123,13 @@ const HeaderViewComponent = props => {
   const { DAY, WEEK, MONTH } = CalendarViewSelectors;
 
   //TODO: change for only 1 room when calendarpage is removed
+  // How to get the date?
   const booking = {
     roomName: selectedRoom[0] ? selectedRoom[0].name : "",
     roomId: selectedRoom[0] ? selectedRoom[0].id : ""
   };
+
+  const showCtrl = !/Mac.*/.test(window.navigator.platform);
 
   return (
     <div>
@@ -144,14 +147,16 @@ const HeaderViewComponent = props => {
       <div className={createBtnContainer}>
         <ModalFormConsumer>
           {modalForm => (
-            <Button
-              color="primary"
-              className={createButton}
-              onClick={modalForm.handleOnClickCreateMeeting(booking)}
-              variant={"contained"}
-            >
-              CREATE APPOINTMENT
-            </Button>
+            <Tooltip placement="top" title={`${showCtrl ? "CTRL" : "⌘"} + B`}>
+              <Button
+                color="primary"
+                className={createButton}
+                onClick={modalForm.handleOnClickCreateMeeting(booking)}
+                variant={"contained"}
+              >
+                Create appointment
+              </Button>
+            </Tooltip>
           )}
         </ModalFormConsumer>
       </div>

@@ -3,17 +3,10 @@ import { Modal, withStyles } from "@material-ui/core";
 import { BookingForm } from "components/Modals/CreateMeeting/BookingForm";
 import { ConfirmationDialog } from "components/Modals/DeleteBooking/ConfirmationDialog";
 import { storageService } from "services";
+import { ModalFormContext } from "context/ModalFormContext";
 
 const styles = theme => ({
   modal: { width: "100%", height: "100%" }
-});
-
-const ModalFormContext = React.createContext({
-  handleOnClickCreateMeeting: () => {},
-  handleOnClickEditMeeting: () => {},
-  handleOnCloseModal: () => {},
-  handleDeleteMeeting: () => {},
-  handleCloseDialog: () => {}
 });
 
 class ModalFormProviderComponent extends React.Component {
@@ -49,6 +42,7 @@ class ModalFormProviderComponent extends React.Component {
 
   handleCreationFromButton = booking => {
     const { roomName } = booking;
+    // I need to get the start and
     this.setState({
       isModalOpen: true,
       isDelete: false,
@@ -167,6 +161,6 @@ class ModalFormProviderComponent extends React.Component {
   }
 }
 
-const ModalFormConsumer = ModalFormContext.Consumer;
+const { Consumer: ModalFormConsumer } = ModalFormContext;
 const ModalFormProvider = withStyles(styles)(ModalFormProviderComponent);
 export { ModalFormProvider, ModalFormConsumer };
