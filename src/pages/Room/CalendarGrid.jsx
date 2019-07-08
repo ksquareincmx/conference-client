@@ -60,8 +60,9 @@ class CalendarGridComponent extends React.Component {
   };
 
   handleOpenEmptyModal = () => {
+    const { date } = this.props;
     const { id, name } = this.props.selectedRoom[0];
-    const roomData = { roomId: id, roomName: name };
+    const roomData = { roomId: id, roomName: name, start: date };
     if (id) {
       const triggerOpenModal = this.props.onCreate(roomData);
       triggerOpenModal();
