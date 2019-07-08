@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavBarRightSide } from "./NavBarRightSide";
-import { NavBarContainer } from "./NavBarWrapper";
+import { NavBarWrapper } from "./NavBarWrapper";
 import { AvatarButton } from "./AvatarButton";
 import { UserNameLabel } from "./UsernameLabel";
 import { NavBarMenu } from "./NavBarMenu";
@@ -8,24 +8,25 @@ import { storageService } from "services";
 
 export const NavBar = ({ authContext: { onLogout } }) => {
   const [anchorEl, updateAnchorEl] = useState(null);
+  const [username, updateUsername] = useState("");
 
   const handleClick = ({ currentTarget }) => updateAnchorEl(currentTarget);
 
   const handleClose = () => updateAnchorEl(null);
 
-  const username = storageService.getUserName();
+  useEffect(() => updateUsername(storageService.getUserName()), []);
 
   return (
-    <NavBarContainer>
+    <NavBarWrapper>
       <NavBarRightSide>
         <UserNameLabel username={username} />
-        <AvatarButton onClick={this.handleClick} />
+        <AvatarButton onClick={handleClick} />
         <NavBarMenu
           anchorEl={anchorEl}
-          onClose={this.handleClose}
+          onClose={handleClose}
           onLogout={onLogout}
         />
       </NavBarRightSide>
-    </NavBarContainer>
+    </NavBarWrapper>
   );
 };

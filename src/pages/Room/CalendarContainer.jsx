@@ -4,28 +4,8 @@ import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { Error500 } from "pages/Error500";
 import { getUTCDateFilter } from "utils/BookingFilters";
-import { AuthContext } from "../../context/AuthContext";
-
-// https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-const useInterval = (callback, delay) => {
-  const savedCallback = useRef();
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-};
+import { AuthContext } from "context/AuthContext";
+import { useInterval } from "hooks/useInterval";
 
 const CalendarContainerComponent = ({ URLRoomId, history }) => {
   const [bookings, updateBookings] = useState([]);
