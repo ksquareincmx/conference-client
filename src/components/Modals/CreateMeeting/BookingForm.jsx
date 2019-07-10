@@ -141,9 +141,7 @@ class BookingFormComponent extends React.Component {
   };
 
   setDate = date => {
-    this.setState({ date: formatDashedDate(date) }, () =>
-      this.enableStartTimeSelect()
-    );
+    this.setState({ date: formatDashedDate(date) }, () => this.enableStartTimeSelect());
   };
 
   refreshChipList = () => {
@@ -237,10 +235,7 @@ class BookingFormComponent extends React.Component {
       });
       return onBookingsDataChange();
     }
-    if (
-      bookingInfo.message === "POST error" ||
-      bookingInfo.message === "PUT error"
-    ) {
+    if (bookingInfo.message === "POST error" || bookingInfo.message === "PUT error") {
       onModalClose();
       return onErrorNotification({
         title: "Action failed",
@@ -365,12 +360,7 @@ class BookingFormComponent extends React.Component {
     const buttonSaveTxt = isBookingEdition ? "Edit" : "Create";
 
     return (
-      <Grid
-        container
-        justify="center"
-        alignItems="center"
-        style={{ height: "100%" }}
-      >
+      <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
         <Card className={card}>
           <CardHeader classes={{ title: header }} title={formTitle} />
           <Divider />
@@ -424,9 +414,7 @@ class BookingFormComponent extends React.Component {
                 </Grid>
               </Grid>
               <Collapse in={this.state.isInvalidHour}>
-                <small className={alertMessage}>
-                  {this.state.invalidHourMessage}
-                </small>
+                <small className={alertMessage}>{this.state.invalidHourMessage}</small>
               </Collapse>
             </Grid>
             <Grid container direction="column" className={content}>
@@ -486,9 +474,7 @@ class BookingFormComponent extends React.Component {
                 onClick={this.handleBookingOperation}
                 disabled={this.state.disabledNextButton || isLoading}
               />
-              {isLoading && (
-                <CircularProgress size={24} className={btnProgress} />
-              )}
+              {isLoading && <CircularProgress size={24} className={btnProgress} />}
             </div>
           </CardActions>
         </Card>

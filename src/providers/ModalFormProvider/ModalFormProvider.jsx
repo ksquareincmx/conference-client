@@ -1,10 +1,10 @@
 import React from "react";
+import HotKeys from "react-hot-keys";
 import { Modal, withStyles } from "@material-ui/core";
 import { BookingForm } from "components/Modals/CreateMeeting/BookingForm";
 import { ConfirmationDialog } from "components/Modals/DeleteBooking/ConfirmationDialog";
 import { storageService } from "services";
 import { ModalFormContext } from "context/ModalFormContext";
-
 const styles = theme => ({
   modal: { width: "100%", height: "100%" }
 });
@@ -138,22 +138,24 @@ class ModalFormProviderComponent extends React.Component {
             onAfterDelete={this.handleAfterDelete}
           />
         ) : (
-          <Modal
-            className={modal}
-            open={isModalOpen}
-            disableEscapeKeyDown={false}
-            onClose={this.handleModalClose}
-          >
-            <BookingForm
-              roomName={roomName}
-              roomId={roomId}
-              isBookingEdition={bookingClicked}
-              bookingForEdition={bookingClickedObj}
-              quickAppointment={quickAppointment}
-              onModalClose={this.handleModalClose}
-              onBookingsDataChange={onBookingsDataChange}
-            />
-          </Modal>
+          <HotKeys keyName="ESC" onKeyDown={this.handleModalClose}>
+            <Modal
+              className={modal}
+              open={isModalOpen}
+              disableEscapeKeyDown={false}
+              onClose={this.handleModalClose}
+            >
+              <BookingForm
+                roomName={roomName}
+                roomId={roomId}
+                isBookingEdition={bookingClicked}
+                bookingForEdition={bookingClickedObj}
+                quickAppointment={quickAppointment}
+                onModalClose={this.handleModalClose}
+                onBookingsDataChange={onBookingsDataChange}
+              />
+            </Modal>
+          </HotKeys>
         )}
         {children}
       </ModalFormContext.Provider>
