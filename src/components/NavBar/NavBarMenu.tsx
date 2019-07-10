@@ -9,7 +9,7 @@ export interface INavBarMenu {
   onClose: () => void;
 }
 
-export const NavBarMenu: React.FC<INavBarMenu> = ({ anchorEl, onClose, onLogout }) => {
+export const NavBarMenu: React.SFC<INavBarMenu> = ({ anchorEl, onClose, onLogout }) => {
   const isOpen = Boolean(anchorEl);
   return (
     <Menu

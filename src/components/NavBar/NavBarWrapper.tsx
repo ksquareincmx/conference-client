@@ -14,14 +14,13 @@ const styles = createStyles({
 });
 
 export interface INavBarWrapperComponentProps {
-  children: React.ReactChildren;
   classes: {
     appBar: string;
     toolBar: string;
   };
 }
 
-const NavBarWrapperComponent: React.FC<INavBarWrapperComponentProps> = ({
+const NavBarWrapperComponent: React.SFC<INavBarWrapperComponentProps> = ({
   children,
   classes: { appBar, toolBar }
 }) => {
