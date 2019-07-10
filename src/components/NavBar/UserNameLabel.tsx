@@ -1,6 +1,5 @@
 import React from "react";
 import { Typography } from "@material-ui/core/";
-
 import { useStyles } from "hooks/useStyles";
 
 const styles = {
@@ -11,11 +10,11 @@ const styles = {
   }
 };
 
-export interface IUsernameLabel {
+export interface IUserNameLabel {
   username: string;
 }
 
-export const UsernameLabel: React.FC<IUsernameLabel> = ({ username }) => {
+export const UserNameLabel: React.FC<IUserNameLabel> = ({ username }) => {
   const { label } = useStyles(styles);
   return <Typography className={label}>{username}</Typography>;
 };
