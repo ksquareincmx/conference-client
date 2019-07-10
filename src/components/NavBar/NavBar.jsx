@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavBarRightSide } from "./NavBarRightSide";
 import { NavBarWrapper } from "./NavBarWrapper";
 import { AvatarButton } from "./AvatarButton";
-import { UserNameLabel } from "./UsernameLabel";
+import { UserNameLabel } from "./UserNameLabel";
 import { NavBarMenu } from "./NavBarMenu";
 import { storageService } from "services";
 
@@ -21,11 +21,7 @@ export const NavBar = ({ authContext: { onLogout } }) => {
       <NavBarRightSide>
         <UserNameLabel username={username} />
         <AvatarButton onClick={handleClick} />
-        <NavBarMenu
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          onLogout={onLogout}
-        />
+        <NavBarMenu anchorEl={anchorEl} onClose={handleClose} onLogout={onLogout} />
       </NavBarRightSide>
     </NavBarWrapper>
   );

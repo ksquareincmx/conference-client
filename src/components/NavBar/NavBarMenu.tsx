@@ -2,7 +2,14 @@ import React from "react";
 import { Menu, MenuItem } from "@material-ui/core/";
 import { Link } from "react-router-dom";
 
-export const NavBarMenu = ({ anchorEl, onClose, onLogout }) => {
+// Might get better
+export interface INavBarMenu {
+  anchorEl: HTMLElement;
+  onLogout: () => void;
+  onClose: () => void;
+}
+
+export const NavBarMenu: React.SFC<INavBarMenu> = ({ anchorEl, onClose, onLogout }) => {
   const isOpen = Boolean(anchorEl);
   return (
     <Menu
