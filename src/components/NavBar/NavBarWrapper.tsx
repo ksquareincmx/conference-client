@@ -1,19 +1,30 @@
 import React, { Fragment } from "react";
-import { AppBar, Toolbar, Grid, withStyles } from "@material-ui/core/";
+import { AppBar, Toolbar, Grid, withStyles, createStyles } from "@material-ui/core/";
 
-const styles = theme => ({
+const styles = createStyles({
   appBar: {
     position: "fixed",
     boxShadow: "none",
-    zIndex: theme.zIndex.drawer + 1
+    zIndex: 10
   },
   toolBar: {
     backgroundColor: "#3049a1",
-    zIndex: theme.zIndex.drawer + 1
+    zIndex: 10
   }
 });
 
-const NavBarWrapperComponent = ({ children, classes: { appBar, toolBar } }) => {
+export interface INavBarWrapperComponentProps {
+  children: React.ReactChildren;
+  classes: {
+    appBar: string;
+    toolBar: string;
+  };
+}
+
+const NavBarWrapperComponent: React.FC<INavBarWrapperComponentProps> = ({
+  children,
+  classes: { appBar, toolBar }
+}) => {
   return (
     <Fragment>
       <AppBar className={appBar} position="static">

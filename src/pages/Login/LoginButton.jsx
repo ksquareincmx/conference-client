@@ -1,11 +1,10 @@
 import React from "react";
 import { GoogleLogin } from "react-google-login";
-import { withStyles } from "@material-ui/core/";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import transitions from "@material-ui/core/styles/transitions";
+import { useStyles } from "hooks/useStyles";
 
-const style = theme => ({
+const style = {
   loginButton: {
     width: 300,
     height: 50,
@@ -35,10 +34,11 @@ const style = theme => ({
   loginButtonIcon: {
     color: "#FFFFFF"
   }
-});
+};
 
-const LoginButtonComponent = ({ classes: styleClasses, onSuccess, onFailure }) => {
-  const { loginButton, loginButtonText, loginButtonIcon } = styleClasses;
+export const LoginButton = ({ onSuccess, onFailure }) => {
+  const { loginButton, loginButtonText, loginButtonIcon } = useStyles(style);
+
   return (
     <GoogleLogin
       clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
@@ -59,5 +59,3 @@ const LoginButtonComponent = ({ classes: styleClasses, onSuccess, onFailure }) =
     />
   );
 };
-
-export const LoginButton = withStyles(style)(LoginButtonComponent);
