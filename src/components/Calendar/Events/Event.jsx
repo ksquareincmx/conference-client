@@ -1,74 +1,58 @@
-import React from "react";
-import { withStyles } from "@material-ui/core";
+import React, { useState, useRef } from "react";
+import { withStyles, ClickAwayListener } from "@material-ui/core";
 import { EventToolTip } from "./EventToolTip/EventToolTip";
 import { ModalFormConsumer } from "providers";
 import { storageService } from "services";
+import { useStyles } from "hooks/useStyles";
 
-const styles = theme => {
-  return {
-    eventContainter: {
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontSize: "0.9em"
-    }
-  };
+const styles = {
+  eventContainter: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "0.9em"
+  }
 };
 
-class EventComponent extends React.Component {
-  state = {
-    isOpen: false,
-    isOwner: false
-  };
+export const Event = ({ content, onBookingsDataChange, isSingleGrid }) => {
+  const [isOpen, updateIsOpen] = useState(false);
+  const [isOwner, updateIsOwner] = useState(false);
+  const ref = useRef(null);
+  const { eventContainter } = useStyles(styles);
 
-  handleTooltipClose = () => {
-    this.setState({ isOpen: false });
-  };
-
-  handleTooltipOpen = () => {
-    const { id: userId } = this.props.content.event.booking.user;
+  const handleTooltipClose = () => updateIsOpen(false);
+  const handleTooltipOpen = () => {
+    const { id: userId } = content.event.booking.user;
     const { id: sessionUserId } = storageService.getUserInfo();
     if (sessionUserId === userId) {
-      return this.setState({ isOwner: true, isOpen: true });
+      updateIsOpen(true);
+      return updateIsOwner(true);
     }
-    return this.setState({ isOwner: false, isOpen: true });
+    return updateIsOpen(true);
   };
 
-  render() {
-    const { isOpen, isOwner } = this.state;
-    const {
-      content,
-      classes: styleClasses,
-      onBookingsDataChange,
-      isSingleGrid
-    } = this.props;
-    const { title } = content.event;
-    const { eventContainter } = styleClasses;
-
-    return (
-      <ModalFormConsumer>
-        {({ handleOnClickEditMeeting, handleDeleteMeeting }) => (
-          <EventToolTip
-            content={content.event}
-            handleTooltipClose={this.handleTooltipClose}
-            handleTooltipOpen={this.handleTooltipOpen}
-            onEdit={handleOnClickEditMeeting}
-            onDelete={handleDeleteMeeting}
-            open={isOpen}
-            isOwner={isOwner}
-            onBookingsDataChange={onBookingsDataChange}
-            isSingleGrid={isSingleGrid}
-          >
-            <div className={eventContainter} onClick={this.handleTooltipOpen}>
-              <strong>{title}</strong>
-            </div>
-          </EventToolTip>
-        )}
-      </ModalFormConsumer>
-    );
-  }
-}
-
-export const Event = withStyles(styles)(EventComponent);
+  const { title } = content.event;
+  return (
+    <ModalFormConsumer>
+      {({ handleOnClickEditMeeting, handleDeleteMeeting }) => (
+        <EventToolTip
+          content={content.event}
+          handleTooltipClose={handleTooltipClose}
+          handleTooltipOpen={handleTooltipOpen}
+          onEdit={handleOnClickEditMeeting}
+          onDelete={handleDeleteMeeting}
+          open={isOpen}
+          isOwner={isOwner}
+          onBookingsDataChange={onBookingsDataChange}
+          isSingleGrid={isSingleGrid}
+        >
+          <div className={eventContainter} onClick={handleTooltipOpen} ref={ref}>
+            <strong>{title}</strong>
+          </div>
+        </EventToolTip>
+      )}
+    </ModalFormConsumer>
+  );
+};
