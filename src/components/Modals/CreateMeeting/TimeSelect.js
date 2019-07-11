@@ -13,7 +13,7 @@ const styles = theme => ({
     whiteSpace: "pre"
   },
   form: {
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing(2)
   }
 });
 
@@ -60,14 +60,8 @@ class TimeSelect extends React.Component {
   };
 
   componentDidMount() {
-    const hoursArray = Array.from(new Array(11), (x, i) => [
-      addZeros(8 + i),
-      false
-    ]);
-    const minutesArray = Array.from(new Array(4), (x, i) => [
-      addZeros(i * 15),
-      false
-    ]);
+    const hoursArray = Array.from(new Array(11), (x, i) => [addZeros(8 + i), false]);
+    const minutesArray = Array.from(new Array(4), (x, i) => [addZeros(i * 15), false]);
 
     this.setState({
       hours: hoursArray,

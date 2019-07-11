@@ -50,7 +50,7 @@ const styles = theme => ({
     color: "#5094E3"
   },
   content: {
-    padding: theme.spacing.unit * 1.5
+    padding: theme.spacing(1.5)
   },
   subtitle: {
     fontWeight: "bold",
@@ -65,7 +65,7 @@ const styles = theme => ({
     fontSize: 15
   },
   saveBtnWrapper: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     position: "relative"
   },
   btnProgress: {

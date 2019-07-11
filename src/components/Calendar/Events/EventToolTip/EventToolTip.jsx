@@ -91,13 +91,14 @@ class EventToolTipComponent extends React.Component {
               onClickDelete={this.handleDelete}
             />
           }
+          disableFocusListener
+          disableHoverListener
+          disableTouchListener
+          interactive
           classes={toolTipClasses}
           placement={isSingleGrid ? "bottom" : "right"}
           onClose={handleTooltipClose}
           open={isOpen}
-          disableFocusListener
-          disableHoverListener
-          disableTouchListener
         >
           {children}
         </Tooltip>

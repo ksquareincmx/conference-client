@@ -48,7 +48,13 @@ export const Event = ({ content, onBookingsDataChange, isSingleGrid }) => {
           onBookingsDataChange={onBookingsDataChange}
           isSingleGrid={isSingleGrid}
         >
-          <div className={eventContainter} onClick={handleTooltipOpen} ref={ref}>
+          <div
+            className={eventContainter}
+            onClick={handleTooltipOpen}
+            ref={ref}
+            tabIndex="0"
+            onBlur={handleTooltipClose}
+          >
             <strong>{title}</strong>
           </div>
         </EventToolTip>
