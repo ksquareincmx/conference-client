@@ -53,7 +53,7 @@ const styles = theme => ({
     justifyContent: "center"
   },
   saveBtnWrapper: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
     position: "relative"
   },
   btnProgress: {
@@ -67,24 +67,11 @@ const styles = theme => ({
 });
 
 const DeleteDialogContentComponent = props => {
-  const {
-    isLoading,
-    isOpen,
-    bookingInfo,
-    onConfirmation,
-    onCancel,
-    classes: styleClasses
-  } = props;
+  const { isLoading, isOpen, bookingInfo, onConfirmation, onCancel, classes: styleClasses } = props;
   const room = bookingInfo.room ? bookingInfo.room.name : "";
-  const dateText = bookingInfo.start
-    ? getDateText(formatDate(bookingInfo.start))
-    : "";
-  const startTime = bookingInfo.start
-    ? formatTime(formatDate(bookingInfo.start))
-    : "";
-  const endTime = bookingInfo.end
-    ? formatTime(formatDate(bookingInfo.end))
-    : "";
+  const dateText = bookingInfo.start ? getDateText(formatDate(bookingInfo.start)) : "";
+  const startTime = bookingInfo.start ? formatTime(formatDate(bookingInfo.start)) : "";
+  const endTime = bookingInfo.end ? formatTime(formatDate(bookingInfo.end)) : "";
   const {
     dialog,
     title,
@@ -99,12 +86,7 @@ const DeleteDialogContentComponent = props => {
   } = styleClasses;
 
   return (
-    <Dialog
-      disableBackdropClick
-      disableEscapeKeyDown={false}
-      onClose={onCancel}
-      open={isOpen}
-    >
+    <Dialog disableBackdropClick disableEscapeKeyDown={false} onClose={onCancel} open={isOpen}>
       <div className={dialog}>
         <Typography variant="h5" className={title}>
           Delete Meeting
@@ -133,9 +115,7 @@ const DeleteDialogContentComponent = props => {
             >
               Yes
             </Button>
-            {isLoading && (
-              <CircularProgress size={24} className={btnProgress} />
-            )}
+            {isLoading && <CircularProgress size={24} className={btnProgress} />}
           </div>
         </DialogActions>
       </div>
@@ -143,6 +123,4 @@ const DeleteDialogContentComponent = props => {
   );
 };
 
-export const DeleteDialogContent = withStyles(styles)(
-  DeleteDialogContentComponent
-);
+export const DeleteDialogContent = withStyles(styles)(DeleteDialogContentComponent);

@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { ContentToolTip } from "./ContentToolTip";
-import { withStyles, Tooltip, ClickAwayListener } from "@material-ui/core";
+import { withStyles, Tooltip } from "@material-ui/core";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { toRoomColors } from "mappers/RoomMapper";
 import { withNotifications } from "hocs";
@@ -81,38 +81,30 @@ class EventToolTipComponent extends React.Component {
     };
 
     return (
-      <Fragment>
-        <ClickAwayListener onClickAway={handleTooltipClose}>
-          <MuiThemeProvider theme={theme(bgColor, txtColor)}>
-            <Tooltip
-              title={
-                <Fragment>
-                  <ContentToolTip
-                    isOwner={isOwner}
-                    content={content}
-                    onClickEdit={this.handleEdit}
-                    onClickDelete={this.handleDelete}
-                  />
-                </Fragment>
-              }
-              classes={{ ...toolTipClasses }}
-              placement={isSingleGrid ? "bottom" : "right"}
-              interactive
-              onClose={handleTooltipClose}
-              open={isOpen}
-              disableFocusListener
-              disableHoverListener
-              disableTouchListener
-            >
-              {children}
-            </Tooltip>
-          </MuiThemeProvider>
-        </ClickAwayListener>
-      </Fragment>
+      <MuiThemeProvider theme={theme(bgColor, txtColor)}>
+        <Tooltip
+          title={
+            <ContentToolTip
+              isOwner={isOwner}
+              content={content}
+              onClickEdit={this.handleEdit}
+              onClickDelete={this.handleDelete}
+            />
+          }
+          disableFocusListener
+          disableHoverListener
+          disableTouchListener
+          interactive
+          classes={toolTipClasses}
+          placement={isSingleGrid ? "bottom" : "right"}
+          onClose={handleTooltipClose}
+          open={isOpen}
+        >
+          {children}
+        </Tooltip>
+      </MuiThemeProvider>
     );
   }
 }
 
-export const EventToolTip = withStyles(styles)(
-  withNotifications(EventToolTipComponent)
-);
+export const EventToolTip = withStyles(styles)(withNotifications(EventToolTipComponent));

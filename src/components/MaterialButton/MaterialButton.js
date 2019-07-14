@@ -6,9 +6,9 @@ const styles = theme => ({
   button: {
     color: "white",
     fontSize: 13,
-    marginBottom: theme.spacing.unit * 2,
-    marginLeft: theme.spacing.unit * 1,
-    marginRight: theme.spacing.unit * 1
+    marginBottom: theme.spacing(2),
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   }
 });
 

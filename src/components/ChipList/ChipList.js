@@ -16,7 +16,7 @@ const styles = theme => ({
   },
   chip: {
     fontSize: "1em",
-    margin: theme.spacing.unit / 4
+    margin: theme.spacing(1 / 4)
   },
   invalid: {
     color: "red"
@@ -129,9 +129,7 @@ class ChipList extends React.Component {
           <small className={invalid}>Invalid email</small>
         </Collapse>
         <Collapse in={isInvalidInvite}>
-          <small className={invalid}>
-            Add mail pressing enter or delete this field's content
-          </small>
+          <small className={invalid}>Add mail pressing enter or delete this field's content</small>
         </Collapse>
         <div className={chipList}>
           {chipData.map(data => (
