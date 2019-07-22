@@ -25,16 +25,12 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
     try {
       const { onLogout } = authContext;
       const reqRoom = await roomService.getOneById(URLRoomId);
-      const allData = await bookingService.getAllWithDetails(
-        getUTCDateFilter()
-      );
-      const data = await bookingService.getAllWithDetailsByRoom(
-        getUTCDateFilter(),
-        URLRoomId
-      );
-      if (data.bookings && allData.bookings) {
-        const { bookings: allBookingsData } = allData;
-        const { bookings: bookingsData } = data;
+      const allData = await bookingService.getAllWithDetails(getUTCDateFilter());
+
+      const data = await bookingService.getAllWithDetailsByRoom(getUTCDateFilter(), URLRoomId);
+      if (data && allData) {
+        const allBookingsData = allData;
+        const bookingsData = data;
         // We avoid extra rendering if the data is the same, since this function runs every 1.5 seconds
         const allBookingsDataStr = JSON.stringify(allBookingsData);
         const bookingsDataStr = JSON.stringify(bookingsData);
