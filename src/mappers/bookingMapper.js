@@ -74,7 +74,7 @@ import { getDateText, formatDate, formatTime, abbreviateRoomName } from "utils/B
  * @param {BookingRequest} booking - booking info
  * @returns {BookingRequestWithFormat} - booking info with required format
  */
-export const mapToRequestFormat = ({ start, end, description, roomId: room_id, attendees }) => ({
+export const mapToRequestFormat = ({ start, end, description, room_id, attendees }) => ({
   start,
   end,
   description,
@@ -90,10 +90,9 @@ export const mapToRequestFormat = ({ start, end, description, roomId: room_id, a
 /* TODO: Check this, the function returns unnecesary properties
 with the ...booking */
 export const mapToListFormat = booking => {
-  console.log({ booking });
   const { id: bookingId, start, user, room, attendees, end } = booking;
   const { id: userId, name: userName } = user;
-  const { name: roomName, color: roomColor } = room;
+  const { name: roomName, bg_color: roomColor } = room;
   const roomNameAbbrev = abbreviateRoomName(roomName);
   const dateText = getDateText(formatDate(start));
   return {

@@ -33,7 +33,7 @@ export const APIGateway = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
+          Authorization: `${authToken}`
         }
       });
     } catch (error) {
@@ -58,7 +58,7 @@ export const APIGateway = () => {
         body,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
+          Authorization: `${authToken}`
         }
       });
     } catch (error) {
@@ -83,7 +83,7 @@ export const APIGateway = () => {
         body,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
+          Authorization: `${authToken}`
         }
       });
     } catch (error) {
@@ -106,13 +106,11 @@ export const APIGateway = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
+          Authorization: `${authToken}`
         }
       });
     } catch (error) {
-      return Promise.reject(
-        new Error("An error occurred in the DELETE request")
-      );
+      return Promise.reject(new Error("An error occurred in the DELETE request"));
     }
   };
 

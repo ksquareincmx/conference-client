@@ -25,9 +25,7 @@ const styles = theme => ({
 });
 
 const filterBookingsByTerm = (bookings, filterTerm) => {
-  return bookings.length > 0
-    ? filterByTerm(filterNSortedByDate(bookings), filterTerm)
-    : "";
+  return bookings.length > 0 ? filterByTerm(filterNSortedByDate(bookings), filterTerm) : "";
 };
 
 const BookingListComponent = ({
@@ -37,10 +35,7 @@ const BookingListComponent = ({
   onBookingsDataChange
 }) => {
   const formatedBookingsData = bookingsData.map(mapToListFormat);
-  const filteredBookings = filterBookingsByTerm(
-    formatedBookingsData,
-    filterTerm
-  );
+  const filteredBookings = filterBookingsByTerm(formatedBookingsData, filterTerm);
 
   return (
     <Fragment>

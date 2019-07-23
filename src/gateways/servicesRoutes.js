@@ -43,7 +43,8 @@ export const servicesRoutes = {
     getServiceURI: config => roomServiceURI
   },
   getRoomById: {
-    getServiceURI: ({ id }) => `${roomServiceURI}${id}`
+    getServiceURI: ({ id }) =>
+      `${roomServiceURI}${id}/bookings?filter[include]=user&filter[include]=room`
   },
   getAllRooms: {
     getServiceURI: config => roomServiceURI
@@ -56,23 +57,23 @@ export const servicesRoutes = {
   },
   // Booking
   createBooking: {
-    getServiceURI: config => bookingServiceURI
+    getServiceURI: config => `${bookingServiceURI}`
   },
   getBookingById: {
-    getServiceURI: ({ id }) => `${bookingServiceURI}${id}`
+    getServiceURI: ({ id }) => `${bookingServiceURI}${id}?filter[include]=user&filter[include]=room`
   },
   getAllBookings: {
     getServiceURI: config => bookingServiceURI
   },
   getDetailedBookings: {
     getServiceURI: ({ filterDate }) => {
-      const query = `?page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}`;
+      const query = `?page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}&filter[include]=user&filter[include]=room`;
       return `${bookingServiceURI}${query}`;
     }
   },
   getDetailedBookingsByRoom: {
     getServiceURI: ({ filterDate, roomId }) => {
-      const query = `?page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}&roomId[eq]=${roomId}`;
+      const query = `?page=1&pageSize=500&order=start ASC&start[gte]=${filterDate}&roomId[eq]=${roomId}&filter[include]=user&filter[include]=room`;
       return `${bookingServiceURI}${query}`;
     }
   },

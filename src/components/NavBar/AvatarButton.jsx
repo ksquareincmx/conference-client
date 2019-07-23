@@ -9,13 +9,18 @@ const styles = theme => ({
   avatar: {
     color: "#c4c6c6",
     backgroundColor: "#969696"
+  },
+  avatarImg: {
+    objectPosition: "contain",
+    width: "100%"
   }
 });
 
 const AvatarButtonComponent = ({
   anchorEl,
   onClick,
-  classes: { accountCircle, avatar }
+  classes: { accountCircle, avatar, avatarImg },
+  picture
 }) => {
   return (
     <IconButton
@@ -25,7 +30,11 @@ const AvatarButtonComponent = ({
       onClick={onClick}
     >
       <Avatar className={avatar}>
-        <AccountCircle className={accountCircle} />
+        {picture ? (
+          <img className={avatarImg} src={picture} alt="" />
+        ) : (
+          <AccountCircle className={accountCircle} src={picture} />
+        )}
       </Avatar>
     </IconButton>
   );
