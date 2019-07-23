@@ -45,6 +45,7 @@ const CalendarPage = props => {
   }
 
   const { sessionInfo } = authContext;
+
   return (
     <Fragment>
       <NavBar authContext={authContext} />

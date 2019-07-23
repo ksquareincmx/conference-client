@@ -162,7 +162,6 @@ class BookingFormComponent extends React.Component {
     const isBookingValid = this.validate(booking);
     const { onErrorNotification } = this.props;
     this.setState({ isLoading: true, isInvalidInvite: false });
-
     try {
       if (isBookingValid && isInviteEmpty) {
         if (isBookingEdition) {
@@ -192,13 +191,15 @@ class BookingFormComponent extends React.Component {
     try {
       const bookingCreated = await bookingService.createOne(bookingInfo);
       const { id } = bookingCreated;
+      // TODO: refactor
       if (id) {
-        return mapToNotificationContentFormat(bookingCreated);
+        const bookingWithDetails = await bookingService.getOneById(id);
+        return mapToNotificationContentFormat(bookingWithDetails);
       }
       return bookingCreated;
     } catch (error) {
       return Promise.reject({
-        title: "Booking creation fail's",
+        title: "Booking creation fails",
         body: "There was an error with the server"
       });
     }
@@ -208,8 +209,10 @@ class BookingFormComponent extends React.Component {
     try {
       const bookingEdited = await bookingService.updateOneById(id, bookingInfo);
       const { id: bookingEditedId } = bookingEdited;
+      // TODO: refactor
       if (bookingEditedId) {
-        return mapToNotificationContentFormat(bookingEdited);
+        const bookingWithDetails = await bookingService.getOneById(id);
+        return mapToNotificationContentFormat(bookingWithDetails);
       }
       return bookingEdited;
     } catch (error) {

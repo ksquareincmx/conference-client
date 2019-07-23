@@ -1,9 +1,4 @@
-import {
-  getDateText,
-  formatDate,
-  formatTime,
-  abbreviateRoomName
-} from "utils/BookingFormater";
+import { getDateText, formatDate, formatTime, abbreviateRoomName } from "utils/BookingFormater";
 
 /**
  * @typedef {Object} User
@@ -79,13 +74,13 @@ import {
  * @param {BookingRequest} booking - booking info
  * @returns {BookingRequestWithFormat} - booking info with required format
  */
-export const mapToRequestFormat = ({
+export const mapToRequestFormat = ({ start, end, description, room_id, attendees }) => ({
   start,
   end,
   description,
-  roomId: room_id,
+  room_id,
   attendees
-}) => ({ start, end, description, room_id, attendees });
+});
 
 /**
  * Return booking info with required format for showing in list
@@ -97,7 +92,7 @@ with the ...booking */
 export const mapToListFormat = booking => {
   const { id: bookingId, start, user, room, attendees, end } = booking;
   const { id: userId, name: userName } = user;
-  const { name: roomName, color: roomColor } = room;
+  const { name: roomName, bg_color: roomColor } = room;
   const roomNameAbbrev = abbreviateRoomName(roomName);
   const dateText = getDateText(formatDate(start));
   return {
@@ -135,12 +130,7 @@ export const mapToNotificationContentFormat = ({ user, room }) => {
  * @param {PendingToDefine} booking // The same that returns the map2List
  * @return {BookingForDialog} - booking info with required format
  */
-export const mapToConfirmationDialogFormat = ({
-  start,
-  end,
-  roomName,
-  dateText
-}) => {
+export const mapToConfirmationDialogFormat = ({ start, end, roomName, dateText }) => {
   const startTime = formatTime(formatDate(start));
   const endTime = formatTime(formatDate(end));
   return {

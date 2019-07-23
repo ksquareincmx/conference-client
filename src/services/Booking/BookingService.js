@@ -84,7 +84,8 @@ export const BookingService = storageService => {
    */
   const createOne = async booking => {
     const { token: authToken } = storageService.getJWT();
-    const createBody = mapToRequestFormat(booking);
+    const { id: userId } = storageService.getUserInfo();
+    const createBody = { ...mapToRequestFormat(booking), user_id: userId };
     const config = {
       createBody,
       authToken
@@ -137,9 +138,13 @@ export const BookingService = storageService => {
    */
   const getAllWithDetails = async filterDate => {
     const { token: authToken } = storageService.getJWT();
-    const config = { filterDate, authToken };
+    const config = { filterDate, authToken, include: "user" };
     try {
       const res = await apiGateway.doGet("getDetailedBookings", config);
+      // Unauthorized
+      if (res.status === 401) {
+        return Promise.reject(res);
+      }
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -172,9 +177,13 @@ export const BookingService = storageService => {
   const updateOneById = async (id, booking) => {
     const { token: authToken } = storageService.getJWT();
     const updateBody = mapToRequestFormat(booking);
+    const { user_id } = booking;
     const config = {
       id,
-      updateBody,
+      updateBody: {
+        ...updateBody,
+        user_id
+      },
       authToken
     };
     try {
