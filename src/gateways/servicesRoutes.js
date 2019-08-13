@@ -2,7 +2,7 @@ const userServiceURI = `${process.env.REACT_APP_SERVER_URI}Users/`;
 const profileServiceURI = `${process.env.REACT_APP_SERVER_URI}Profiles/`;
 const bookingServiceURI = `${process.env.REACT_APP_SERVER_URI}Bookings/`;
 const roomServiceURI = `${process.env.REACT_APP_SERVER_URI}Rooms/`;
-const googleAuthURI = `${process.env.REACT_APP_SERVER_URI}auth/googlelogin`;
+const googleAuthURI = `${process.env.REACT_APP_SERVER_URI}Users/google/oauth20`;
 
 export const servicesRoutes = {
   // token
