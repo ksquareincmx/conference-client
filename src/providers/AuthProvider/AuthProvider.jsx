@@ -44,6 +44,7 @@ class AuthProvider extends React.Component {
         storageService.updateInfoInStorage(sessionInfo);
       });
     } catch (err) {
+      this.onLogout();
       console.log(err);
     }
   };
