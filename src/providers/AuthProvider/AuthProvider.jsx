@@ -28,7 +28,9 @@ class AuthProvider extends React.Component {
     try {
       const { login } = authService;
       const res = await login(idToken);
-      const { token, expires, refresh_token: refreshToken, user } = res;
+      const { token, user } = res;
+      const { exp: expires } = JSON.parse(atob(token.split(".")[1]));
+      const refreshToken = expires;
       const sessionInfo = {
         jwt: {
           token,
