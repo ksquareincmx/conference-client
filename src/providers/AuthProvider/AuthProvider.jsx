@@ -1,6 +1,7 @@
 import React from "react";
 import { authService, storageService } from "services";
 import { AuthContext } from "context/AuthContext";
+import queryString from "query-string";
 // Context object template
 
 class AuthProvider extends React.Component {
@@ -13,8 +14,14 @@ class AuthProvider extends React.Component {
   };
 
   componentDidMount() {
-    const jwt = storageService.getJWT();
-    const user = storageService.getUserInfo();
+    const params = queryString.parse(window.location.search);
+    let jwt = this.decryptToken(params.access_token);
+    let user = params.user;
+
+    if (!(jwt && user)) {
+      jwt = storageService.getJWT();
+      user = storageService.getUserInfo();
+    }
 
     if (jwt && user) {
       const sessionInfo = { jwt, user };
@@ -29,14 +36,9 @@ class AuthProvider extends React.Component {
       const { login } = authService;
       const res = await login(idToken);
       const { token, user } = res;
-      const { exp: expires } = JSON.parse(atob(token.split(".")[1]));
-      const refreshToken = token;
+      const jwt = this.decryptToken(token);
       const sessionInfo = {
-        jwt: {
-          token,
-          expires,
-          refreshToken
-        },
+        jwt,
         user
       };
       this.setState({ sessionInfo, isAuth: true }, () => {
@@ -48,6 +50,21 @@ class AuthProvider extends React.Component {
       console.log(err);
     }
   };
+
+  decryptToken(token) {
+    if (!token) {
+      return null;
+    }
+
+    const { exp: expires } = JSON.parse(atob(token.split(".")[1]));
+    const refreshToken = token;
+    const jwt = {
+      token,
+      expires,
+      refreshToken
+    };
+    return jwt;
+  }
 
   onLogout = () => {
     const sessionInfo = {
