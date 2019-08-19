@@ -1,7 +1,7 @@
 const userServiceURI = `${process.env.REACT_APP_SERVER_URI}User/`;
 const profileServiceURI = `${process.env.REACT_APP_SERVER_URI}Profile/`;
-const bookingServiceURI = `${process.env.REACT_APP_SERVER_URI}Booking/`;
-const roomServiceURI = `${process.env.REACT_APP_SERVER_URI}Room/`;
+const bookingServiceURI = `${process.env.REACT_APP_SERVER_URI}Bookings/`;
+const roomServiceURI = `${process.env.REACT_APP_SERVER_URI}Rooms/`;
 const googleAuthURI = `${process.env.REACT_APP_SERVER_URI}auth/googlelogin`;
 
 export const servicesRoutes = {

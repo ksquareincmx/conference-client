@@ -43,12 +43,23 @@ export const StorageService = () => {
   const get = localStorage.getItem.bind(localStorage);
 
   /**
+   * Validate if the passed item is JSON
+   */
+  const parseToJSON = function(item) {
+    if (item && item !== "undefined") {
+      return JSON.parse(item);
+    } else {
+      return "";
+    }
+  };
+
+  /**
    * Returns an item in local storage
    * @param {string} item - item name in local storage
    * @returns {Object} - an item
    */
   const getItem = compose(
-    JSON.parse,
+    parseToJSON,
     get
   );
 
