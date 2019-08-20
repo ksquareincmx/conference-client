@@ -19,6 +19,7 @@
     "cuid": "^2.1.6",
     "material-ui-pickers": "^2.2.4",
     "moment": "^2.24.0",
+    "query-string": "^6.8.2",
     "react": "^16.8.6",
     "react-big-calendar": "0.20.1",
     "react-dom": "^16.8.6",
@@ -51,5 +52,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0"
   }
 }
