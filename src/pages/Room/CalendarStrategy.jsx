@@ -5,12 +5,11 @@ import { CalendarViewSelectors } from "utils/Enums";
 export const CalendarStrategy = props => {
   const { DAY, WEEK, MONTH } = CalendarViewSelectors;
   switch (props.type) {
-    case DAY:
-      return <DaysView {...props} />;
     case WEEK:
       return <WeeksView {...props} />;
     case MONTH:
       return <MonthsView {...props} />;
+    case DAY:
     default:
       return <DaysView {...props} />;
   }

@@ -17,24 +17,19 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
   const authContext = useContext(AuthContext);
   const [bookingsHash, updateBookingsHash] = useState("initial");
   const [allBookingsHash, updateAllBookingsHash] = useState("initial");
-  const [delay, updateDelay] = useState(5000);
-
+  const [delay, updateDelay] = useState(5000); // TODO: when the tab is not used, augment delay time
   const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
+  const { onLogout } = authContext;
 
   const fetchBookings = async () => {
     try {
-      const { onLogout } = authContext;
       const reqRoom = await roomService.getOneById(URLRoomId);
-      const allData = await bookingService.getAllWithDetails(
-        getUTCDateFilter()
-      );
-      const data = await bookingService.getAllWithDetailsByRoom(
-        getUTCDateFilter(),
-        URLRoomId
-      );
-      if (data.bookings && allData.bookings) {
-        const { bookings: allBookingsData } = allData;
-        const { bookings: bookingsData } = data;
+      const allData = await bookingService.getAllWithDetails(getUTCDateFilter());
+
+      const data = await bookingService.getAllWithDetailsByRoom(getUTCDateFilter(), URLRoomId);
+      if (data && allData) {
+        const allBookingsData = allData;
+        const bookingsData = data;
         // We avoid extra rendering if the data is the same, since this function runs every 1.5 seconds
         const allBookingsDataStr = JSON.stringify(allBookingsData);
         const bookingsDataStr = JSON.stringify(bookingsData);
@@ -66,6 +61,12 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
       // updateIsLoading(true);
       return undefined;
     } catch (error) {
+      console.log({ enErro: error });
+      if (error.status === 401) {
+        onLogout();
+        history.push("/login");
+        return undefined;
+      }
       // Don't know how to do this with hooks
       Promise.reject(new Error(error.message));
       return undefined;
