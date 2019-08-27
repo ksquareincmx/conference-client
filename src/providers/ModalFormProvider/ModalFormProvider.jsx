@@ -43,7 +43,7 @@ class ModalFormProviderComponent extends React.Component {
   handleCreationFromButton = booking => {
     const { roomName } = booking;
     // I need to get the start and
-    this.setState({
+    return this.setState({
       isModalOpen: true,
       isDelete: false,
       room: roomName,
@@ -52,7 +52,6 @@ class ModalFormProviderComponent extends React.Component {
       roomId: null,
       bookingClickedObj: booking
     });
-    return;
   };
 
   handleClickEditBooking = booking => {
