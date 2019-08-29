@@ -10,7 +10,7 @@ const styles = theme => ({
 });
 
 const MeetingDuration = ({ classes, time, onSelectItem, disabled }) => {
-  const timeSelectedHandler = time => {
+  const handleClick = time => () => {
     onSelectItem(time);
   };
   return (
@@ -24,9 +24,7 @@ const MeetingDuration = ({ classes, time, onSelectItem, disabled }) => {
           color="default"
           className={time.selected ? classes.checked : classes.timeSelector}
           label={time.value}
-          onClick={() => {
-            timeSelectedHandler(time);
-          }}
+          onClick={handleClick(time)}
         />
       }
       label={`${time.value} min`}

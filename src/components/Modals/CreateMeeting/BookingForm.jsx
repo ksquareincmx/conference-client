@@ -85,6 +85,46 @@ const styles = theme => ({
   }
 });
 
+const getMeetingDuration = prevState => {
+  const { startTime, endTime, meetingDuration } = prevState;
+  if (!endTime.minute) {
+    return meetingDuration;
+  }
+  const minutes = moment({
+    hour: endTime.hour,
+    minute: endTime.minute
+  }).diff(
+    moment({
+      hour: startTime.hour,
+      minute: startTime.minute
+    }),
+    "minute"
+  );
+
+  const times = [...meetingDuration].map(element => {
+    return element.value === minutes
+      ? { ...element, selected: true }
+      : { ...element, selected: false };
+  });
+
+  return times;
+};
+
+const clearSelections = times => {
+  return times.map(element => ({ ...element, selected: false }));
+};
+
+const getEndTime = (minutes, startTime) => {
+  const endTime = moment({
+    hour: startTime.hour,
+    minute: startTime.minute
+  }).add(minutes, "minutes");
+
+  return {
+    hour: addZeros(endTime.hour()),
+    minute: addZeros(endTime.minute())
+  };
+};
 class BookingFormComponent extends React.Component {
   state = {
     date: formatDashedDate(formatToday()),
@@ -111,7 +151,7 @@ class BookingFormComponent extends React.Component {
     isInvalidInvite: false,
     isInviteEmpty: true,
     isLoading: false,
-    timesMeetingDuration: [],
+    meetingDuration: [],
     timesDurationDisabled: true
   };
 
@@ -132,23 +172,24 @@ class BookingFormComponent extends React.Component {
   };
 
   setBookingStartTime = startTime => {
+    console.log(startTime);
     if (startTime.hour && startTime.minute) {
       this.setState({ timesDurationDisabled: false });
     }
     this.setState({ startTime }, () =>
-      this.setState(
-        prevState => this.updateMeetingDuration(prevState),
-        () => this.enableEndTimeSelect()
-      )
+      this.setState(prevState => {
+        const meetingDuration = getMeetingDuration(prevState);
+        return { ...prevState, meetingDuration };
+      }, this.enableEndTimeSelect)
     );
   };
 
   setBookingEndTime = endTime => {
     this.setState({ endTime }, () =>
-      this.setState(
-        prevState => this.updateMeetingDuration(prevState),
-        () => this.verifyQuickAppointment()
-      )
+      this.setState(prevState => {
+        const meetingDuration = getMeetingDuration(prevState);
+        return { ...prevState, meetingDuration };
+      }, this.verifyQuickAppointment)
     );
   };
 
@@ -159,60 +200,25 @@ class BookingFormComponent extends React.Component {
     this.enableConferenceSelect();
   };
 
-  updateMeetingDuration = ({ startTime, endTime, timesMeetingDuration }) => {
-    const minutes = moment({
-      hour: endTime.hour,
-      minute: endTime.minute
-    }).diff(
-      moment({
-        hour: startTime.hour,
-        minute: startTime.minute
-      }),
-      "minute"
-    );
-
-    const times = [...timesMeetingDuration].map(element => {
-      if (element.value === minutes) {
-        element.selected = true;
-      } else {
-        element.selected = false;
-      }
-      return element;
-    });
-
-    return { timesMeetingDuration: times };
-  };
-
   clearMeetingDuration = () => {
-    this.setState(({ timesMeetingDuration }) => {
-      const times = [...timesMeetingDuration].map(element => {
-        element.selected = false;
-        return element;
-      });
-      return { timesMeetingDuration: times };
+    this.setState(prevState => {
+      const { meetingDuration } = prevState;
+      const times = clearSelections(meetingDuration);
+      return { ...prevState, meetingDuration: times };
     });
   };
 
   setTimeDurationSelected = time => {
-    const computedEndtime = moment({
-      hour: this.state.startTime.hour,
-      minute: this.state.startTime.minute
-    }).add(time.value, "minutes");
-
-    const endTime = {
-      hour: computedEndtime.hour(),
-      minute: addZeros(computedEndtime.minute())
-    };
-
+    const endTime = getEndTime(time.value, this.state.startTime);
     this.setState({ endTime }, () =>
-      this.setState(({ timesMeetingDuration }) => {
-        const times = [...timesMeetingDuration].map(element => {
-          element.selected = false;
-          return element;
+      this.setState(prevState => {
+        const { meetingDuration } = prevState;
+        const times = clearSelections(meetingDuration);
+        const idx = times.findIndex(element => {
+          return element.value === time.value;
         });
-        const idx = times.indexOf(time);
         times[idx].selected = true;
-        return { timesMeetingDuration: times };
+        return { ...prevState, meetingDuration: times };
       })
     );
   };
@@ -391,7 +397,7 @@ class BookingFormComponent extends React.Component {
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
           disabledNextButton: roomName ? false : true,
-          timesMeetingDuration: times
+          meetingDuration: times
         });
       }
     } else if (this.props.isBookingEdition) {
@@ -421,7 +427,7 @@ class BookingFormComponent extends React.Component {
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
           disabledNextButton: false,
-          timesMeetingDuration: times
+          meetingDuration: times
         });
 
         return this.refreshChipList();
@@ -502,8 +508,7 @@ class BookingFormComponent extends React.Component {
                   <TimeSelect
                     hour={this.state.startTime.hour}
                     minute={this.state.startTime.minute}
-                    onChangeHour={this.setBookingStartTime}
-                    onChangeMinute={this.setBookingStartTime}
+                    onChangeTime={this.setBookingStartTime}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -511,8 +516,7 @@ class BookingFormComponent extends React.Component {
                   <TimeSelect
                     hour={this.state.endTime.hour}
                     minute={this.state.endTime.minute}
-                    onChangeHour={this.setBookingEndTime}
-                    onChangeMinute={this.setBookingEndTime}
+                    onChangeTime={this.setBookingEndTime}
                   />
                 </Grid>
               </Grid>
@@ -521,7 +525,7 @@ class BookingFormComponent extends React.Component {
                 <Grid item xs={8}>
                   <span className={helpText}>Meeting duration</span>
                   <Grid container direction="row">
-                    {this.state.timesMeetingDuration.map(time => {
+                    {this.state.meetingDuration.map(time => {
                       return (
                         <MeetingDuration
                           key={time.value}

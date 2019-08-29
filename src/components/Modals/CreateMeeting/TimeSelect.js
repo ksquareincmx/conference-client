@@ -26,22 +26,7 @@ const minutesValues = Array.from(new Array(4), (x, i) => [
   false
 ]);
 
-function handleOnChangeHour(e, minute, onChangeHour) {
-  onChangeHour({ hour: e.target.value, minute: minute });
-}
-
-function handleOnChangeMinute(e, hour, onChangeMinute) {
-  onChangeMinute({ hour: hour, minute: e.target.value });
-}
-
-const TimeSelect = ({
-  classes,
-  hour,
-  minute,
-  onChangeHour,
-  onChangeMinute,
-  isInvalidHour
-}) => {
+const TimeSelect = ({ classes, hour, minute, onChangeTime, isInvalidHour }) => {
   const hours = hoursValues.map(hour => (
     <MenuItem value={hour[0]} key={cuid()}>
       {hour[0]}
@@ -53,6 +38,16 @@ const TimeSelect = ({
     </MenuItem>
   ));
 
+  const handleChangeHour = minute => event => {
+    const { value: hour } = event.target;
+    onChangeTime({ minute, hour });
+  };
+
+  const handleChangeMinute = hour => event => {
+    const { value: minute } = event.target;
+    onChangeTime({ minute, hour });
+  };
+
   return (
     <Grid container direction="row">
       <Grid item xs={6}>
@@ -60,9 +55,7 @@ const TimeSelect = ({
           <InputLabel>Hour</InputLabel>
           <Select
             value={hour}
-            onChange={e => {
-              handleOnChangeHour(e, minute, onChangeHour);
-            }}
+            onChange={handleChangeHour(minute)}
             className={classes.select}
             error={isInvalidHour}
           >
@@ -75,9 +68,7 @@ const TimeSelect = ({
           <InputLabel>Minutes</InputLabel>
           <Select
             value={minute}
-            onChange={e => {
-              handleOnChangeMinute(e, hour, onChangeMinute);
-            }}
+            onChange={handleChangeMinute(hour)}
             className={classes.select}
             error={isInvalidHour}
           >
