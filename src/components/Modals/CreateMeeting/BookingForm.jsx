@@ -11,11 +11,13 @@ import {
   TextField,
   Typography,
   withStyles,
-  CircularProgress
+  CircularProgress,
+  Button
 } from "@material-ui/core/";
 import compose from "lodash/fp/compose";
 import DatePicker from "./DatePicker";
 import TimeSelect from "./TimeSelect";
+import MeetingDuration from "./MeetingDuration";
 import { RoomSelect } from "./RoomSelect";
 import { validateBooking } from "./meetingValidations";
 import MaterialButton from "components/MaterialButton";
@@ -32,6 +34,8 @@ import addZeros from "utils/AddZeros";
 import { mapToNotificationContentFormat } from "mappers/bookingMapper";
 import { bookingService } from "services";
 import { withNotifications } from "hocs";
+import moment from "moment";
+import { element } from "prop-types";
 
 const styles = theme => ({
   card: {
@@ -75,9 +79,46 @@ const styles = theme => ({
     left: "50%",
     marginTop: -18,
     marginLeft: -12
+  },
+  clearTimeMeeting: {
+    textTransform: "lowercase"
   }
 });
 
+const getMinutesDiff = (startTime, endTime) => {
+  return moment(endTime).diff(moment(startTime), "minute");
+};
+
+const getMeetingDuration = prevState => {
+  const { startTime, endTime, meetingDuration } = prevState;
+  if (!endTime.minute) {
+    return meetingDuration;
+  }
+  const minutes = getMinutesDiff(startTime, endTime);
+
+  return [...meetingDuration].map(element => {
+    return element.value === minutes
+      ? { ...element, selected: true }
+      : { ...element, selected: false };
+  });
+};
+
+const clearSelections = times => {
+  return times.map(element => ({ ...element, selected: false }));
+};
+
+const addMinutes = (minutes, time) => {
+  return moment(time).add(minutes, "minutes");
+};
+
+const getEndTime = (minutes, startTime) => {
+  const endTime = addMinutes(minutes, startTime);
+
+  return {
+    hour: addZeros(endTime.hour()),
+    minute: addZeros(endTime.minute())
+  };
+};
 class BookingFormComponent extends React.Component {
   state = {
     date: formatDashedDate(formatToday()),
@@ -91,6 +132,7 @@ class BookingFormComponent extends React.Component {
     invalidHourMessage: "",
     disabledEndTimeSelect: true,
     disabledStartTimeSelect: false,
+    disabledMeetingDuration: true,
     disabledConferenceSelect: true,
     disabledNextButton: true,
     disabledDate: false,
@@ -102,7 +144,9 @@ class BookingFormComponent extends React.Component {
     isInvalidReason: false,
     isInvalidInvite: false,
     isInviteEmpty: true,
-    isLoading: false
+    isLoading: false,
+    meetingDuration: [],
+    timesDurationDisabled: true
   };
 
   enableStartTimeSelect = () => {
@@ -121,12 +165,40 @@ class BookingFormComponent extends React.Component {
     this.setState({ disabledNextButton: false });
   };
 
-  setBookingStartTime = startTime => {
-    this.setState({ startTime }, () => this.enableEndTimeSelect());
+  setBookingStartTime = updateStartTime => {
+    const timesDurationDisabled = !(
+      updateStartTime.hour && updateStartTime.minute
+    );
+    this.setState(prevState => {
+      const { endTime, meetingDuration } = prevState;
+      const updatedMeetingDuration = getMeetingDuration({
+        meetingDuration,
+        startTime: updateStartTime,
+        endTime
+      });
+      return {
+        ...prevState,
+        startTime: updateStartTime,
+        meetingDuration: updatedMeetingDuration,
+        timesDurationDisabled
+      };
+    }, this.enableEndTimeSelect);
   };
 
-  setBookingEndTime = endTime => {
-    this.setState({ endTime }, () => this.verifyQuickAppointment());
+  setBookingEndTime = updateEndTime => {
+    this.setState(prevState => {
+      const { startTime, meetingDuration } = prevState;
+      const updatedMeetingDuration = getMeetingDuration({
+        meetingDuration,
+        startTime,
+        endTime: updateEndTime
+      });
+      return {
+        ...prevState,
+        endTime: updateEndTime,
+        meetingDuration: updatedMeetingDuration
+      };
+    });
   };
 
   verifyQuickAppointment = () => {
@@ -136,12 +208,36 @@ class BookingFormComponent extends React.Component {
     this.enableConferenceSelect();
   };
 
+  clearMeetingDuration = () => {
+    this.setState(prevState => {
+      const { meetingDuration } = prevState;
+      const times = clearSelections(meetingDuration);
+      return { ...prevState, meetingDuration: times };
+    });
+  };
+
+  setTimeDurationSelected = time => {
+    const updateEndTime = getEndTime(time.value, this.state.startTime);
+    this.setState(prevState => {
+      const { meetingDuration } = prevState;
+      const times = clearSelections(meetingDuration);
+      const idx = times.findIndex(element => {
+        return element.value === time.value;
+      });
+      if (idx === -1) {
+        return { ...prevState };
+      }
+      times[idx].selected = true;
+      return { ...prevState, endTime: updateEndTime, meetingDuration: times };
+    });
+  };
+
   setRoom = room => {
     this.setState({ roomId: room }, () => this.enableNextButton());
   };
 
   setDate = date => {
-    this.setState({ date: formatDashedDate(date) }, () => this.enableStartTimeSelect());
+    this.setState({ date: formatDashedDate(date) }, this.enableStartTimeSelect);
   };
 
   refreshChipList = () => {
@@ -238,7 +334,10 @@ class BookingFormComponent extends React.Component {
       });
       return onBookingsDataChange();
     }
-    if (bookingInfo.message === "POST error" || bookingInfo.message === "PUT error") {
+    if (
+      bookingInfo.message === "POST error" ||
+      bookingInfo.message === "PUT error"
+    ) {
       onModalClose();
       return onErrorNotification({
         title: "Action failed",
@@ -275,6 +374,12 @@ class BookingFormComponent extends React.Component {
 
   componentDidMount() {
     let date = "";
+    const times = [...new Array(4)].map((x, i) => {
+      return {
+        value: addZeros((i + 1) * 15),
+        selected: false
+      };
+    });
 
     if (this.props.quickAppointment) {
       if (!this.state.quickAppointment) {
@@ -289,16 +394,17 @@ class BookingFormComponent extends React.Component {
           date: formatDashedDate(startDate),
           startTime: {
             hour: formatHours(startDate),
-            minute: formatMinutes(startDate)
+            minute: ""
           },
           endTime: {
             hour: formatHours(endDate),
-            minute: formatMinutes(endDate)
+            minute: ""
           },
           disabledStartTimeSelect: false,
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
-          disabledNextButton: roomName ? false : true
+          disabledNextButton: roomName ? false : true,
+          meetingDuration: times
         });
       }
     } else if (this.props.isBookingEdition) {
@@ -316,18 +422,19 @@ class BookingFormComponent extends React.Component {
           date: formatDashedDate(startDate),
           startTime: {
             hour: formatHours(startDate),
-            minute: formatMinutes(startDate)
+            minute: ""
           },
           endTime: {
             hour: formatHours(endDate),
-            minute: formatMinutes(endDate)
+            minute: ""
           },
           bookingReason: description,
           attendees: attendees,
           disabledStartTimeSelect: false,
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
-          disabledNextButton: false
+          disabledNextButton: false,
+          meetingDuration: times
         });
 
         return this.refreshChipList();
@@ -356,14 +463,20 @@ class BookingFormComponent extends React.Component {
       alertMessage,
       helpText,
       saveBtnWrapper,
-      btnProgress
+      btnProgress,
+      clearTimeMeeting
     } = styleClasses;
 
     const formTitle = isBookingEdition ? "Edit Appointment" : "New Appointment";
     const buttonSaveTxt = isBookingEdition ? "Edit" : "Create";
 
     return (
-      <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
+      <Grid
+        container
+        justify="center"
+        alignItems="center"
+        style={{ height: "100%" }}
+      >
         <Card className={card}>
           <CardHeader classes={{ title: header }} title={formTitle} />
           <Divider />
@@ -400,24 +513,49 @@ class BookingFormComponent extends React.Component {
                 <Grid item xs={6}>
                   <span className={helpText}>From</span>
                   <TimeSelect
-                    disabledHour={this.state.disabledStartTimeSelect}
-                    setTime={this.setBookingStartTime}
-                    startTime={this.state.startTime}
-                    isInvalidHour={this.state.isInvalidHour}
+                    hour={this.state.startTime.hour}
+                    minute={this.state.startTime.minute}
+                    onChangeTime={this.setBookingStartTime}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <span className={helpText}>To</span>
                   <TimeSelect
-                    disabledHour={this.state.disabledEndTimeSelect}
-                    setTime={this.setBookingEndTime}
-                    endTime={this.state.endTime}
-                    isInvalidHour={this.state.isInvalidHour}
+                    hour={this.state.endTime.hour}
+                    minute={this.state.endTime.minute}
+                    onChangeTime={this.setBookingEndTime}
                   />
                 </Grid>
               </Grid>
+              <br />
+              <Grid container direction="row">
+                <Grid item xs={8}>
+                  <span className={helpText}>Meeting duration</span>
+                  <Grid container direction="row">
+                    {this.state.meetingDuration.map(time => {
+                      return (
+                        <MeetingDuration
+                          key={time.value}
+                          time={time}
+                          onSelectItem={this.setTimeDurationSelected}
+                          disabled={this.state.timesDurationDisabled}
+                        />
+                      );
+                    })}
+                    <Button
+                      disabled={this.state.timesDurationDisabled}
+                      className={clearTimeMeeting}
+                      onClick={this.clearMeetingDuration}
+                    >
+                      x Clear
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
               <Collapse in={this.state.isInvalidHour}>
-                <small className={alertMessage}>{this.state.invalidHourMessage}</small>
+                <small className={alertMessage}>
+                  {this.state.invalidHourMessage}
+                </small>
               </Collapse>
             </Grid>
             <Grid container direction="column" className={content}>
@@ -477,7 +615,9 @@ class BookingFormComponent extends React.Component {
                 onClick={this.handleBookingOperation}
                 disabled={this.state.disabledNextButton || isLoading}
               />
-              {isLoading && <CircularProgress size={24} className={btnProgress} />}
+              {isLoading && (
+                <CircularProgress size={24} className={btnProgress} />
+              )}
             </div>
           </CardActions>
         </Card>
