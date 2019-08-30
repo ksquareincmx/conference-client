@@ -166,9 +166,9 @@ class BookingFormComponent extends React.Component {
   };
 
   setBookingStartTime = updateStartTime => {
-    if (updateStartTime.hour && updateStartTime.minute) {
-      this.setState({ timesDurationDisabled: false });
-    }
+    const timesDurationDisabled = !(
+      updateStartTime.hour && updateStartTime.minute
+    );
     this.setState(prevState => {
       const { endTime, meetingDuration } = prevState;
       const updatedMeetingDuration = getMeetingDuration({
@@ -179,7 +179,8 @@ class BookingFormComponent extends React.Component {
       return {
         ...prevState,
         startTime: updateStartTime,
-        meetingDuration: updatedMeetingDuration
+        meetingDuration: updatedMeetingDuration,
+        timesDurationDisabled
       };
     }, this.enableEndTimeSelect);
   };
