@@ -85,40 +85,34 @@ const styles = theme => ({
   }
 });
 
+const getMinutesDiff = (startTime, endTime) => {
+  return moment(endTime).diff(moment(startTime), "minute");
+};
+
 const getMeetingDuration = prevState => {
   const { startTime, endTime, meetingDuration } = prevState;
   if (!endTime.minute) {
     return meetingDuration;
   }
-  const minutes = moment({
-    hour: endTime.hour,
-    minute: endTime.minute
-  }).diff(
-    moment({
-      hour: startTime.hour,
-      minute: startTime.minute
-    }),
-    "minute"
-  );
+  const minutes = getMinutesDiff(startTime, endTime);
 
-  const times = [...meetingDuration].map(element => {
+  return [...meetingDuration].map(element => {
     return element.value === minutes
       ? { ...element, selected: true }
       : { ...element, selected: false };
   });
-
-  return times;
 };
 
 const clearSelections = times => {
   return times.map(element => ({ ...element, selected: false }));
 };
 
+const addMinutes = (minutes, time) => {
+  return moment(time).add(minutes, "minutes");
+};
+
 const getEndTime = (minutes, startTime) => {
-  const endTime = moment({
-    hour: startTime.hour,
-    minute: startTime.minute
-  }).add(minutes, "minutes");
+  const endTime = addMinutes(minutes, startTime);
 
   return {
     hour: addZeros(endTime.hour()),
@@ -171,26 +165,39 @@ class BookingFormComponent extends React.Component {
     this.setState({ disabledNextButton: false });
   };
 
-  setBookingStartTime = startTime => {
-    console.log(startTime);
-    if (startTime.hour && startTime.minute) {
+  setBookingStartTime = updateStartTime => {
+    if (updateStartTime.hour && updateStartTime.minute) {
       this.setState({ timesDurationDisabled: false });
     }
-    this.setState({ startTime }, () =>
-      this.setState(prevState => {
-        const meetingDuration = getMeetingDuration(prevState);
-        return { ...prevState, meetingDuration };
-      }, this.enableEndTimeSelect)
-    );
+    this.setState(prevState => {
+      const { endTime, meetingDuration } = prevState;
+      const updatedMeetingDuration = getMeetingDuration({
+        meetingDuration,
+        startTime: updateStartTime,
+        endTime
+      });
+      return {
+        ...prevState,
+        startTime: updateStartTime,
+        meetingDuration: updatedMeetingDuration
+      };
+    }, this.enableEndTimeSelect);
   };
 
-  setBookingEndTime = endTime => {
-    this.setState({ endTime }, () =>
-      this.setState(prevState => {
-        const meetingDuration = getMeetingDuration(prevState);
-        return { ...prevState, meetingDuration };
-      }, this.verifyQuickAppointment)
-    );
+  setBookingEndTime = updateEndTime => {
+    this.setState(prevState => {
+      const { startTime, meetingDuration } = prevState;
+      const updatedMeetingDuration = getMeetingDuration({
+        meetingDuration,
+        startTime,
+        endTime: updateEndTime
+      });
+      return {
+        ...prevState,
+        endTime: updateEndTime,
+        meetingDuration: updatedMeetingDuration
+      };
+    });
   };
 
   verifyQuickAppointment = () => {
@@ -209,18 +216,19 @@ class BookingFormComponent extends React.Component {
   };
 
   setTimeDurationSelected = time => {
-    const endTime = getEndTime(time.value, this.state.startTime);
-    this.setState({ endTime }, () =>
-      this.setState(prevState => {
-        const { meetingDuration } = prevState;
-        const times = clearSelections(meetingDuration);
-        const idx = times.findIndex(element => {
-          return element.value === time.value;
-        });
-        times[idx].selected = true;
-        return { ...prevState, meetingDuration: times };
-      })
-    );
+    const updateEndTime = getEndTime(time.value, this.state.startTime);
+    this.setState(prevState => {
+      const { meetingDuration } = prevState;
+      const times = clearSelections(meetingDuration);
+      const idx = times.findIndex(element => {
+        return element.value === time.value;
+      });
+      if (idx === -1) {
+        return { ...prevState };
+      }
+      times[idx].selected = true;
+      return { ...prevState, endTime: updateEndTime, meetingDuration: times };
+    });
   };
 
   setRoom = room => {
@@ -228,9 +236,7 @@ class BookingFormComponent extends React.Component {
   };
 
   setDate = date => {
-    this.setState({ date: formatDashedDate(date) }, () =>
-      this.enableStartTimeSelect()
-    );
+    this.setState({ date: formatDashedDate(date) }, this.enableStartTimeSelect);
   };
 
   refreshChipList = () => {
