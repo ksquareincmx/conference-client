@@ -85,10 +85,6 @@ const styles = theme => ({
   }
 });
 
-const setLastRoom = room => {
-  storageService.setLastRoom(room);
-};
-
 const getMinutesDiff = (startTime, endTime) => {
   return moment(endTime).diff(moment(startTime), "minute");
 };
@@ -268,11 +264,11 @@ class BookingFormComponent extends React.Component {
           const { bookingForEdition } = this.props;
           const { id } = bookingForEdition;
           const bookingInfo = await this.doBookingEdition(id, booking);
-          setLastRoom(this.state.roomId);
+          storageService.setLastRoom(this.state.roomId);
           return this.saveBookingResponse(bookingInfo, isBookingEdition);
         }
         const bookingInfo = await this.doBookingCreation(booking);
-        setLastRoom(this.state.roomId);
+        storageService.setLastRoom(this.state.roomId);
         return this.saveBookingResponse(bookingInfo, isBookingEdition);
       }
       return this.setState({

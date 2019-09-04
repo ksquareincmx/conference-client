@@ -20,8 +20,7 @@ const style = () => ({
 });
 
 const getLastRoom = () => {
-  const room = storageService.getLastRoom();
-  return room ? room : "1";
+  return storageService.getLastRoom() || "1";
 };
 
 const Login = props => {
