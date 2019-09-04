@@ -91,10 +91,20 @@ export const StorageService = () => {
     set("cb_user", JSON.stringify(user));
   };
 
+  const getLastRoom = () => {
+    return get("last_room");
+  };
+
+  const setLastRoom = room => {
+    set("last_room", JSON.stringify(room));
+  };
+
   return {
     getJWT,
     getUserInfo,
     getUserName,
-    updateInfoInStorage
+    updateInfoInStorage,
+    getLastRoom,
+    setLastRoom
   };
 };

@@ -32,7 +32,7 @@ import {
 import { mapToPost } from "mappers/AppointmentMapper";
 import addZeros from "utils/AddZeros";
 import { mapToNotificationContentFormat } from "mappers/bookingMapper";
-import { bookingService } from "services";
+import { bookingService, storageService } from "services";
 import { withNotifications } from "hocs";
 import moment from "moment";
 import { element } from "prop-types";
@@ -84,6 +84,10 @@ const styles = theme => ({
     textTransform: "lowercase"
   }
 });
+
+const setLastRoom = room => {
+  storageService.setLastRoom(room);
+};
 
 const getMinutesDiff = (startTime, endTime) => {
   return moment(endTime).diff(moment(startTime), "minute");
@@ -264,9 +268,11 @@ class BookingFormComponent extends React.Component {
           const { bookingForEdition } = this.props;
           const { id } = bookingForEdition;
           const bookingInfo = await this.doBookingEdition(id, booking);
+          setLastRoom(this.state.roomId);
           return this.saveBookingResponse(bookingInfo, isBookingEdition);
         }
         const bookingInfo = await this.doBookingCreation(booking);
+        setLastRoom(this.state.roomId);
         return this.saveBookingResponse(bookingInfo, isBookingEdition);
       }
       return this.setState({
