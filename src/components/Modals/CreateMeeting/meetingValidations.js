@@ -40,8 +40,10 @@ const validateIsDiferentHour = (timeStart, timeEnd) => timeStart !== timeEnd;
 
 const validateIsCoherentHour = (timeStart, timeEnd) => timeStart <= timeEnd;
 
-const validateIsAfterCurrentHour = (timeStart, currentTime) =>
-  timeStart > currentTime;
+const validateIsAfterCurrentHour = (timeStart, currentTime) => {
+  const pastTimeStart = moment(timeStart).add(15, "m");
+  return pastTimeStart > currentTime;
+};
 
 const validateWorkingHours = (timeStart, timeEnd) => {
   const isStart = true;

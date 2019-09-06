@@ -26,9 +26,14 @@ export const Event = ({ content, onBookingsDataChange, isSingleGrid }) => {
   const handleTooltipOpen = () => {
     const { id: userId } = content.event.booking.user;
     const { id: sessionUserId } = storageService.getUserInfo();
+
     if (sessionUserId === userId) {
       updateIsOpen(true);
-      return updateIsOwner(true);
+      const eventEnd = new Date(content.event.booking.end).getTime();
+      if (eventEnd > Date.now()) {
+        return updateIsOwner(true);
+      }
+      return;
     }
     return updateIsOpen(true);
   };

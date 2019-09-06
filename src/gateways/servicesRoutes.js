@@ -60,7 +60,8 @@ export const servicesRoutes = {
     getServiceURI: config => `${bookingServiceURI}`
   },
   getBookingById: {
-    getServiceURI: ({ id }) => `${bookingServiceURI}${id}?filter[include]=user&filter[include]=room`
+    getServiceURI: ({ id }) =>
+      `${bookingServiceURI}${id}?filter[include]=user&filter[include]=room`
   },
   getAllBookings: {
     getServiceURI: config => bookingServiceURI

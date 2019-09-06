@@ -5,6 +5,7 @@ import background from "./login.jpg";
 import { LoginErrorCard } from "./LoginErrorCard";
 import { LoginCard } from "./LoginCard";
 import { withAuthContext } from "hocs";
+import { storageService, roomService } from "services";
 
 const style = () => ({
   loginContainer: {
@@ -17,6 +18,10 @@ const style = () => ({
     paddingTop: "10em"
   }
 });
+
+const getLastRoom = () => {
+  return storageService.getLastRoom() || "1";
+};
 
 const Login = props => {
   const [anErrorOcurred, setAnErrorOcurred] = React.useState(false);
@@ -34,7 +39,8 @@ const Login = props => {
   const { isAuth } = authContext;
 
   if (isAuth) {
-    return <Redirect to="/room/1" />;
+    const idx = getLastRoom();
+    return <Redirect to={`/room/${idx}`} />;
   }
 
   const { onLogin } = authContext;
