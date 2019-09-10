@@ -40,7 +40,7 @@ const validateIsDiferentHour = (timeStart, timeEnd) => timeStart !== timeEnd;
 
 const validateIsCoherentHour = (timeStart, timeEnd) => timeStart <= timeEnd;
 
-const validateIsAfterCurrentHour = (timeStart, currentTime) => {
+const isAfter = (timeStart, currentTime) => {
   const pastTimeStart = moment(timeStart).add(15, "minutes");
   return pastTimeStart.unix() > moment(currentTime).unix();
 };
@@ -90,7 +90,7 @@ const validateBooking = bookingObj => {
   const isWorkingHours = validateWorkingHours(startDate, endDate);
 
   const isAfterCurrentHour = isCoherentDate
-    ? validateIsAfterCurrentHour(startDate, moment().toDate())
+    ? isAfter(startDate, moment().toDate())
     : true;
 
   const areHoursNumbers =
