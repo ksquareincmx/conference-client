@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { HeaderView } from "components/Calendar/HeaderView";
 import * as Utils from "./Utils.js";
-import { HeaderStrategy } from "./HeaderStrategy.jsx";
+import { HeaderStrategy } from "./HeaderStrategy";
 import { roomService } from "services";
 import { Grid, withStyles } from "@material-ui/core";
 import { CalendarGrid } from "./CalendarGrid";
