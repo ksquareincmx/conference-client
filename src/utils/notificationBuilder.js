@@ -19,6 +19,12 @@ const getMessageContent = (notificationType, userName) => {
         title: "Appointment deleted succesfully",
         body: `${userName} has deleted a appointment`
       };
+
+    default:
+      return {
+        title: "Something went wrong",
+        body: ""
+      };
   }
 };
 

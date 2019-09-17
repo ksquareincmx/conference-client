@@ -1,5 +1,11 @@
 import React from "react";
-import { Button, FormControl, Select, MenuItem, withStyles } from "@material-ui/core";
+import {
+  Button,
+  FormControl,
+  Select,
+  MenuItem,
+  withStyles
+} from "@material-ui/core";
 import { SelectContent } from "./SelectContent";
 import cuid from "cuid";
 
@@ -64,7 +70,8 @@ class SelectRoomComponent extends React.Component {
     });
   };
 
-  getRoomNames = rooms => rooms.reduce((acc, curr) => `${acc.name} and ${curr.name}`);
+  getRoomNames = rooms =>
+    rooms.reduce((acc, curr) => `${acc.name} and ${curr.name}`);
 
   getOptions = isSingleGrid => {
     const { pairedRooms, roomList } = this.props;
@@ -81,8 +88,14 @@ class SelectRoomComponent extends React.Component {
 
     return (
       <form autoComplete="off">
-        <Button onClick={this.handleOpen} variant={"contained"} className={button}>
-          <SelectContent roomName={selectedRoom[0] ? selectedRoom[0].name : null} />
+        <Button
+          onClick={this.handleOpen}
+          variant={"contained"}
+          className={button}
+        >
+          <SelectContent
+            roomName={selectedRoom[0] ? selectedRoom[0].name : null}
+          />
         </Button>
         <FormControl className={formControl}>
           <Select
@@ -100,7 +113,11 @@ class SelectRoomComponent extends React.Component {
             {options
               ? options.map(({ rooms, optionTxt }) => (
                   <MenuItem value={rooms} key={cuid()}>
-                    <img className={optionImg} src={`/assets/${optionTxt}.png`} />
+                    <img
+                      className={optionImg}
+                      src={`/assets/${optionTxt}.png`}
+                      alt=""
+                    />
                     {optionTxt}
                   </MenuItem>
                 ))

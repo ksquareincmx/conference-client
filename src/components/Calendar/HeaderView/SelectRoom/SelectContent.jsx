@@ -22,7 +22,11 @@ const SelectContentComponent = props => {
     <Fragment>
       {roomName ? (
         <Fragment>
-          <img className={roomImg} src={`/assets/${roomName}.png`} />
+          <img
+            className={roomImg}
+            src={`/assets/${roomName}.png`}
+            alt={`${roomName} logo icon`}
+          />
           <span>{roomName}</span>
           <div className={arrow}>▼</div>
         </Fragment>
