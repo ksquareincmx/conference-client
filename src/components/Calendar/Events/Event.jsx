@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { withStyles, ClickAwayListener } from "@material-ui/core";
 import { EventToolTip } from "./EventToolTip/EventToolTip";
 import { ModalFormConsumer } from "providers";
 import { storageService } from "services";

@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Drawer, withStyles, Grid } from "@material-ui/core";
+import { Drawer, withStyles } from "@material-ui/core";
 import { DrawerBtn } from "./DrawerBtn";
 
 const drawerWidth = 460;

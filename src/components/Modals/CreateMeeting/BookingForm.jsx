@@ -26,7 +26,6 @@ import {
   formatDate,
   formatDashedDate,
   formatHours,
-  formatMinutes,
   formatToday
 } from "utils/BookingFormater";
 import { mapToPost } from "mappers/AppointmentMapper";
@@ -35,7 +34,6 @@ import { mapToNotificationContentFormat } from "mappers/bookingMapper";
 import { bookingService, storageService } from "services";
 import { withNotifications } from "hocs";
 import moment from "moment";
-import { element } from "prop-types";
 
 const styles = theme => ({
   card: {
@@ -375,7 +373,6 @@ class BookingFormComponent extends React.Component {
   };
 
   componentDidMount() {
-    let date = "";
     const times = [...new Array(4)].map((x, i) => {
       return {
         value: addZeros((i + 1) * 15),
@@ -412,7 +409,7 @@ class BookingFormComponent extends React.Component {
     } else if (this.props.isBookingEdition) {
       if (!this.state.isBookingEdition) {
         const { bookingForEdition, roomId, roomName } = this.props;
-        const { start, end, room, description, attendees } = bookingForEdition;
+        const { start, end, description, attendees } = bookingForEdition;
 
         const startDate = formatDate(start);
         const endDate = formatDate(end);

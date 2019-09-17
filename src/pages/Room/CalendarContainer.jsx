@@ -17,16 +17,21 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
   const authContext = useContext(AuthContext);
   const [bookingsHash, updateBookingsHash] = useState("initial");
   const [allBookingsHash, updateAllBookingsHash] = useState("initial");
-  const [delay, updateDelay] = useState(5000); // TODO: when the tab is not used, augment delay time
+  const [delay] = useState(5000); // TODO: when the tab is not used, augment delay time
   const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
   const { onLogout } = authContext;
 
   const fetchBookings = async () => {
     try {
       const reqRoom = await roomService.getOneById(URLRoomId);
-      const allData = await bookingService.getAllWithDetails(getUTCDateFilter());
+      const allData = await bookingService.getAllWithDetails(
+        getUTCDateFilter()
+      );
 
-      const data = await bookingService.getAllWithDetailsByRoom(getUTCDateFilter(), URLRoomId);
+      const data = await bookingService.getAllWithDetailsByRoom(
+        getUTCDateFilter(),
+        URLRoomId
+      );
       if (data && allData) {
         const allBookingsData = allData;
         const bookingsData = data;
@@ -61,7 +66,6 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
       // updateIsLoading(true);
       return undefined;
     } catch (error) {
-      console.log({ enErro: error });
       if (error.status === 401) {
         onLogout();
         history.push("/login");
@@ -77,6 +81,7 @@ const CalendarContainerComponent = ({ URLRoomId, history }) => {
     // TODO: update state ONLY if there's no data;
     fetchBookings();
     // whenever shouldFetch changes, it will call `fetchBookings`
+    // eslint-disable-next-line
   }, [shouldFetch]);
 
   useInterval(() => {

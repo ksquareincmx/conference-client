@@ -22,7 +22,11 @@ const SnackBarStickerComponent = ({
 }) => {
   return (
     <div className={snackBarStickerContainer}>
-      <img className={snackBarSticker} src={`/assets/${roomName}.png`} />
+      <img
+        className={snackBarSticker}
+        src={`/assets/${roomName}.png`}
+        alt={`${roomName} room logo`}
+      />
     </div>
   );
 };

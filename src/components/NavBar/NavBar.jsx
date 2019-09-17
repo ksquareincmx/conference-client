@@ -22,13 +22,18 @@ export const NavBar = ({ authContext: { onLogout } }) => {
       updateUsername(userData.name);
       updatePicture(userData.picture);
     }
-  });
+  }, []);
+
   return (
     <NavBarWrapper>
       <NavBarRightSide>
         <UserNameLabel username={username} />
         <AvatarButton onClick={handleClick} picture={picture} />
-        <NavBarMenu anchorEl={anchorEl} onClose={handleClose} onLogout={onLogout} />
+        <NavBarMenu
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          onLogout={onLogout}
+        />
       </NavBarRightSide>
     </NavBarWrapper>
   );

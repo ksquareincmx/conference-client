@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { ContentToolTip } from "./ContentToolTip";
 import { withStyles, Tooltip } from "@material-ui/core";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
@@ -107,4 +107,6 @@ class EventToolTipComponent extends React.Component {
   }
 }
 
-export const EventToolTip = withStyles(styles)(withNotifications(EventToolTipComponent));
+export const EventToolTip = withStyles(styles)(
+  withNotifications(EventToolTipComponent)
+);

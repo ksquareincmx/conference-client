@@ -1,5 +1,5 @@
 import React from "react";
-import { getDateText, formatDate, formatTime } from "utils/BookingFormater";
+import { formatDate } from "utils/BookingFormater";
 import { mapToNotificationContentFormat } from "mappers/bookingMapper";
 import { withNotifications } from "hocs";
 import { storageService, bookingService } from "services";
