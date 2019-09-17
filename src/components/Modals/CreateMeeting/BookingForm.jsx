@@ -257,6 +257,7 @@ class BookingFormComponent extends React.Component {
     const booking = mapToPost(this.state);
     const isBookingValid = this.validate(booking);
     const { onErrorNotification } = this.props;
+    console.log(this.state.room);
     this.setState({ isLoading: true, isInvalidInvite: false });
     try {
       if (isBookingValid && isInviteEmpty) {
