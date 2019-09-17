@@ -34,6 +34,7 @@ import { mapToNotificationContentFormat } from "mappers/bookingMapper";
 import { bookingService, storageService } from "services";
 import { withNotifications } from "hocs";
 import moment from "moment";
+import { When } from "components/When/When";
 
 const styles = theme => ({
   card: {
@@ -244,9 +245,11 @@ class BookingFormComponent extends React.Component {
 
   validate = bookingObj => {
     const bookingValidated = validateBooking(bookingObj);
+
     this.setState({
       ...bookingValidated.InfoValidations
     });
+
     return bookingValidated.isValidBooking;
   };
 
@@ -256,6 +259,7 @@ class BookingFormComponent extends React.Component {
     const isBookingValid = this.validate(booking);
     const { onErrorNotification } = this.props;
     this.setState({ isLoading: true, isInvalidInvite: false });
+
     try {
       if (isBookingValid && isInviteEmpty) {
         if (isBookingEdition) {
@@ -265,6 +269,7 @@ class BookingFormComponent extends React.Component {
           storageService.setLastRoom(this.state.roomId);
           return this.saveBookingResponse(bookingInfo, isBookingEdition);
         }
+
         const bookingInfo = await this.doBookingCreation(booking);
         storageService.setLastRoom(this.state.roomId);
         return this.saveBookingResponse(bookingInfo, isBookingEdition);
@@ -285,13 +290,17 @@ class BookingFormComponent extends React.Component {
 
   doBookingCreation = async bookingInfo => {
     try {
-      const bookingCreated = await bookingService.createOne(bookingInfo);
+      const bookingCreated = await bookingService.createOne({
+        ...bookingInfo,
+        guests: 1
+      });
       const { id } = bookingCreated;
       // TODO: refactor
       if (id) {
         const bookingWithDetails = await bookingService.getOneById(id);
         return mapToNotificationContentFormat(bookingWithDetails);
       }
+
       return bookingCreated;
     } catch (error) {
       return Promise.reject({
@@ -344,6 +353,7 @@ class BookingFormComponent extends React.Component {
         body: "There was an error with the server"
       });
     }
+
     return this.setState({
       isLoading: false,
       isInvalidHour: true,
@@ -492,18 +502,20 @@ class BookingFormComponent extends React.Component {
               />
               <Collapse in={this.state.isInvalidDate}>
                 <small className={alertMessage}>
-                  {this.state.invalidWeekendMessage !== "" ? (
+                  <When predicate={this.state.invalidWeekendMessage !== ""}>
                     <Fragment>
                       {this.state.invalidWeekendMessage}
                       <br />
                       {this.state.invalidDateMessage}
                     </Fragment>
-                  ) : (
+                  </When>
+                  <When predicate={this.state.invalidWeekendMessage === ""}>
                     <Fragment>{this.state.invalidDateMessage}</Fragment>
-                  )}
+                  </When>
                 </small>
               </Collapse>
             </Grid>
+
             <Grid container direction="column" className={content}>
               <Typography className={subtitle} variant="subtitle1">
                 Reservation Time
@@ -614,9 +626,9 @@ class BookingFormComponent extends React.Component {
                 onClick={this.handleBookingOperation}
                 disabled={this.state.disabledNextButton || isLoading}
               />
-              {isLoading && (
+              <When predicate={isLoading}>
                 <CircularProgress size={24} className={btnProgress} />
-              )}
+              </When>
             </div>
           </CardActions>
         </Card>
