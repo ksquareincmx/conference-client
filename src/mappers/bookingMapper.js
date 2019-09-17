@@ -51,7 +51,7 @@ import {
  * @property {Date} end - booking end date.
  * @property {string} event_id -Google calendar event id.
  * @property {number} roomId - room id.
- * @property {number} user_id - user id who created the booking.
+ * @property {number} userId - user id who created the booking.
  * @property {Date} created_at - booking creation date.
  * @property {Date} updated_at - booking update date.
  * @property {string[]} attendees - Emails from users who will attend the event.
@@ -86,14 +86,16 @@ export const fromEntityToDto = ({
   description,
   roomId,
   attendees,
-  guests
+  guests,
+  userId
 }) => ({
   start,
   end,
   description,
   room_id: roomId,
   attendees,
-  guests
+  guests,
+  user_id: userId
 });
 
 /**

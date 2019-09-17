@@ -44,7 +44,7 @@ export const RoomService = storageService => {
   const createOne = async ({ name, color }) => {
     const { token: authToken } = storageService.getJWT();
     const config = {
-      createBody: { name, color },
+      data: { name, color },
       authToken
     };
     try {

@@ -12,7 +12,7 @@ export const mapToPost = postInfo => {
   return {
     description: bookingReason,
     roomId: roomId,
-    user_id: 3,
+    userId: 3,
     start: formatDate(`${date}T${startTime.hour}:${startTime.minute}`).toDate(),
     end: formatDate(`${date}T${endTime.hour}:${endTime.minute}`).toDate(),
     attendees

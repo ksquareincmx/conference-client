@@ -18,7 +18,7 @@ import * as bookingMapper from "mappers/BookingMapper";
  * @property {Date} end - booking end date.
  * @property {string} event_id -Google calendar event id .
  * @property {number} roomId - room id.
- * @property {number} user_id - user id who created the booking.
+ * @property {number} userId - user id who created the booking.
  * @property {Date} created_at - booking creation date.
  * @property {Date} updated_at - booking update date.
  * @property {string[]} attendees - Emails from users who will attend the event.
@@ -83,18 +83,19 @@ export const BookingService = storageService => {
    * @return {BookingResponse} - created booking information.
    */
   const createOne = async booking => {
-    const { token: authToken } = storageService.getJWT();
-    const { id: userId } = storageService.getUserInfo();
-    const createBody = {
-      ...bookingMapper.fromEntityToDto(booking),
-      user_id: userId
-    };
-    const config = {
-      createBody,
-      authToken
-    };
+    const { token } = storageService.getJWT();
+    const { id } = storageService.getUserInfo();
+    const data = bookingMapper.fromEntityToDto({
+      ...booking,
+      userId: id
+    });
+
     try {
-      const res = await apiGateway.doPost("createBooking", config);
+      const res = await apiGateway.doPost("createBooking", {
+        data,
+        authToken: token
+      });
+
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -180,12 +181,12 @@ export const BookingService = storageService => {
   const updateOneById = async (id, booking) => {
     const { token: authToken } = storageService.getJWT();
     const updateBody = bookingMapper.fromEntityToDto(booking);
-    const { user_id } = booking;
+    const { userId } = booking;
     const config = {
       id,
       updateBody: {
         ...updateBody,
-        user_id
+        userId
       },
       authToken
     };
