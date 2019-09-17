@@ -1,10 +1,17 @@
 import { formatDate } from "utils/BookingFormater";
 
 export const mapToPost = postInfo => {
-  const { bookingReason, roomId, date, startTime, endTime, attendees } = postInfo;
+  const {
+    bookingReason,
+    roomId,
+    date,
+    startTime,
+    endTime,
+    attendees
+  } = postInfo;
   return {
     description: bookingReason,
-    room_id: roomId,
+    roomId: roomId,
     user_id: 3,
     start: formatDate(`${date}T${startTime.hour}:${startTime.minute}`).toDate(),
     end: formatDate(`${date}T${endTime.hour}:${endTime.minute}`).toDate(),

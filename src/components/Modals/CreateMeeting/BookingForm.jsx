@@ -30,7 +30,7 @@ import {
 } from "utils/BookingFormater";
 import { mapToPost } from "mappers/AppointmentMapper";
 import addZeros from "utils/AddZeros";
-import { mapToNotificationContentFormat } from "mappers/bookingMapper";
+import * as bookingMapper from "mappers/BookingMapper";
 import { bookingService, storageService } from "services";
 import { withNotifications } from "hocs";
 import moment from "moment";
@@ -298,7 +298,7 @@ class BookingFormComponent extends React.Component {
       // TODO: refactor
       if (id) {
         const bookingWithDetails = await bookingService.getOneById(id);
-        return mapToNotificationContentFormat(bookingWithDetails);
+        return bookingMapper.mapToNotificationContentFormat(bookingWithDetails);
       }
 
       return bookingCreated;
@@ -317,7 +317,7 @@ class BookingFormComponent extends React.Component {
       // TODO: refactor
       if (bookingEditedId) {
         const bookingWithDetails = await bookingService.getOneById(id);
-        return mapToNotificationContentFormat(bookingWithDetails);
+        return bookingMapper.mapToNotificationContentFormat(bookingWithDetails);
       }
       return bookingEdited;
     } catch (error) {

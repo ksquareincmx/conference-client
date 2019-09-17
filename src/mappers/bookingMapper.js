@@ -37,7 +37,7 @@ import {
 /**
  * @typedef {Object} BookingRequestWithFormat
  * @property {string} description - booking description.
- * @property {number} room_id - booking room id.
+ * @property {number} roomId - booking room id.
  * @property {Date} start - start date.
  * @property {Date} end - end date.
  * @property {string[]} attendees - booking attendees.
@@ -50,7 +50,7 @@ import {
  * @property {Date} start - booking start date.
  * @property {Date} end - booking end date.
  * @property {string} event_id -Google calendar event id.
- * @property {number} room_id - room id.
+ * @property {number} roomId - room id.
  * @property {number} user_id - user id who created the booking.
  * @property {Date} created_at - booking creation date.
  * @property {Date} updated_at - booking update date.
@@ -79,18 +79,19 @@ import {
  * @param {BookingRequest} booking - booking info
  * @returns {BookingRequestWithFormat} - booking info with required format
  */
-export const mapToRequestFormat = ({
+// fromEntityToDto :: IBooking -> IBookingDto
+export const fromEntityToDto = ({
   start,
   end,
   description,
-  room_id,
+  roomId,
   attendees,
   guests
 }) => ({
   start,
   end,
   description,
-  room_id,
+  room_id: roomId,
   attendees,
   guests
 });

@@ -5,7 +5,7 @@ import { RoomSticker } from "./RoomSticker";
 import { BookingDetails } from "./BookingDetails";
 import { BookingItemMenu } from "./BookingItemMenu";
 import { BookingOptionsButton } from "./BookingOptionsButton";
-import { mapToConfirmationDialogFormat } from "mappers/bookingMapper";
+import * as bookingMapper from "mappers/BookingMapper";
 import { ModalFormConsumer } from "providers";
 import { withNotifications } from "hocs";
 import { storageService } from "services";
@@ -86,7 +86,9 @@ class BookingItemComponent extends React.Component {
     } = styleClasses;
 
     const { userName, dateText, room } = booking;
-    const bookingForDialog = mapToConfirmationDialogFormat(booking);
+    const bookingForDialog = bookingMapper.mapToConfirmationDialogFormat(
+      booking
+    );
     const { startTime, endTime } = bookingForDialog;
     const { name: roomName } = room;
 
@@ -97,11 +99,18 @@ class BookingItemComponent extends React.Component {
             <RoomSticker roomName={roomName} />
           </Grid>
           <Grid item xs={6} className={bookingInfoGrid}>
-            <BookingDetails userName={userName} startTime={startTime} endTime={endTime} />
+            <BookingDetails
+              userName={userName}
+              startTime={startTime}
+              endTime={endTime}
+            />
           </Grid>
           <Grid item xs={3} className={bookingDateGrid}>
             {dateText}
-            <BookingOptionsButton onClick={this.handleMenuOpen} isOwner={isOwner} />
+            <BookingOptionsButton
+              onClick={this.handleMenuOpen}
+              isOwner={isOwner}
+            />
             <ModalFormConsumer>
               {({ handleDeleteMeeting, handleOnClickEditMeeting }) => (
                 <BookingItemMenu

@@ -1,5 +1,5 @@
 import { apiGateway } from "gateways";
-import { mapToRequestFormat } from "mappers/bookingMapper";
+import * as bookingMapper from "mappers/BookingMapper";
 
 /**
  * @typedef {Object} BookingRequest
@@ -17,7 +17,7 @@ import { mapToRequestFormat } from "mappers/bookingMapper";
  * @property {Date} start - booking start date.
  * @property {Date} end - booking end date.
  * @property {string} event_id -Google calendar event id .
- * @property {number} room_id - room id.
+ * @property {number} roomId - room id.
  * @property {number} user_id - user id who created the booking.
  * @property {Date} created_at - booking creation date.
  * @property {Date} updated_at - booking update date.
@@ -85,7 +85,10 @@ export const BookingService = storageService => {
   const createOne = async booking => {
     const { token: authToken } = storageService.getJWT();
     const { id: userId } = storageService.getUserInfo();
-    const createBody = { ...mapToRequestFormat(booking), user_id: userId };
+    const createBody = {
+      ...bookingMapper.fromEntityToDto(booking),
+      user_id: userId
+    };
     const config = {
       createBody,
       authToken
@@ -176,7 +179,7 @@ export const BookingService = storageService => {
    */
   const updateOneById = async (id, booking) => {
     const { token: authToken } = storageService.getJWT();
-    const updateBody = mapToRequestFormat(booking);
+    const updateBody = bookingMapper.fromEntityToDto(booking);
     const { user_id } = booking;
     const config = {
       id,

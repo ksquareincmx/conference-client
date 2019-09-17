@@ -2,10 +2,10 @@ import React, { Fragment } from "react";
 import cuid from "cuid";
 import { GridList, withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem/BookingItem";
-import { mapToListFormat } from "mappers/bookingMapper";
+import * as bookingMapper from "mappers/BookingMapper";
 import { filterNSortedByDate, filterByTerm } from "utils/BookingFilters";
 
-const styles = theme => ({
+const styles = () => ({
   gridList: {
     width: "100%",
     height: "100%",
@@ -25,7 +25,9 @@ const styles = theme => ({
 });
 
 const filterBookingsByTerm = (bookings, filterTerm) => {
-  return bookings.length > 0 ? filterByTerm(filterNSortedByDate(bookings), filterTerm) : "";
+  return bookings.length > 0
+    ? filterByTerm(filterNSortedByDate(bookings), filterTerm)
+    : "";
 };
 
 const BookingListComponent = ({
@@ -34,8 +36,11 @@ const BookingListComponent = ({
   bookingsData,
   onBookingsDataChange
 }) => {
-  const formatedBookingsData = bookingsData.map(mapToListFormat);
-  const filteredBookings = filterBookingsByTerm(formatedBookingsData, filterTerm);
+  const formatedBookingsData = bookingsData.map(bookingMapper.mapToListFormat);
+  const filteredBookings = filterBookingsByTerm(
+    formatedBookingsData,
+    filterTerm
+  );
 
   return (
     <Fragment>
