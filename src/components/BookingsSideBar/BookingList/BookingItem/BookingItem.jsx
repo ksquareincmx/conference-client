@@ -68,9 +68,11 @@ class BookingItemComponent extends React.Component {
   componentDidMount() {
     const { id: userId } = this.props.booking.user;
     const { id: sessionUserId } = storageService.getUserInfo();
+
     if (sessionUserId === userId) {
       return this.setState({ isOwner: true });
     }
+
     return this.setState({ isOwner: false });
   }
 
@@ -132,4 +134,5 @@ const withContexts = compose(
   withStyles(styles),
   withNotifications
 );
+
 export const BookingItem = withContexts(BookingItemComponent);

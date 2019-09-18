@@ -1,5 +1,6 @@
 import { apiGateway } from "gateways";
 import * as bookingMapper from "mappers/BookingMapper";
+import { IBooking } from "models/Booking";
 
 /**
  * @typedef {Object} BookingRequest
@@ -75,25 +76,25 @@ import * as bookingMapper from "mappers/BookingMapper";
  * @namespace BookingService
  * @param storageService - service used for access to session info
  */
-export const BookingService = storageService => {
+export const BookingService = (storageService: any) => {
   /**
    * Return the new Booking information.
    * @memberof BookingService
    * @param {BookingRequest} booking - booking information.
    * @return {BookingResponse} - created booking information.
    */
-  const createOne = async booking => {
+  const createOne = async (booking: IBooking) => {
     const { token } = storageService.getJWT();
     const { id } = storageService.getUserInfo();
     const data = bookingMapper.fromEntityToDto({
       ...booking,
-      userId: id
+      userId: id,
     });
 
     try {
       const res = await apiGateway.doPost("createBooking", {
         data,
-        authToken: token
+        authToken: token,
       });
 
       return await res.json();
@@ -108,7 +109,7 @@ export const BookingService = storageService => {
    * @param {number} id - booking id.
    * @return {BookingResponse} - found booking information.
    */
-  const getOneById = async id => {
+  const getOneById = async (id: string) => {
     const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
@@ -140,7 +141,7 @@ export const BookingService = storageService => {
    * @memberof BookingService
    * @return {BookingWithDetails} - found bookigs and, room and user information.
    */
-  const getAllWithDetails = async filterDate => {
+  const getAllWithDetails = async (filterDate: any) => {
     const { token: authToken } = storageService.getJWT();
     const config = { filterDate, authToken, include: "user" };
     try {
@@ -160,7 +161,7 @@ export const BookingService = storageService => {
    * @memberof BookingService
    * @return {BookingWithDetailsByRoom} - found bookigs and, room and user information.
    */
-  const getAllWithDetailsByRoom = async (filterDate, roomId) => {
+  const getAllWithDetailsByRoom = async (filterDate: any, roomId: any) => {
     const { token: authToken } = storageService.getJWT();
     const config = { filterDate, roomId, authToken };
     try {
@@ -178,7 +179,7 @@ export const BookingService = storageService => {
    * @param {BookingRequest} booking - booking new information.
    * @return {BookingResponse} - booking updated information.
    */
-  const updateOneById = async (id, booking) => {
+  const updateOneById = async (id: any, booking: any) => {
     const { token: authToken } = storageService.getJWT();
     const updateBody = bookingMapper.fromEntityToDto(booking);
     const { userId } = booking;
@@ -186,9 +187,9 @@ export const BookingService = storageService => {
       id,
       updateBody: {
         ...updateBody,
-        userId
+        userId,
       },
-      authToken
+      authToken,
     };
     try {
       const res = await apiGateway.doUpdate("updateBookingById", config);
@@ -204,7 +205,7 @@ export const BookingService = storageService => {
    * @param {number} id - booking id.
    * @returns {NotContentResponse} - request response.
    */
-  const deleteOneById = async id => {
+  const deleteOneById = async (id: any) => {
     const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
@@ -222,6 +223,6 @@ export const BookingService = storageService => {
     getAllWithDetails,
     getAllWithDetailsByRoom,
     updateOneById,
-    deleteOneById
+    deleteOneById,
   };
 };

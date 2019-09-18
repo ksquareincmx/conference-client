@@ -2,8 +2,10 @@ import {
   getDateText,
   formatDate,
   formatTime,
-  abbreviateRoomName
+  abbreviateRoomName,
 } from "utils/BookingFormater";
+import { IBooking } from "models/Booking";
+import { IBookingDto } from "dtos/BookingDto";
 
 /**
  * @typedef {Object} User
@@ -87,15 +89,15 @@ export const fromEntityToDto = ({
   roomId,
   attendees,
   guests,
-  userId
-}) => ({
+  userId,
+}: IBooking): IBookingDto => ({
   start,
   end,
   description,
   room_id: roomId,
   attendees,
   guests,
-  user_id: userId
+  user_id: userId,
 });
 
 /**
@@ -105,12 +107,13 @@ export const fromEntityToDto = ({
  */
 /* TODO: Check this, the function returns unnecesary properties
 with the ...booking */
-export const mapToListFormat = booking => {
+export const mapToListFormat = (booking: any) => {
   const { id: bookingId, start, user, room, attendees, end } = booking;
   const { id: userId, name: userName } = user;
   const { name: roomName, bg_color: roomColor } = room;
   const roomNameAbbrev = abbreviateRoomName(roomName);
   const dateText = getDateText(formatDate(start));
+
   return {
     ...booking,
     start,
@@ -122,7 +125,7 @@ export const mapToListFormat = booking => {
     roomNameAbbrev,
     roomColor,
     dateText,
-    attendees
+    attendees,
   };
 };
 
@@ -132,12 +135,12 @@ export const mapToListFormat = booking => {
  * @param {string} notificationType - notification type
  * @returns {BookingForNotification} - booking info with required format
  */
-export const mapToNotificationContentFormat = ({ user, room }) => {
+export const mapToNotificationContentFormat = ({ user, room }: any) => {
   const { name: userName } = user;
   const { name: roomName } = room;
   return {
     userName,
-    roomName
+    roomName,
   };
 };
 
@@ -150,14 +153,14 @@ export const mapToConfirmationDialogFormat = ({
   start,
   end,
   roomName,
-  dateText
-}) => {
+  dateText,
+}: any) => {
   const startTime = formatTime(formatDate(start));
   const endTime = formatTime(formatDate(end));
   return {
     roomName,
     startTime,
     endTime,
-    dateText
+    dateText,
   };
 };
