@@ -2,6 +2,19 @@ import { apiGateway } from "gateways";
 import * as bookingMapper from "mappers/BookingMapper";
 import { IBooking } from "models/Booking";
 
+export interface IBookingService {
+  createOne: (booking: IBooking) => Promise<IBooking | Error>;
+  getOneById: (id: string) => Promise<IBooking | Error>;
+  getAll: () => Promise<IBooking[] | Error>;
+  getAllWithDetails: (filterDate: any) => Promise<any | Error>;
+  getAllWithDetailsByRoom: (
+    filterDate: any,
+    roomId: any,
+  ) => Promise<any | Error>;
+  updateOneById: (id: any, booking: any) => Promise<IBooking | Error>;
+  deleteOneById: (id: any) => Promise<any | Error>;
+}
+
 /**
  * @typedef {Object} BookingRequest
  * @property {string} description - booking description.
@@ -76,14 +89,14 @@ import { IBooking } from "models/Booking";
  * @namespace BookingService
  * @param storageService - service used for access to session info
  */
-export const BookingService = (storageService: any) => {
+export const BookingService = (storageService: any): IBookingService => {
   /**
    * Return the new Booking information.
    * @memberof BookingService
    * @param {BookingRequest} booking - booking information.
    * @return {BookingResponse} - created booking information.
    */
-  const createOne = async (booking: IBooking) => {
+  const createOne = async (booking: IBooking): Promise<IBooking | Error> => {
     const { token } = storageService.getJWT();
     const { id } = storageService.getUserInfo();
     const data = bookingMapper.fromEntityToDto({
@@ -97,7 +110,7 @@ export const BookingService = (storageService: any) => {
         authToken: token,
       });
 
-      return await res.json();
+      return (await res.json()) as IBooking;
     } catch (error) {
       return new Error(error.message);
     }
@@ -109,7 +122,7 @@ export const BookingService = (storageService: any) => {
    * @param {number} id - booking id.
    * @return {BookingResponse} - found booking information.
    */
-  const getOneById = async (id: string) => {
+  const getOneById = async (id: string): Promise<IBooking | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
@@ -125,7 +138,7 @@ export const BookingService = (storageService: any) => {
    * @memberof BookingService
    * @return {BookingResponse[]} - found bookings information.
    */
-  const getAll = async () => {
+  const getAll = async (): Promise<IBooking[] | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { authToken };
     try {
@@ -141,7 +154,7 @@ export const BookingService = (storageService: any) => {
    * @memberof BookingService
    * @return {BookingWithDetails} - found bookigs and, room and user information.
    */
-  const getAllWithDetails = async (filterDate: any) => {
+  const getAllWithDetails = async (filterDate: any): Promise<any | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { filterDate, authToken, include: "user" };
     try {
@@ -150,6 +163,7 @@ export const BookingService = (storageService: any) => {
       if (res.status === 401) {
         return Promise.reject(res);
       }
+
       return await res.json();
     } catch (error) {
       return new Error(error.message);
@@ -161,7 +175,10 @@ export const BookingService = (storageService: any) => {
    * @memberof BookingService
    * @return {BookingWithDetailsByRoom} - found bookigs and, room and user information.
    */
-  const getAllWithDetailsByRoom = async (filterDate: any, roomId: any) => {
+  const getAllWithDetailsByRoom = async (
+    filterDate: any,
+    roomId: any,
+  ): Promise<any | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { filterDate, roomId, authToken };
     try {
@@ -179,7 +196,10 @@ export const BookingService = (storageService: any) => {
    * @param {BookingRequest} booking - booking new information.
    * @return {BookingResponse} - booking updated information.
    */
-  const updateOneById = async (id: any, booking: any) => {
+  const updateOneById = async (
+    id: any,
+    booking: any,
+  ): Promise<IBooking | Error> => {
     const { token: authToken } = storageService.getJWT();
     const updateBody = bookingMapper.fromEntityToDto(booking);
     const { userId } = booking;
@@ -205,7 +225,7 @@ export const BookingService = (storageService: any) => {
    * @param {number} id - booking id.
    * @returns {NotContentResponse} - request response.
    */
-  const deleteOneById = async (id: any) => {
+  const deleteOneById = async (id: any): Promise<any | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
