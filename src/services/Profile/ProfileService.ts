@@ -1,5 +1,11 @@
 import { apiGateway } from "gateways";
 
+export interface IProfileService {
+  getOneById: (id: string | number) => Promise<any | Error>;
+  getAll: () => Promise<any | Error>;
+  updateOneById: (id: string | number, data: any) => Promise<any | Error>;
+}
+
 /**
  * @typedef {Object} Profile
  * @property {string} time_zone - profile time zone.
@@ -19,7 +25,7 @@ import { apiGateway } from "gateways";
  * @namespace ProfileService
  * @param storageService - service used for access to session info
  */
-export const ProfileService = storageService => {
+export const ProfileService = (storageService: any): IProfileService => {
   /**
    * Profile service require the auth token for requests
    */
@@ -31,7 +37,7 @@ export const ProfileService = storageService => {
    * @param {number} id - profile id.
    * @returns {ProfileResponse} - found profile information.
    */
-  const getOneById = async id => {
+  const getOneById = async (id: string | number) => {
     const config = { id, authToken };
     try {
       const res = await apiGateway.doGet("getProfileById", config);
@@ -62,14 +68,17 @@ export const ProfileService = storageService => {
    * @param {Profile} profile - profile information.
    * @returns {ProfileResponse} - profile updated information.
    */
-  const updateOneById = async (id, { time_zone, locale }) => {
+  const updateOneById = async (
+    id: string | number,
+    { time_zone, locale }: any,
+  ) => {
     const config = {
       id,
       body: {
         time_zone,
-        locale
+        locale,
       },
-      authToken
+      authToken,
     };
     try {
       const res = await apiGateway.doUpdate("updateProfileById", config);
@@ -82,6 +91,6 @@ export const ProfileService = storageService => {
   return {
     getOneById,
     getAll,
-    updateOneById
+    updateOneById,
   };
 };
