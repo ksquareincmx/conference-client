@@ -39,7 +39,7 @@ export const AuthService = () => {
    */
   const login = async idToken => {
     const config = {
-      createBody: {
+      data: {
         idToken
       },
       authToken: ""

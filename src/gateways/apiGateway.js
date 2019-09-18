@@ -50,8 +50,8 @@ export const APIGateway = () => {
   const doPost = async (service, config) => {
     const { getServiceURI } = servicesRoutes[service];
     const serviceURI = getServiceURI(config);
-    const { createBody, authToken } = config;
-    const body = JSON.stringify(createBody);
+    const { data, authToken } = config;
+    const body = JSON.stringify(data);
     try {
       return await fetch(serviceURI, {
         method: "POST",
@@ -110,7 +110,9 @@ export const APIGateway = () => {
         }
       });
     } catch (error) {
-      return Promise.reject(new Error("An error occurred in the DELETE request"));
+      return Promise.reject(
+        new Error("An error occurred in the DELETE request")
+      );
     }
   };
 
