@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import cuid from "cuid";
 import { GridList, withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem/BookingItem";
 import * as bookingMapper from "mappers/BookingMapper";
@@ -24,41 +23,41 @@ const styles = () => ({
   }
 });
 
-const filterBookingsByTerm = (bookings, filterTerm) => {
-  return bookings.length > 0
-    ? filterByTerm(filterNSortedByDate(bookings), filterTerm)
-    : "";
+// filterBookingsByTerm :: (String, IBooking[]) -> IBooking[]
+const filterBookingsByTerm = (filterTerm, bookings = []) => {
+  return filterByTerm(filterTerm, filterNSortedByDate(bookings));
 };
 
 const BookingListComponent = ({
   classes: { gridList, emptyList },
   filterTerm,
-  bookingsData,
+  bookingsData = [],
   onBookingsDataChange
 }) => {
-  const formatedBookingsData = bookingsData.map(bookingMapper.mapToListFormat);
   const filteredBookings = filterBookingsByTerm(
-    formatedBookingsData,
-    filterTerm
+    filterTerm,
+    bookingsData.map(bookingMapper.mapToListFormat)
   );
+
+  if (filteredBookings.length === 0) {
+    return (
+      <div className={emptyList}>
+        <h2>No results found</h2>
+      </div>
+    );
+  }
 
   return (
     <Fragment>
-      {filteredBookings.length > 0 ? (
-        <GridList className={gridList}>
-          {filteredBookings.map(booking => (
-            <BookingItem
-              key={cuid()}
-              booking={booking}
-              onBookingsDataChange={onBookingsDataChange}
-            />
-          ))}
-        </GridList>
-      ) : (
-        <div className={emptyList}>
-          <h2>No results found</h2>
-        </div>
-      )}
+      <GridList className={gridList}>
+        {filteredBookings.map(booking => (
+          <BookingItem
+            key={booking.id}
+            booking={booking}
+            onBookingsDataChange={onBookingsDataChange}
+          />
+        ))}
+      </GridList>
     </Fragment>
   );
 };

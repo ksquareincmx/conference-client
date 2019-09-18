@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Grid } from "@material-ui/core";
-import { CalendarPageLogic } from "./CalendarPageLogic.jsx";
+import { CalendarPageLogic } from "./CalendarPageLogic";
 import { NavBar } from "components/NavBar";
 import { DrawerBookings } from "components/Drawer";
-import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar.jsx";
+import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar";
 import { withAuthContext } from "hocs";
 import { NotificationProvider, ModalFormProvider } from "providers";
 import { NoteCard } from "components/NoteCard";
