@@ -29,3 +29,13 @@ export const fromDtoToEntity = (roomDto: IRoomDto): IRoom => ({
   presence: roomDto.presence,
   txtColor: roomDto.txt_color,
 });
+
+export const fromEntityToDto = (roomDto: IRoom): IRoomDto => ({
+  bg_color: roomDto.bgColor,
+  guests: roomDto.guests,
+  id: roomDto.id,
+  minimum_capacity: roomDto.minimumCapacity,
+  name: roomDto.name,
+  presence: roomDto.presence,
+  txt_color: roomDto.txtColor,
+});

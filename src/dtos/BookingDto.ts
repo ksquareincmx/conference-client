@@ -1,3 +1,5 @@
+import { IRoomDto } from "./RoomDto";
+
 export interface IBookingDto {
   description: string;
   start: Date;
@@ -9,4 +11,5 @@ export interface IBookingDto {
   id?: number;
   room_id: number;
   user_id: number;
+  room: IRoomDto;
 }

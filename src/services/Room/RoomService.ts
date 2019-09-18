@@ -2,6 +2,9 @@ import { apiGateway } from "gateways";
 import { IRoom } from "models/Room";
 import { IRoomDto } from "dtos/RoomDto";
 import * as roomMapper from "mappers/RoomMapper";
+import * as bookingMapper from "mappers/BookingMapper";
+import { IBookingDto } from "dtos/BookingDto";
+import { IBooking } from "models/Booking";
 
 export interface IRoomService {
   createOne: ({ name, color }: any) => Promise<any | Error>;
@@ -75,12 +78,15 @@ export const RoomService = (storageService: any): IRoomService => {
    * @param {number} id - room id.
    * @returns {RoomResponse} - found room information.
    */
-  const getOneById = async (id: string | number): Promise<any | Error> => {
+  const getOneById = async (
+    id: string | number,
+  ): Promise<IBooking[] | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
       const res = await apiGateway.doGet("getRoomById", config);
-      return await res.json();
+      const bookingList = (await res.json()) as IBookingDto[];
+      return bookingList.map(bookingMapper.fromDtoToEntity);
     } catch (error) {
       return new Error(error.message);
     }

@@ -6,6 +6,7 @@ import {
 } from "utils/BookingFormater";
 import { IBooking } from "models/Booking";
 import { IBookingDto } from "dtos/BookingDto";
+import * as roomMapper from "./RoomMapper";
 
 /**
  * @typedef {Object} User
@@ -90,6 +91,7 @@ export const fromEntityToDto = ({
   attendees,
   guests,
   userId,
+  room,
 }: IBooking): IBookingDto => ({
   start,
   end,
@@ -98,6 +100,27 @@ export const fromEntityToDto = ({
   attendees,
   guests,
   user_id: userId,
+  room: roomMapper.fromEntityToDto(room),
+});
+
+export const fromDtoToEntity = ({
+  start,
+  end,
+  description,
+  room_id,
+  attendees,
+  guests,
+  user_id,
+  room,
+}: IBookingDto): IBooking => ({
+  start,
+  end,
+  description,
+  roomId: room_id,
+  attendees,
+  guests,
+  userId: user_id,
+  room: roomMapper.fromDtoToEntity(room),
 });
 
 /**
