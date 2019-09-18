@@ -1,4 +1,18 @@
 import { apiGateway } from "gateways";
+import { IRoom } from "models/Room";
+import { IRoomDto } from "dtos/RoomDto";
+import * as roomMapper from "mappers/RoomMapper";
+
+export interface IRoomService {
+  createOne: ({ name, color }: any) => Promise<any | Error>;
+  getOneById: (id: string | number) => Promise<any | Error>;
+  getAll: () => Promise<any | Error>;
+  updateOneById: (
+    id: string | number,
+    { name, color }: any,
+  ) => Promise<any | Error>;
+  deleteOneById: (id: string | number) => Promise<any | Error>;
+}
 
 /**
  * @typedef {Object} Room
@@ -34,18 +48,18 @@ import { apiGateway } from "gateways";
  * @namespace RoomService
  * @param storageService - service used for access to session info
  */
-export const RoomService = storageService => {
+export const RoomService = (storageService: any): IRoomService => {
   /**
    * Create a new room and return it.
    * @memberof RoomService
    * @param {Room} room - room object.
    * @returns {RoomResponse} - created room information.
    */
-  const createOne = async ({ name, color }) => {
+  const createOne = async ({ name, color }: any): Promise<any | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = {
       data: { name, color },
-      authToken
+      authToken,
     };
     try {
       const res = await apiGateway.doPost("createRoom", config);
@@ -61,7 +75,7 @@ export const RoomService = storageService => {
    * @param {number} id - room id.
    * @returns {RoomResponse} - found room information.
    */
-  const getOneById = async id => {
+  const getOneById = async (id: string | number): Promise<any | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
@@ -77,12 +91,13 @@ export const RoomService = storageService => {
    * @memberof RoomService
    * @returns {RoomResponse[]} - found rooms information.
    */
-  const getAll = async () => {
+  const getAll = async (): Promise<IRoom[] | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { authToken };
     try {
       const res = await apiGateway.doGet("getAllRooms", config);
-      return await res.json();
+      const rooms = (await res.json()) as IRoomDto[];
+      return rooms.map(roomMapper.fromDtoToEntity);
     } catch (error) {
       return new Error(error.message);
     }
@@ -95,15 +110,18 @@ export const RoomService = storageService => {
    * @param {Room} room - room object.
    * @returns {RoomResponse} - room updated information.
    */
-  const updateOneById = async (id, { name, color }) => {
+  const updateOneById = async (
+    id: string | number,
+    { name, color }: any,
+  ): Promise<any | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = {
       id,
       updateBody: {
         name,
-        color
+        color,
       },
-      authToken
+      authToken,
     };
     try {
       const res = await apiGateway.doUpdate("updateRoomById", config);
@@ -119,7 +137,7 @@ export const RoomService = storageService => {
    * @param {number} id - room id.
    *  @returns {NotContentResponse} - request response.
    */
-  const deleteOneById = async id => {
+  const deleteOneById = async (id: string | number): Promise<any | Error> => {
     const { token: authToken } = storageService.getJWT();
     const config = { id, authToken };
     try {
@@ -135,6 +153,6 @@ export const RoomService = storageService => {
     getOneById,
     getAll,
     updateOneById,
-    deleteOneById
+    deleteOneById,
   };
 };
