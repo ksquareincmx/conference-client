@@ -280,11 +280,11 @@ class BookingFormComponent extends React.Component {
       });
     } catch (error) {
       const { title, body } = error;
-      onErrorNotification({
+      this.setState({ isLoading: false });
+      return onErrorNotification({
         title,
         body
       });
-      return;
     }
   };
 
