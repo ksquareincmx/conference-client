@@ -1,17 +1,18 @@
 import React, { Fragment } from "react";
-import { GridList, withStyles } from "@material-ui/core";
+import { /*GridList,*/ withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem/BookingItem";
 import * as bookingMapper from "mappers/BookingMapper";
 import { filterNSortedByDate, filterByTerm } from "utils/BookingFilters";
+import { IBooking } from "models/Booking";
 
-const styles = () => ({
+const styles = {
   gridList: {
     width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
     flexWrap: "nowrap",
-    marginTop: 10
+    marginTop: 10,
   },
   emptyList: {
     height: "100%",
@@ -19,24 +20,27 @@ const styles = () => ({
     color: "#808080",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
-  }
-});
+    alignItems: "center",
+  },
+};
 
 // filterBookingsByTerm :: (String, IBooking[]) -> IBooking[]
-const filterBookingsByTerm = (filterTerm, bookings = []) => {
+const filterBookingsByTerm = (
+  filterTerm: string,
+  bookings: IBooking[] = [],
+) => {
   return filterByTerm(filterTerm, filterNSortedByDate(bookings));
 };
 
-const BookingListComponent = ({
+const BookingListComponent: React.SFC<any> = ({
   classes: { gridList, emptyList },
   filterTerm,
   bookingsData = [],
-  onBookingsDataChange
+  onBookingsDataChange,
 }) => {
   const filteredBookings = filterBookingsByTerm(
     filterTerm,
-    bookingsData.map(bookingMapper.mapToListFormat)
+    bookingsData.map(bookingMapper.mapToListFormat),
   );
 
   if (filteredBookings.length === 0) {
@@ -49,7 +53,7 @@ const BookingListComponent = ({
 
   return (
     <Fragment>
-      <GridList className={gridList}>
+      <ul className={gridList}>
         {filteredBookings.map(booking => (
           <BookingItem
             key={booking.id}
@@ -57,9 +61,9 @@ const BookingListComponent = ({
             onBookingsDataChange={onBookingsDataChange}
           />
         ))}
-      </GridList>
+      </ul>
     </Fragment>
   );
 };
 
-export const BookingList = withStyles(styles)(BookingListComponent);
+export const BookingList = withStyles(styles as any)(BookingListComponent);

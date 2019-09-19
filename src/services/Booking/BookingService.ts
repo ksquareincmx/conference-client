@@ -97,14 +97,14 @@ export const BookingService = (storageService: any): IBookingService => {
    * @return {BookingResponse} - created booking information.
    */
   const createOne = async (booking: IBooking): Promise<IBooking | Error> => {
-    const { token } = storageService.getJWT();
-    const { id } = storageService.getUserInfo();
-    const data = bookingMapper.fromEntityToDto({
-      ...booking,
-      userId: id,
-    });
-
     try {
+      const { token } = storageService.getJWT();
+      const { id } = storageService.getUserInfo();
+      const data = bookingMapper.fromEntityToDto({
+        ...booking,
+        userId: id,
+      });
+
       const res = await apiGateway.doPost("createBooking", {
         data,
         authToken: token,

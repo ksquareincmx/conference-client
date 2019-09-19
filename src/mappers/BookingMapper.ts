@@ -120,7 +120,17 @@ export const fromDtoToEntity = ({
   attendees,
   guests,
   userId: user_id,
-  room: roomMapper.fromDtoToEntity(room),
+  room: room
+    ? roomMapper.fromDtoToEntity(room)
+    : {
+        bgColor: "",
+        minimumCapacity: 1,
+        id: 1,
+        txtColor: "",
+        guests: 1,
+        name: "",
+        presence: false,
+      },
 });
 
 /**
