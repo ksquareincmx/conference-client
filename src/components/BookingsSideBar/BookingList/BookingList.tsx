@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { /*GridList,*/ withStyles } from "@material-ui/core";
+import { GridList, withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem/BookingItem";
 import * as bookingMapper from "mappers/BookingMapper";
 import { filterNSortedByDate, filterByTerm } from "utils/BookingFilters";
@@ -53,7 +53,7 @@ const BookingListComponent: React.SFC<any> = ({
 
   return (
     <Fragment>
-      <ul className={gridList}>
+      <GridList className={gridList}>
         {filteredBookings.map(booking => (
           <BookingItem
             key={booking.id}
@@ -61,7 +61,7 @@ const BookingListComponent: React.SFC<any> = ({
             onBookingsDataChange={onBookingsDataChange}
           />
         ))}
-      </ul>
+      </GridList>
     </Fragment>
   );
 };
