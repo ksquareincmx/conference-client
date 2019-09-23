@@ -10,7 +10,6 @@ import { NotificationProvider, ModalFormProvider } from "providers";
 import { NoteCard } from "components/NoteCard";
 
 const CalendarPage = props => {
-  const [isDBEmpty, setIsDBEmpty] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -20,10 +19,6 @@ const CalendarPage = props => {
 
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
-  };
-
-  const handleDBEmpty = () => {
-    setIsDBEmpty(true);
   };
 
   useEffect(() => {
@@ -65,7 +60,7 @@ const CalendarPage = props => {
             <Grid item xs={12}>
               {isMainLoading && <div>Loading...</div>}
 
-              {isDBEmpty && !isMainLoading && (
+              {!isMainLoading && (
                 <NoteCard
                   title={"Rooms not found"}
                   content={
@@ -74,17 +69,16 @@ const CalendarPage = props => {
                 />
               )}
 
-              {!isDBEmpty && !URLRoomId && !isMainLoading && (
-                <NoteCard title={"Error 404: Room not found."} content={""} />
+              {!URLRoomId && !isMainLoading && (
+                <NoteCard title="Error 404: Room not found." content={""} />
               )}
 
-              {!isDBEmpty && URLRoomId && !isMainLoading && (
+              {URLRoomId && !isMainLoading && (
                 <CalendarPageLogic
                   auth={sessionInfo}
                   URLRoomId={URLRoomId}
                   bookingsData={bookingsData}
                   onBookingsDataChange={onBookingsDataChange}
-                  handleDBEmpty={handleDBEmpty}
                   isDrawerOpen={isDrawerOpen}
                 />
               )}

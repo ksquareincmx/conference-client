@@ -72,10 +72,6 @@ class CalendarPageLogicComponent extends React.Component {
   fetchRooms = async () => {
     try {
       const roomList = await roomService.getAll();
-      if (roomList.length === 0) {
-        return this.props.handleDBEmpty();
-      }
-
       const ROOMS_PER_CALENDAR = 2;
       const pairedRooms = roomList.reduce((result, value, index, array) => {
         if (index % 2 === 0) {

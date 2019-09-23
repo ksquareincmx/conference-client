@@ -98,9 +98,9 @@ export const RoomService = (storageService: any): IRoomService => {
    * @returns {RoomResponse[]} - found rooms information.
    */
   const getAll = async (): Promise<IRoom[] | Error> => {
-    const { token: authToken } = storageService.getJWT();
-    const config = { authToken };
     try {
+      const { token: authToken } = storageService.getJWT();
+      const config = { authToken };
       const res = await apiGateway.doGet("getAllRooms", config);
       const rooms = (await res.json()) as IRoomDto[];
       return rooms.map(roomMapper.fromDtoToEntity);
