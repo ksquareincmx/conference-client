@@ -60,15 +60,6 @@ const CalendarPage = props => {
             <Grid item xs={12}>
               {isMainLoading && <div>Loading...</div>}
 
-              {!isMainLoading && (
-                <NoteCard
-                  title={"Rooms not found"}
-                  content={
-                    "The data base of the application needs to have rooms registered to work."
-                  }
-                />
-              )}
-
               {!URLRoomId && !isMainLoading && (
                 <NoteCard title="Error 404: Room not found." content={""} />
               )}
