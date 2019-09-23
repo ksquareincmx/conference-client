@@ -12,15 +12,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ControlledOpenSelect({
-  capacity,
-  handleMinimumCapacity
-}) {
+export default function ControlledOpenSelect({ capacity, handleGuests }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
   function handleChange(event) {
-    handleMinimumCapacity(event.target.value);
+    handleGuests(event.target.value);
   }
 
   function handleClose() {
@@ -34,9 +31,7 @@ export default function ControlledOpenSelect({
   return (
     <form autoComplete="off">
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="demo-controlled-open-select">
-          Room Capacity
-        </InputLabel>
+        <InputLabel htmlFor="demo-controlled-open-select">Guests</InputLabel>
         <Select
           open={open}
           onClose={handleClose}

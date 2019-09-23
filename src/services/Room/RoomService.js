@@ -16,6 +16,7 @@ import { apiGateway } from "gateways";
  * @property {Date} update_at - room update date.
  * @property {number} booking_id_actual - Booking id that currently occupies the room, null if its not.
  * @property {string} status - room status ("Available" or "Not Available").
+ * @property {number} minimum_capacity - room capacity (default: 1, less will throw an error)
  */
 
 // TODO: Review the use of this type definition

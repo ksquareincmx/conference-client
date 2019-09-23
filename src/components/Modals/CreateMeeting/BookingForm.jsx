@@ -128,7 +128,8 @@ class BookingFormComponent extends React.Component {
     room: "",
     bookingReason: "",
     attendees: [],
-    minimumCapacity: 0,
+    guests: 1,
+    minimumCapacity: 1,
     invalidWeekendMessage: "",
     invalidDateMessage: "",
     invalidHourMessage: "",
@@ -298,6 +299,7 @@ class BookingFormComponent extends React.Component {
       }
       return bookingCreated;
     } catch (error) {
+      alert(error.message);
       return Promise.reject({
         title: "Booking creation fails",
         body: "There was an error with the server"
@@ -367,8 +369,8 @@ class BookingFormComponent extends React.Component {
     this.setState({ attendees: attendeesList });
   };
 
-  handleMinimumCapacity = minimumCapacitySelector => {
-    this.setState({ minimumCapacity: minimumCapacitySelector });
+  handleGuests = minimumCapacitySelector => {
+    this.setState({ guests: minimumCapacitySelector });
   };
 
   getDate = () => {
@@ -424,7 +426,7 @@ class BookingFormComponent extends React.Component {
           room,
           description,
           attendees,
-          minimumCapacity
+          guests
         } = bookingForEdition;
 
         const startDate = formatDate(start);
@@ -445,7 +447,7 @@ class BookingFormComponent extends React.Component {
           },
           bookingReason: description,
           attendees: attendees,
-          minimumCapacity,
+          guests,
           disabledStartTimeSelect: false,
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
@@ -485,7 +487,7 @@ class BookingFormComponent extends React.Component {
 
     const formTitle = isBookingEdition ? "Edit Appointment" : "New Appointment";
     const buttonSaveTxt = isBookingEdition ? "Edit" : "Create";
-
+    const room = this.state.room;
     return (
       <Grid
         container
@@ -584,10 +586,14 @@ class BookingFormComponent extends React.Component {
                 room={this.state.room}
                 roomId={this.state.roomId}
               />
-              <CapacitySelector
-                capacity={this.state.minimumCapacity}
-                handleMinimumCapacity={this.handleMinimumCapacity}
-              />
+              <React.Fragment>
+                {room === "Stark" && (
+                  <CapacitySelector
+                    capacity={this.state.guests}
+                    handleGuests={this.handleGuests}
+                  />
+                )}
+              </React.Fragment>
             </Grid>
             <Grid container direction="column" className={content}>
               <Typography className={subtitle} variant="subtitle1">
@@ -613,6 +619,7 @@ class BookingFormComponent extends React.Component {
               </Typography>
               <ChipList
                 handleChangeInvite={this.handleChangeInvite}
+                setGuests={this.setGuests}
                 handleChangeInviteField={this.handleChangeInviteField}
                 attendeesList={this.state.attendees}
                 isInvalidInvite={this.state.isInvalidInvite}

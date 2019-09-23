@@ -8,6 +8,7 @@ import { mapToRequestFormat } from "mappers/bookingMapper";
  * @property {Date} start - start date.
  * @property {Date} end - end date.
  * @property {string[]} attendees - booking attendee.
+ * @property {number} guests - Number of emails registered to attend the event. (This will be compared with minimum_capacity property in RoomService)
  */
 
 /**
@@ -22,6 +23,7 @@ import { mapToRequestFormat } from "mappers/bookingMapper";
  * @property {Date} created_at - booking creation date.
  * @property {Date} updated_at - booking update date.
  * @property {string[]} attendees - Emails from users who will attend the event.
+ * @property {number} guests - Number of emails registered to attend the event. (This will be compared with minimum_capacity property in RoomService)
  */
 
 // TODO: Review the use of this type definition
@@ -44,6 +46,7 @@ import { mapToRequestFormat } from "mappers/bookingMapper";
  * @property {Date} update_at - room update date.
  * @property {number} booking_id_actual - booking id that currently occupies the room, null if its not.
  * @property {string} status - Booking status ("Available" or "Not Available").
+ * @property {number} minimum_capacity - room capacity (default: 1, less will throw an error)
  */
 
 /**
@@ -94,7 +97,7 @@ export const BookingService = storageService => {
       const res = await apiGateway.doPost("createBooking", config);
       return await res.json();
     } catch (error) {
-      return new Error(error.message);
+      throw new Error(error.message);
     }
   };
 
