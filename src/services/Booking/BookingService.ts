@@ -1,7 +1,7 @@
 import { apiGateway } from "gateways";
 import * as bookingMapper from "mappers/BookingMapper";
 import { IBooking } from "models/Booking";
-import { IAppError } from "models/AppError";
+import { IAppError, AppErrorTypes, appError } from "models/AppError";
 
 export interface IBookingService {
   createOne: (booking: IBooking) => Promise<IBooking | Error>;
@@ -186,7 +186,7 @@ export const BookingService = (storageService: any): IBookingService => {
       const res = await apiGateway.doGet("getDetailedBookingsByRoom", config);
       return await res.json();
     } catch (error) {
-      return Promise.reject({ type: "NETWORK_ERROR" });
+      return Promise.reject(appError(AppErrorTypes.NETWORK_ERROR));
     }
   };
 
