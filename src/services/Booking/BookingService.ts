@@ -1,6 +1,7 @@
 import { apiGateway } from "gateways";
 import * as bookingMapper from "mappers/BookingMapper";
 import { IBooking } from "models/Booking";
+import { IAppError, AppErrorTypes, appError } from "models/AppError";
 
 export interface IBookingService {
   createOne: (booking: IBooking) => Promise<IBooking | Error>;
@@ -178,14 +179,14 @@ export const BookingService = (storageService: any): IBookingService => {
   const getAllWithDetailsByRoom = async (
     filterDate: any,
     roomId: any,
-  ): Promise<any | Error> => {
-    const { token: authToken } = storageService.getJWT();
-    const config = { filterDate, roomId, authToken };
+  ): Promise<any | IAppError> => {
     try {
+      const { token: authToken } = storageService.getJWT();
+      const config = { filterDate, roomId, authToken };
       const res = await apiGateway.doGet("getDetailedBookingsByRoom", config);
       return await res.json();
     } catch (error) {
-      return new Error(error.message);
+      return Promise.reject(appError(AppErrorTypes.NETWORK_ERROR));
     }
   };
 
