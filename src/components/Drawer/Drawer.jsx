@@ -1,44 +1,36 @@
 import React, { Fragment } from "react";
 import { Drawer, withStyles } from "@material-ui/core";
 
-const drawerWidth = 460;
+const DRAWER_WIDTH = 380;
 
 const styles = theme => ({
   drawer: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    }),
-    width: drawerWidth,
+    width: DRAWER_WIDTH,
     flexShrink: 0
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: DRAWER_WIDTH,
     overflowX: "hidden"
-  },
-  toolbar: theme.mixins.toolbar
+  }
 });
 
 class DrawerComponent extends React.Component {
   render() {
     const { children, classes: styleClasses } = this.props;
-    const { drawer, drawerPaper, toolbar } = styleClasses;
+    const { drawer, drawerPaper } = styleClasses;
 
     return (
-      <Fragment>
-        <Drawer
-          className={drawer}
-          variant="persistent"
-          anchor="left"
-          open={true}
-          classes={{
-            paper: drawerPaper
-          }}
-        >
-          <div className={toolbar} />
-          {children}
-        </Drawer>
-      </Fragment>
+      <Drawer
+        className={drawer}
+        variant="persistent"
+        anchor="left"
+        open={true}
+        classes={{
+          paper: drawerPaper
+        }}
+      >
+        {children}
+      </Drawer>
     );
   }
 }
