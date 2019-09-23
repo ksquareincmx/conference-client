@@ -1,7 +1,6 @@
 import React from "react";
 import { Grid, Typography, Card } from "@material-ui/core/";
 import { withStyles } from "@material-ui/core/styles";
-import { SearchBar } from "./SearchBar";
 import { BookingList } from "./BookingList/BookingList";
 
 const styles = () => ({
@@ -59,7 +58,6 @@ class BookingsSideBarComponent extends React.Component<
           <Typography className={searchBarCardTittle}>
             Appointments Made
           </Typography>
-          <SearchBar onChange={this.handleChangeSearch} />
         </Card>
         <BookingList
           bookingsData={bookingsData}
