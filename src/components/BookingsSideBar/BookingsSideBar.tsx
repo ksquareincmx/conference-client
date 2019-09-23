@@ -27,29 +27,27 @@ const styles = () => ({
   },
 });
 
-class BookingsSideBarComponent extends React.Component<any, {}> {
-  render() {
-    const {
-      bookingsData,
-      onBookingsDataChange,
-      classes: { siderBarContainer, searchBarCard, searchBarCardTittle },
-    } = this.props;
+const BookingsSideBarComponent: React.FC<any> = props => {
+  const {
+    bookingsData,
+    onBookingsDataChange,
+    classes: { siderBarContainer, searchBarCard, searchBarCardTittle },
+  } = props;
 
-    return (
-      <Grid container className={siderBarContainer}>
-        <Card className={searchBarCard} square elevation={1}>
-          <Typography className={searchBarCardTittle}>
-            Appointments Made
-          </Typography>
-        </Card>
-        <BookingList
-          bookingsData={bookingsData}
-          onBookingsDataChange={onBookingsDataChange}
-        />
-      </Grid>
-    );
-  }
-}
+  return (
+    <Grid container className={siderBarContainer}>
+      <Card className={searchBarCard} square elevation={1}>
+        <Typography className={searchBarCardTittle}>
+          Appointments Made
+        </Typography>
+      </Card>
+      <BookingList
+        bookingsData={bookingsData}
+        onBookingsDataChange={onBookingsDataChange}
+      />
+    </Grid>
+  );
+};
 
 export const BookingsSideBar = withStyles(styles as any)(
   BookingsSideBarComponent,
