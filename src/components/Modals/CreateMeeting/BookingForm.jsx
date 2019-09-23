@@ -22,6 +22,7 @@ import { RoomSelect } from "./RoomSelect";
 import { validateBooking } from "./meetingValidations";
 import MaterialButton from "components/MaterialButton";
 import ChipList from "components/ChipList";
+import CapacitySelector from "components/CapacitySelector";
 import {
   formatDate,
   formatDashedDate,
@@ -127,6 +128,7 @@ class BookingFormComponent extends React.Component {
     room: "",
     bookingReason: "",
     attendees: [],
+    minimumCapacity: 0,
     invalidWeekendMessage: "",
     invalidDateMessage: "",
     invalidHourMessage: "",
@@ -257,7 +259,6 @@ class BookingFormComponent extends React.Component {
     const booking = mapToPost(this.state);
     const isBookingValid = this.validate(booking);
     const { onErrorNotification } = this.props;
-    console.log(this.state.room);
     this.setState({ isLoading: true, isInvalidInvite: false });
     try {
       if (isBookingValid && isInviteEmpty) {
@@ -366,6 +367,10 @@ class BookingFormComponent extends React.Component {
     this.setState({ attendees: attendeesList });
   };
 
+  handleMinimumCapacity = minimumCapacitySelector => {
+    this.setState({ minimumCapacity: minimumCapacitySelector });
+  };
+
   getDate = () => {
     const date = new Date();
     const day = addZeros(date.getDate());
@@ -413,7 +418,14 @@ class BookingFormComponent extends React.Component {
     } else if (this.props.isBookingEdition) {
       if (!this.state.isBookingEdition) {
         const { bookingForEdition, roomId, roomName } = this.props;
-        const { start, end, room, description, attendees } = bookingForEdition;
+        const {
+          start,
+          end,
+          room,
+          description,
+          attendees,
+          minimumCapacity
+        } = bookingForEdition;
 
         const startDate = formatDate(start);
         const endDate = formatDate(end);
@@ -433,6 +445,7 @@ class BookingFormComponent extends React.Component {
           },
           bookingReason: description,
           attendees: attendees,
+          minimumCapacity,
           disabledStartTimeSelect: false,
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
@@ -570,6 +583,10 @@ class BookingFormComponent extends React.Component {
                 setRoom={this.setRoom}
                 room={this.state.room}
                 roomId={this.state.roomId}
+              />
+              <CapacitySelector
+                capacity={this.state.minimumCapacity}
+                handleMinimumCapacity={this.handleMinimumCapacity}
               />
             </Grid>
             <Grid container direction="column" className={content}>
