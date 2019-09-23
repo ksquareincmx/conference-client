@@ -7,6 +7,7 @@ import { mapEventsByRoom } from "mappers/AppointmentMapper";
 import { toRoomColors } from "mappers/RoomMapper";
 import fp from "lodash/fp";
 import cuid from "cuid";
+import { When } from "components/When/When";
 
 const styles = theme => ({
   gridContainer: {
@@ -102,7 +103,7 @@ const customEventContainerWrapper = eventWrapper => {
   });
 };
 
-const dayGrid = props => room => {
+const DayGrid = props => room => {
   const {
     bookings,
     roomList,
@@ -137,7 +138,9 @@ const dayGrid = props => room => {
 
   const getRoomEvents = roomId => {
     const events = mapEventsByRoom(bookings, roomList);
-    const eventsObj = events.find(eventsByRoom => eventsByRoom.roomId === roomId);
+    const eventsObj = events.find(
+      eventsByRoom => eventsByRoom.roomId === roomId
+    );
     return eventsObj.roomEvents;
   };
 
@@ -148,13 +151,25 @@ const dayGrid = props => room => {
   const gridStyle = isSingleGrid ? bigGrid : grid;
 
   return (
-    <div className={classNames(gridStyle, "day", gutterless)} key={room ? room.id : cuid()}>
+    <div
+      className={classNames(gridStyle, "day", gutterless)}
+      key={room ? room.id : cuid()}
+    >
       <div className={gridHeaderContainer}>
-        {isGutterless ? <div className={gridGutterless} /> : <div className={gridGutter} />}
+        <When predicate={isGutterless}>
+          <div className={gridGutterless} />
+        </When>
+        <When predicate={!isGutterless}>
+          <div className={gridGutter} />
+        </When>
+
         <div className={gridHeader}>
-          <h3 className={gridHeaderTxt}>{room ? `${room.name} Room` : "Loading"}</h3>
+          <h3 className={gridHeaderTxt}>
+            {room ? `${room.name} Room` : "Loading"}
+          </h3>
         </div>
       </div>
+
       <BigCalendar
         selectable
         toolbar={false}
@@ -182,11 +197,13 @@ const DaysViewComponent = props => {
   const { gridContainer, loadingContainer } = styleClasses;
 
   if (isSingleGrid && roomSelected) {
-    return <div className={gridContainer}>{roomSelected.map(dayGrid(props))}</div>;
+    return (
+      <div className={gridContainer}>{roomSelected.map(DayGrid(props))}</div>
+    );
   }
 
   if (roomList) {
-    return <div className={gridContainer}>{roomList.map(dayGrid(props))}</div>;
+    return <div className={gridContainer}>{roomList.map(DayGrid(props))}</div>;
   }
 
   return (

@@ -1,6 +1,6 @@
 import React from "react";
-import { getDateText, formatDate, formatTime } from "utils/BookingFormater";
-import { mapToNotificationContentFormat } from "mappers/bookingMapper";
+import { formatDate } from "utils/BookingFormater";
+import * as bookingMapper from "mappers/BookingMapper";
 import { withNotifications } from "hocs";
 import { storageService, bookingService } from "services";
 import { DeleteDialogContent } from "./DeleteDialogContent";
@@ -59,7 +59,7 @@ class ConfirmationDialogComponent extends React.Component {
         const deleteResponse = await bookingService.deleteOneById(bookingId);
         const { ok } = deleteResponse;
         if (ok) {
-          return mapToNotificationContentFormat(booking);
+          return bookingMapper.mapToNotificationContentFormat(booking);
         }
 
         return onErrorNotification({

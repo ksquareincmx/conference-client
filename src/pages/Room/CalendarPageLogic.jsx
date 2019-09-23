@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { HeaderView } from "components/Calendar/HeaderView";
 import * as Utils from "./Utils.js";
-import { HeaderStrategy } from "./HeaderStrategy.jsx";
+import { HeaderStrategy } from "./HeaderStrategy";
 import { roomService } from "services";
 import { Grid, withStyles } from "@material-ui/core";
 import { CalendarGrid } from "./CalendarGrid";
@@ -72,9 +72,6 @@ class CalendarPageLogicComponent extends React.Component {
   fetchRooms = async () => {
     try {
       const roomList = await roomService.getAll();
-      if (roomList.length === 0) {
-        return this.props.handleDBEmpty();
-      }
       const ROOMS_PER_CALENDAR = 2;
       const pairedRooms = roomList.reduce((result, value, index, array) => {
         if (index % 2 === 0) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 
-const styles = theme => ({
+const styles = () => ({
   roomStickerContainer: {
     height: "3.125rem",
     width: "3.125rem",
@@ -16,7 +16,11 @@ const RoomStickerComponent = ({ roomName, classes }) => {
   const { roomStickerContainer, roomSticker } = classes;
   return (
     <div className={roomStickerContainer}>
-      <img className={roomSticker} src={`/assets/${roomName}.png`} />
+      <img
+        className={roomSticker}
+        src={`/assets/${roomName}.png`}
+        alt={`${roomName} logo icon`}
+      />
     </div>
   );
 };

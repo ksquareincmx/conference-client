@@ -40,7 +40,7 @@ const Error500Component = props => {
   return (
     <div className={container}>
       <h1 className={title}>Whoops... something went wrong</h1>
-      <h2 className={subTitle}>Which one of our engineers we should fire?</h2>
+      <h2 className={subTitle}>Which one of our engineers should we fire?</h2>
       <div className={pictureList}>
         <div>
           <img className={picture} src="/assets/basultos.png" alt="Basultos" />

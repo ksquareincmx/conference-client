@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { SearchBar } from "./SearchBar";
 import { BookingList } from "./BookingList/BookingList";
 
-const styles = theme => ({
+const styles = () => ({
   siderBarContainer: {
     height: 855,
     width: 460,
@@ -12,37 +12,45 @@ const styles = theme => ({
     flexDirection: "column",
     flexWrap: "nowrap",
     justifyContent: "start",
-    overflowY: "hidden"
+    overflowY: "hidden",
   },
   searchBarCard: {
     width: "100%",
     height: 180,
-    marginBottom: 4
+    marginBottom: 4,
   },
   searchBarCardTittle: {
     marginTop: 25,
     marginLeft: 50,
     fontSize: "1.8em",
     fontWeight: "bold",
-    color: "gray"
-  }
+    color: "gray",
+  },
 });
 
-class BookingsSideBarComponent extends React.Component {
+export interface IBookingsSideBarState {
+  filterTerm: string;
+}
+
+class BookingsSideBarComponent extends React.Component<
+  any,
+  IBookingsSideBarState
+> {
   state = {
-    filterTerm: ""
+    filterTerm: "",
   };
 
-  handleFilterTermChange = event => {
+  handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ filterTerm: event.target.value });
   };
 
   render() {
     const { filterTerm } = this.state;
+
     const {
       bookingsData,
       onBookingsDataChange,
-      classes: { siderBarContainer, searchBarCard, searchBarCardTittle }
+      classes: { siderBarContainer, searchBarCard, searchBarCardTittle },
     } = this.props;
 
     return (
@@ -51,7 +59,7 @@ class BookingsSideBarComponent extends React.Component {
           <Typography className={searchBarCardTittle}>
             Appointments Made
           </Typography>
-          <SearchBar onChange={this.handleFilterTermChange} />
+          <SearchBar onChange={this.handleChangeSearch} />
         </Card>
         <BookingList
           bookingsData={bookingsData}
@@ -63,4 +71,6 @@ class BookingsSideBarComponent extends React.Component {
   }
 }
 
-export const BookingsSideBar = withStyles(styles)(BookingsSideBarComponent);
+export const BookingsSideBar = withStyles(styles as any)(
+  BookingsSideBarComponent,
+);

@@ -5,7 +5,7 @@ import background from "./login.jpg";
 import { LoginErrorCard } from "./LoginErrorCard";
 import { LoginCard } from "./LoginCard";
 import { withAuthContext } from "hocs";
-import { storageService, roomService } from "services";
+import { storageService } from "services";
 
 const style = () => ({
   loginContainer: {

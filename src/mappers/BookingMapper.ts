@@ -4,6 +4,9 @@ import {
   formatTime,
   abbreviateRoomName
 } from "utils/BookingFormater";
+import { IBooking } from "models/Booking";
+import { IBookingDto } from "dtos/BookingDto";
+import * as roomMapper from "./RoomMapper";
 
 /**
  * @typedef {Object} User
@@ -37,7 +40,7 @@ import {
 /**
  * @typedef {Object} BookingRequestWithFormat
  * @property {string} description - booking description.
- * @property {number} room_id - booking room id.
+ * @property {number} roomId - booking room id.
  * @property {Date} start - start date.
  * @property {Date} end - end date.
  * @property {string[]} attendees - booking attendees.
@@ -50,8 +53,8 @@ import {
  * @property {Date} start - booking start date.
  * @property {Date} end - booking end date.
  * @property {string} event_id -Google calendar event id.
- * @property {number} room_id - room id.
- * @property {number} user_id - user id who created the booking.
+ * @property {number} roomId - room id.
+ * @property {number} userId - user id who created the booking.
  * @property {Date} created_at - booking creation date.
  * @property {Date} updated_at - booking update date.
  * @property {string[]} attendees - Emails from users who will attend the event.
@@ -79,20 +82,55 @@ import {
  * @param {BookingRequest} booking - booking info
  * @returns {BookingRequestWithFormat} - booking info with required format
  */
-export const mapToRequestFormat = ({
+// fromEntityToDto :: IBooking -> IBookingDto
+export const fromEntityToDto = ({
+  start,
+  end,
+  description,
+  roomId,
+  attendees,
+  guests,
+  userId,
+  room
+}: IBooking): IBookingDto => ({
+  start,
+  end,
+  description,
+  room_id: roomId,
+  attendees,
+  guests,
+  user_id: userId,
+  room: roomMapper.fromEntityToDto(room)
+});
+
+export const fromDtoToEntity = ({
   start,
   end,
   description,
   room_id,
   attendees,
-  guests
-}) => ({
+  guests,
+  user_id,
+  room
+}: IBookingDto): IBooking => ({
   start,
   end,
   description,
-  room_id,
+  roomId: room_id,
   attendees,
-  guests
+  guests,
+  userId: user_id,
+  room: room
+    ? roomMapper.fromDtoToEntity(room)
+    : {
+        bgColor: "",
+        minimumCapacity: 1,
+        id: 1,
+        txtColor: "",
+        guests: 1,
+        name: "",
+        presence: false
+      }
 });
 
 /**
@@ -102,12 +140,13 @@ export const mapToRequestFormat = ({
  */
 /* TODO: Check this, the function returns unnecesary properties
 with the ...booking */
-export const mapToListFormat = booking => {
+export const mapToListFormat = (booking: any) => {
   const { id: bookingId, start, user, room, attendees, end } = booking;
   const { id: userId, name: userName } = user;
   const { name: roomName, bg_color: roomColor } = room;
   const roomNameAbbrev = abbreviateRoomName(roomName);
   const dateText = getDateText(formatDate(start));
+
   return {
     ...booking,
     start,
@@ -129,7 +168,7 @@ export const mapToListFormat = booking => {
  * @param {string} notificationType - notification type
  * @returns {BookingForNotification} - booking info with required format
  */
-export const mapToNotificationContentFormat = ({ user, room }) => {
+export const mapToNotificationContentFormat = ({ user, room }: any) => {
   const { name: userName } = user;
   const { name: roomName } = room;
   return {
@@ -148,7 +187,7 @@ export const mapToConfirmationDialogFormat = ({
   end,
   roomName,
   dateText
-}) => {
+}: any) => {
   const startTime = formatTime(formatDate(start));
   const endTime = formatTime(formatDate(end));
   return {

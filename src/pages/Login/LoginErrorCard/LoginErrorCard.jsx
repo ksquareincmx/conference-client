@@ -35,7 +35,6 @@ const styles = theme => ({
   cardMessageText: {
     width: "70%",
     height: "100%",
-    fontSize: "20px",
     textAlign: "center",
     fontSize: "1rem",
     margin: "0 auto",

@@ -44,5 +44,7 @@ export const isColliding = (newSelection, selectionsList) => {
       // No collision
       return false;
     }
+
+    return false;
   });
 };
