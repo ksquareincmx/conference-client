@@ -27,25 +27,8 @@ const styles = () => ({
   },
 });
 
-export interface IBookingsSideBarState {
-  filterTerm: string;
-}
-
-class BookingsSideBarComponent extends React.Component<
-  any,
-  IBookingsSideBarState
-> {
-  state = {
-    filterTerm: "",
-  };
-
-  handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ filterTerm: event.target.value });
-  };
-
+class BookingsSideBarComponent extends React.Component<any, {}> {
   render() {
-    const { filterTerm } = this.state;
-
     const {
       bookingsData,
       onBookingsDataChange,
@@ -61,7 +44,6 @@ class BookingsSideBarComponent extends React.Component<
         </Card>
         <BookingList
           bookingsData={bookingsData}
-          filterTerm={filterTerm}
           onBookingsDataChange={onBookingsDataChange}
         />
       </Grid>

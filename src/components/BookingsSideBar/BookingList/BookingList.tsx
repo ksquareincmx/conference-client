@@ -2,8 +2,6 @@ import React, { Fragment } from "react";
 import { GridList, withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem/BookingItem";
 import * as bookingMapper from "mappers/BookingMapper";
-import { filterNSortedByDate, filterByTerm } from "utils/BookingFilters";
-import { IBooking } from "models/Booking";
 
 const styles = {
   gridList: {
@@ -24,26 +22,14 @@ const styles = {
   },
 };
 
-// filterBookingsByTerm :: (String, IBooking[]) -> IBooking[]
-const filterBookingsByTerm = (
-  filterTerm: string,
-  bookings: IBooking[] = [],
-) => {
-  return filterByTerm(filterTerm, filterNSortedByDate(bookings));
-};
-
 const BookingListComponent: React.SFC<any> = ({
   classes: { gridList, emptyList },
-  filterTerm,
   bookingsData = [],
   onBookingsDataChange,
 }) => {
-  const filteredBookings = filterBookingsByTerm(
-    filterTerm,
-    bookingsData.map(bookingMapper.mapToListFormat),
-  );
+  const bookings = bookingsData.map(bookingMapper.mapToListFormat);
 
-  if (filteredBookings.length === 0) {
+  if (bookings.length === 0) {
     return (
       <div className={emptyList}>
         <h2>No results found</h2>
@@ -54,7 +40,7 @@ const BookingListComponent: React.SFC<any> = ({
   return (
     <Fragment>
       <GridList className={gridList}>
-        {filteredBookings.map(booking => (
+        {bookings.map((booking: any) => (
           <BookingItem
             key={booking.id}
             booking={booking}
