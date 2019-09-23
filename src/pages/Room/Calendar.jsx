@@ -10,16 +10,7 @@ import { NotificationProvider, ModalFormProvider } from "providers";
 import { NoteCard } from "components/NoteCard";
 
 const CalendarPage = props => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const handleDrawerOpen = () => {
-    setIsDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setIsDrawerOpen(false);
-  };
 
   useEffect(() => {
     setIsLoading(false);
@@ -47,11 +38,7 @@ const CalendarPage = props => {
       <NotificationProvider>
         <ModalFormProvider onBookingsDataChange={onBookingsDataChange}>
           <Grid container direction="row">
-            <DrawerBookings
-              isOpen={isDrawerOpen}
-              handleOpen={handleDrawerOpen}
-              handleClose={handleDrawerClose}
-            >
+            <DrawerBookings isOpen={true}>
               <BookingsSideBar
                 bookingsData={allBookingsData}
                 onBookingsDataChange={onBookingsDataChange}
@@ -70,7 +57,7 @@ const CalendarPage = props => {
                   URLRoomId={URLRoomId}
                   bookingsData={bookingsData}
                   onBookingsDataChange={onBookingsDataChange}
-                  isDrawerOpen={isDrawerOpen}
+                  isDrawerOpen={true}
                 />
               )}
             </Grid>
