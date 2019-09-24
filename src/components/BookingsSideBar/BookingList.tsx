@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
-import { BookingItem } from "./BookingItem/BookingItem";
+import { BookingItem } from "./BookingItem";
 import * as bookingMapper from "mappers/BookingMapper";
 import { IBooking } from "models/Booking";
 import * as colors from "styles/colors";
@@ -67,7 +67,7 @@ const getShortDayName = (day: string): string => {
 };
 
 const getHumanDay = (date: string) => {
-  return moment(date).day();
+  return new Date(date).getUTCDate();
 };
 
 const getTitleMonth = (date: string) => {
@@ -76,9 +76,15 @@ const getTitleMonth = (date: string) => {
   return getShortDayName(String(day));
 };
 
+const getYear = (date: string) => {
+  return new Date(date).getFullYear();
+};
+
 const groupByDay = (bookingList: IBooking[]) => {
   return bookingList.reduce((acc: any, booking: IBooking) => {
-    const key = `${getTitleMonth(booking.start)} ${getHumanDay(booking.start)}`;
+    const key = `${getYear(booking.start)}_${getTitleMonth(
+      booking.start,
+    )}_${getHumanDay(booking.start)}`;
 
     if (acc[key]) {
       acc[key].push(booking);
@@ -149,18 +155,24 @@ const BookingListComponent: React.SFC<any> = ({
                   key={index}
                   style={{ boxSizing: "border-box", padding: "0 2.5rem" }}
                 >
-                  <h4>
-                    {key.split(" ")[0]} <span>{key.split(" ")[1]}</span>
+                  <h4 style={{ color: colors.SECONDARY_TEXT }}>
+                    {key.split("_")[1]}{" "}
+                    <span
+                      style={{
+                        color: colors.PRIMARY_DEFAULT,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {key.split("_")[2]}
+                    </span>
                   </h4>
-                  {group.map((booking: IBooking) => {
-                    return (
-                      <BookingItem
-                        key={booking.id}
-                        booking={booking}
-                        onBookingsDataChange={onBookingsDataChange}
-                      />
-                    );
-                  })}
+                  {group.map((booking: IBooking) => (
+                    <BookingItem
+                      key={booking.id}
+                      booking={booking}
+                      onBookingsDataChange={onBookingsDataChange}
+                    />
+                  ))}
                 </div>
               );
             })}

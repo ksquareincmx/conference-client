@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Card } from "@material-ui/core/";
 import { withStyles } from "@material-ui/core/styles";
-import { BookingList } from "./BookingList/BookingList";
+import { BookingList } from "./BookingList";
 import * as colors from "styles/colors";
 
 const styles = () => ({
