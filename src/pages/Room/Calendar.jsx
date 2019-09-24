@@ -7,6 +7,7 @@ import { withAuthContext } from "hocs";
 import { NotificationProvider, ModalFormProvider } from "providers";
 import { NoteCard } from "components/NoteCard";
 import styled from "styled-components";
+import { When } from "components/When/When";
 
 export const ContentContainer = styled.div`
   display: flex;
@@ -36,13 +37,11 @@ const CalendarPage = props => {
     URLRoomId,
     isLoading: isMainLoading
   } = props;
-  const { isAuth } = authContext;
+  const { isAuth, sessionInfo } = authContext;
 
   if (!isAuth && !isLoading) {
     return <Redirect to="/login" />;
   }
-
-  const { sessionInfo } = authContext;
 
   return (
     <Fragment>
@@ -55,13 +54,15 @@ const CalendarPage = props => {
               onBookingsDataChange={onBookingsDataChange}
             />
             <CalendarWrapper>
-              {isMainLoading && <div>Loading...</div>}
+              <When predicate={isMainLoading}>
+                <div>Loading...</div>
+              </When>
 
-              {!URLRoomId && !isMainLoading && (
+              <When predicate={!URLRoomId && !isMainLoading}>
                 <NoteCard title="Error 404: Room not found." content={""} />
-              )}
+              </When>
 
-              {URLRoomId && !isMainLoading && (
+              <When predicate={URLRoomId && !isMainLoading}>
                 <CalendarPageLogic
                   auth={sessionInfo}
                   URLRoomId={URLRoomId}
@@ -69,7 +70,7 @@ const CalendarPage = props => {
                   onBookingsDataChange={onBookingsDataChange}
                   isDrawerOpen={true}
                 />
-              )}
+              </When>
             </CalendarWrapper>
           </ContentContainer>
         </ModalFormProvider>
