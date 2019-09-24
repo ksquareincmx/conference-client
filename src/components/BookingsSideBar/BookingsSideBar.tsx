@@ -15,8 +15,7 @@ const styles = () => ({
     margin: 0,
   },
   searchBarHeader: {
-    borderBottom: `8px solid ${colors.PRIMARY_DEFAULT}`,
-    boxSizin: "border-box",
+    boxSizing: "border-box",
     paddingBottom: "1.5rem",
     paddingLeft: "2.5rem",
     paddingTop: "2.5rem",

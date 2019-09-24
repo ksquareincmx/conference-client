@@ -2,8 +2,8 @@ import { IRoom } from "./Room";
 
 export interface IBooking {
   description: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   eventId?: string;
   attendees: string[];
   location?: string;

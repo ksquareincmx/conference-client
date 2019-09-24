@@ -1,9 +1,9 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Drawer, withStyles } from "@material-ui/core";
 
 const DRAWER_WIDTH = 380;
 
-const styles = theme => ({
+const styles = () => ({
   drawer: {
     width: DRAWER_WIDTH,
     flexShrink: 0
