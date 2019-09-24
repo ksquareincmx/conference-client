@@ -5,7 +5,7 @@ import { withStyles, Button, Tooltip } from "@material-ui/core";
 import classNames from "classnames";
 import { CalendarViewSelectors } from "utils/Enums";
 
-const styles = theme => ({
+const styles = () => ({
   createBtnContainer: {
     position: "relative"
   },
@@ -116,12 +116,11 @@ const HeaderViewComponent = props => {
     createButton,
     optionBar,
     optionButtons,
-    rightBtn,
     middleBtn,
     leftBtn
   } = styleClasses;
 
-  const { DAY, WEEK, MONTH } = CalendarViewSelectors;
+  const { DAY, WEEK } = CalendarViewSelectors;
 
   //TODO: change for only 1 room when calendarpage is removed
   // How to get the date?
@@ -178,13 +177,6 @@ const HeaderViewComponent = props => {
             variant={"contained"}
           >
             Week
-          </Button>
-          <Button
-            className={classNames(rightBtn, "calView")}
-            onClick={handleOnClick(onClickViewButton(MONTH))}
-            variant={"contained"}
-          >
-            Month
           </Button>
         </div>
       </div>

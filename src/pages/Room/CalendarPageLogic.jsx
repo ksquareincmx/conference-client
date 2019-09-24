@@ -6,29 +6,14 @@ import { HeaderView } from "components/Calendar/HeaderView";
 import * as Utils from "./Utils.js";
 import { HeaderStrategy } from "./HeaderStrategy";
 import { roomService } from "services";
-import { Grid, withStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import { CalendarGrid } from "./CalendarGrid";
 import { ModalFormConsumer } from "providers";
 import { EasterEgg } from "./components/EasterEgg";
-import classNames from "classnames";
 
-const styles = theme => ({
+const styles = () => ({
   calendarContainer: {
     margin: "64px 5% 64px 5%"
-  },
-  contentShrink: {
-    transition: theme.transitions.create("margin-left", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    }),
-    marginLeft: "36vw"
-  },
-  contentExpand: {
-    transition: theme.transitions.create("margin-left", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    }),
-    marginLeft: "5%"
   }
 });
 
@@ -112,18 +97,12 @@ class CalendarPageLogicComponent extends React.Component {
     const {
       bookingsData,
       onBookingsDataChange,
-      isDrawerOpen,
       classes: styleClasses
     } = this.props;
-    const { calendarContainer, contentShrink, contentExpand } = styleClasses;
+    const { calendarContainer } = styleClasses;
     return (
-      <Grid container direction="column">
-        <div
-          className={classNames(calendarContainer, {
-            [contentShrink]: isDrawerOpen,
-            [contentExpand]: !isDrawerOpen
-          })}
-        >
+      <React.Fragment>
+        <div className={calendarContainer}>
           <HeaderView
             onClickViewButton={this.handlerOnClickViewButton}
             roomList={rooms}
@@ -164,7 +143,7 @@ class CalendarPageLogicComponent extends React.Component {
           </ModalFormConsumer>
           <EasterEgg />
         </div>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

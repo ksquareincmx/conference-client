@@ -1,76 +1,43 @@
 import React from "react";
-import { Grid, Typography, Card } from "@material-ui/core/";
-import { withStyles } from "@material-ui/core/styles";
-import { SearchBar } from "./SearchBar";
-import { BookingList } from "./BookingList/BookingList";
+import { BookingList } from "./BookingList";
+import * as colors from "styles/colors";
+import styled from "styled-components";
+import { IBooking } from "models/Booking";
 
-const styles = () => ({
-  siderBarContainer: {
-    height: 855,
-    width: 460,
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "nowrap",
-    justifyContent: "start",
-    overflowY: "hidden",
-  },
-  searchBarCard: {
-    width: "100%",
-    height: 180,
-    marginBottom: 4,
-  },
-  searchBarCardTittle: {
-    marginTop: 25,
-    marginLeft: 50,
-    fontSize: "1.8em",
-    fontWeight: "bold",
-    color: "gray",
-  },
-});
+export const BookingsSideBarHeader = styled.header`
+  box-sizing: border-box;
+  padding-bottom: 1.5rem;
+  padding-left: 2.5rem;
+  padding-top: 2.5rem;
+`;
 
-export interface IBookingsSideBarState {
-  filterTerm: string;
+export const BookingsSideBarTitle = styled.h2`
+  color: ${colors.TEXT};
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+`;
+
+export const BookingsSideBarContainer = styled.aside`
+  background-color: white;
+  box-sizing: border-box;
+  padding-top: 64px;
+  width: 400px;
+`;
+
+export interface IBookingsSideBarProps {
+  bookingsData: IBooking[];
 }
 
-class BookingsSideBarComponent extends React.Component<
-  any,
-  IBookingsSideBarState
-> {
-  state = {
-    filterTerm: "",
-  };
-
-  handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ filterTerm: event.target.value });
-  };
-
-  render() {
-    const { filterTerm } = this.state;
-
-    const {
-      bookingsData,
-      onBookingsDataChange,
-      classes: { siderBarContainer, searchBarCard, searchBarCardTittle },
-    } = this.props;
-
-    return (
-      <Grid container className={siderBarContainer}>
-        <Card className={searchBarCard} square elevation={1}>
-          <Typography className={searchBarCardTittle}>
-            Appointments Made
-          </Typography>
-          <SearchBar onChange={this.handleChangeSearch} />
-        </Card>
-        <BookingList
-          bookingsData={bookingsData}
-          filterTerm={filterTerm}
-          onBookingsDataChange={onBookingsDataChange}
-        />
-      </Grid>
-    );
-  }
-}
-
-export const BookingsSideBar = withStyles(styles as any)(
-  BookingsSideBarComponent,
-);
+export const BookingsSideBar: React.FC<IBookingsSideBarProps> = ({
+  bookingsData,
+}) => {
+  return (
+    <BookingsSideBarContainer>
+      <BookingsSideBarHeader>
+        <BookingsSideBarTitle>My Appointments</BookingsSideBarTitle>
+      </BookingsSideBarHeader>
+      <BookingList bookingsData={bookingsData} />
+    </BookingsSideBarContainer>
+  );
+};

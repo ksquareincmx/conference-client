@@ -2,8 +2,8 @@ import { IRoomDto } from "./RoomDto";
 
 export interface IBookingDto {
   description: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   event_id?: string;
   attendees: string[];
   location?: string;

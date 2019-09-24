@@ -2,7 +2,7 @@ import React from "react";
 import { CalendarHeader } from "./Headers/CalendarHeader";
 import { CalendarViewSelectors } from "utils/Enums";
 
-const { WEEK, MONTH } = CalendarViewSelectors;
+const { WEEK } = CalendarViewSelectors;
 
 export interface IHeaderStrategy {
   type: String;
@@ -21,10 +21,10 @@ export const HeaderStrategy: React.SFC<IHeaderStrategy> = ({
   numberDayInMonth,
   fullYear,
   onClickNext,
-  onClickPrev
+  onClickPrev,
 }) => (
   <React.Fragment>
-    {type === WEEK || type === MONTH ? (
+    {type === WEEK ? (
       <CalendarHeader
         titleTxt={monthName}
         subtitleTxt={fullYear}
