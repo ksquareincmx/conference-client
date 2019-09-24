@@ -1,6 +1,7 @@
 import React from "react";
 import * as colors from "styles/colors";
 import styled from "styled-components";
+import { IBooking } from "models/Booking";
 
 const toHumanHour = (date: string): string => {
   const d = new Date(date);
@@ -50,7 +51,11 @@ export const BookingItemTime = styled.p`
   margin-left: 1rem;
 `;
 
-export const BookingItem: React.FC<any> = ({ booking }) => {
+export interface IBookingItemProps {
+  booking: IBooking;
+}
+
+export const BookingItem: React.FC<IBookingItemProps> = ({ booking }) => {
   return (
     <BookingItemContainer>
       <BookingItemDesc>{booking.description}</BookingItemDesc>

@@ -134,9 +134,12 @@ export const BookingListDayNumber = styled.span`
   font-weight: bold;
 `;
 
-export const BookingList: React.SFC<any> = ({
+export interface IBookingListProps {
+  bookingsData: IBooking[];
+}
+
+export const BookingList: React.SFC<IBookingListProps> = ({
   bookingsData = [],
-  onBookingsDataChange,
 }) => {
   const bookings = bookingsData.map(bookingMapper.mapToListFormat);
 
@@ -176,11 +179,7 @@ export const BookingList: React.SFC<any> = ({
                     </BookingListDayNumber>
                   </BookingListDayDate>
                   {group.map((booking: IBooking) => (
-                    <BookingItem
-                      key={booking.id}
-                      booking={booking}
-                      onBookingsDataChange={onBookingsDataChange}
-                    />
+                    <BookingItem key={booking.id} booking={booking} />
                   ))}
                 </BookingListDayBlock>
               );

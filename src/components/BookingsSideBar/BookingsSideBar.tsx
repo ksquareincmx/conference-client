@@ -2,6 +2,7 @@ import React from "react";
 import { BookingList } from "./BookingList";
 import * as colors from "styles/colors";
 import styled from "styled-components";
+import { IBooking } from "models/Booking";
 
 export const BookingsSideBarHeader = styled.header`
   box-sizing: border-box;
@@ -17,18 +18,19 @@ export const BookingsSideBarTitle = styled.h2`
   margin: 0;
 `;
 
-export const BookingsSideBar: React.FC<any> = props => {
-  const { bookingsData, onBookingsDataChange } = props;
+export interface IBookingsSideBarProps {
+  bookingsData: IBooking[];
+}
 
+export const BookingsSideBar: React.FC<IBookingsSideBarProps> = ({
+  bookingsData,
+}) => {
   return (
     <aside>
       <BookingsSideBarHeader>
         <BookingsSideBarTitle>My Appointments</BookingsSideBarTitle>
       </BookingsSideBarHeader>
-      <BookingList
-        bookingsData={bookingsData}
-        onBookingsDataChange={onBookingsDataChange}
-      />
+      <BookingList bookingsData={bookingsData} />
     </aside>
   );
 };
