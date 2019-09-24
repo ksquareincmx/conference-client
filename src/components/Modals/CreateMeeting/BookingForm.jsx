@@ -594,14 +594,12 @@ class BookingFormComponent extends React.Component {
                 room={this.state.room}
                 roomId={this.state.roomId}
               />
-              <React.Fragment>
-                {room === "Stark" && (
-                  <CapacitySelector
-                    capacity={this.state.guests}
-                    handleGuests={this.handleGuests}
-                  />
-                )}
-              </React.Fragment>
+              <When predicate={room === "Stark"}>
+                <CapacitySelector
+                  capacity={this.state.guests}
+                  handleGuests={this.handleGuests}
+                />
+              </When>
             </Grid>
             <Grid container direction="column" className={content}>
               <Typography className={subtitle} variant="subtitle1">
