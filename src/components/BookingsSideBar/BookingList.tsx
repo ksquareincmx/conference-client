@@ -1,21 +1,9 @@
 import React from "react";
-import { withStyles } from "@material-ui/core";
 import { BookingItem } from "./BookingItem";
 import * as bookingMapper from "mappers/BookingMapper";
 import { IBooking } from "models/Booking";
 import * as colors from "styles/colors";
 import moment from "moment";
-
-const styles = {
-  emptyList: {
-    height: "100%",
-    width: "100%",
-    color: "#808080",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-};
 
 const groupByMonth = (
   bookingList: IBooking[],
@@ -96,8 +84,7 @@ const groupByDay = (bookingList: IBooking[]) => {
   }, {});
 };
 
-const BookingListComponent: React.SFC<any> = ({
-  classes: { emptyList },
+export const BookingList: React.SFC<any> = ({
   bookingsData = [],
   onBookingsDataChange,
 }) => {
@@ -105,7 +92,16 @@ const BookingListComponent: React.SFC<any> = ({
 
   if (bookings.length === 0) {
     return (
-      <div className={emptyList}>
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          color: "#808080",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <h2>No results found</h2>
       </div>
     );
@@ -182,5 +178,3 @@ const BookingListComponent: React.SFC<any> = ({
     </ul>
   );
 };
-
-export const BookingList = withStyles(styles as any)(BookingListComponent);
