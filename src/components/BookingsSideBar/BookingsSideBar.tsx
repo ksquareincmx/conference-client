@@ -18,6 +18,13 @@ export const BookingsSideBarTitle = styled.h2`
   margin: 0;
 `;
 
+export const BookingsSideBarContainer = styled.aside`
+  background-color: white;
+  box-sizing: border-box;
+  padding-top: 64px;
+  width: 400px;
+`;
+
 export interface IBookingsSideBarProps {
   bookingsData: IBooking[];
 }
@@ -26,11 +33,11 @@ export const BookingsSideBar: React.FC<IBookingsSideBarProps> = ({
   bookingsData,
 }) => {
   return (
-    <aside>
+    <BookingsSideBarContainer>
       <BookingsSideBarHeader>
         <BookingsSideBarTitle>My Appointments</BookingsSideBarTitle>
       </BookingsSideBarHeader>
       <BookingList bookingsData={bookingsData} />
-    </aside>
+    </BookingsSideBarContainer>
   );
 };

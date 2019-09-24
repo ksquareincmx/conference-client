@@ -1,13 +1,25 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
-import { Grid } from "@material-ui/core";
 import { CalendarPageLogic } from "./CalendarPageLogic";
 import { NavBar } from "components/NavBar";
-import { DrawerBookings } from "components/Drawer";
 import { BookingsSideBar } from "components/BookingsSideBar/BookingsSideBar";
 import { withAuthContext } from "hocs";
 import { NotificationProvider, ModalFormProvider } from "providers";
 import { NoteCard } from "components/NoteCard";
+import styled from "styled-components";
+
+export const ContentContainer = styled.div`
+  display: flex;
+  align-content: center;
+  align-items: top;
+  justify-content: flex-start;
+`;
+
+export const CalendarWrapper = styled.div`
+  box-sizing: border-box;
+  padding: 64px;
+  width: calc(100vw - 400px);
+`;
 
 const CalendarPage = props => {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,14 +49,12 @@ const CalendarPage = props => {
       <NavBar authContext={authContext} />
       <NotificationProvider>
         <ModalFormProvider onBookingsDataChange={onBookingsDataChange}>
-          <Grid container direction="row">
-            <DrawerBookings isOpen={true}>
-              <BookingsSideBar
-                bookingsData={allBookingsData}
-                onBookingsDataChange={onBookingsDataChange}
-              />
-            </DrawerBookings>
-            <Grid item xs={12}>
+          <ContentContainer>
+            <BookingsSideBar
+              bookingsData={allBookingsData}
+              onBookingsDataChange={onBookingsDataChange}
+            />
+            <CalendarWrapper>
               {isMainLoading && <div>Loading...</div>}
 
               {!URLRoomId && !isMainLoading && (
@@ -60,8 +70,8 @@ const CalendarPage = props => {
                   isDrawerOpen={true}
                 />
               )}
-            </Grid>
-          </Grid>
+            </CalendarWrapper>
+          </ContentContainer>
         </ModalFormProvider>
       </NotificationProvider>
     </Fragment>
