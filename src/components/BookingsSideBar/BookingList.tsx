@@ -4,6 +4,7 @@ import * as bookingMapper from "mappers/BookingMapper";
 import { IBooking } from "models/Booking";
 import * as colors from "styles/colors";
 import moment from "moment";
+import styled from "styled-components";
 
 const groupByMonth = (
   bookingList: IBooking[],
@@ -84,6 +85,55 @@ const groupByDay = (bookingList: IBooking[]) => {
   }, {});
 };
 
+const BookingListEmpty = styled.div`
+  align-items: center;
+  color: #808080;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  width: "100%";
+`;
+
+export const BookingListContainer = styled.div`
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+`;
+
+export const BookingListMonthBlock = styled.div`
+  display: block;
+  width: 100%;
+`;
+
+export const BookingListMonthLabel = styled.div`
+  background-color: ${colors.PRIMARY_DEFAULT};
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+`;
+
+export const BookingListMonthName = styled.h3`
+  box-sizing: border-box;
+  color: ${colors.WHITE};
+  font-size: 0.9rem;
+  margin: 0;
+  padding-left: 2.5rem;
+`;
+
+export const BookingListDayBlock = styled.div`
+  box-sizing: border-box;
+  padding: 0 2.5rem;
+`;
+
+export const BookingListDayDate = styled.h4`
+  color: ${colors.SECONDARY_TEXT};
+`;
+
+export const BookingListDayNumber = styled.span`
+  color: ${colors.PRIMARY_DEFAULT};
+  font-weight: bold;
+`;
+
 export const BookingList: React.SFC<any> = ({
   bookingsData = [],
   onBookingsDataChange,
@@ -92,76 +142,39 @@ export const BookingList: React.SFC<any> = ({
 
   if (bookings.length === 0) {
     return (
-      <div
-        style={{
-          height: "100%",
-          width: "100%",
-          color: "#808080",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <BookingListEmpty>
         <h2>No results found</h2>
-      </div>
+      </BookingListEmpty>
     );
   }
 
   const groupedByMonth = groupByMonth(bookings);
 
   return (
-    <ul
-      style={{
-        height: "100vh",
-        margin: 0,
-        padding: 0,
-        width: "100%",
-      }}
-    >
+    <BookingListContainer>
       {Object.keys(groupedByMonth).map((month: string, index: number) => {
         const bookingList = groupedByMonth[month] as IBooking[];
         const groupedByDay = groupByDay(bookingList);
 
         return (
-          <div key={index} style={{ display: "block", width: "100%" }}>
-            <div
-              style={{
-                backgroundColor: colors.PRIMARY_DEFAULT,
-                padding: "0.25rem 0",
-                fontSize: "0.9rem",
-              }}
-            >
-              <h3
-                style={{
-                  boxSizing: "border-box",
-                  color: colors.WHITE,
-                  fontSize: "0.9rem",
-                  margin: 0,
-                  paddingLeft: "2.5rem",
-                }}
-              >
+          <BookingListMonthBlock key={index}>
+            <BookingListMonthLabel>
+              <BookingListMonthName>
                 {getHumanMonth(month)}
-              </h3>
-            </div>
+              </BookingListMonthName>
+            </BookingListMonthLabel>
+
             {Object.keys(groupedByDay).map((key: string, index: number) => {
               const group = groupedByDay[key];
 
               return (
-                <div
-                  key={index}
-                  style={{ boxSizing: "border-box", padding: "0 2.5rem" }}
-                >
-                  <h4 style={{ color: colors.SECONDARY_TEXT }}>
+                <BookingListDayBlock key={index}>
+                  <BookingListDayDate>
                     {key.split("_")[1]}{" "}
-                    <span
-                      style={{
-                        color: colors.PRIMARY_DEFAULT,
-                        fontWeight: "bold",
-                      }}
-                    >
+                    <BookingListDayNumber>
                       {key.split("_")[2]}
-                    </span>
-                  </h4>
+                    </BookingListDayNumber>
+                  </BookingListDayDate>
                   {group.map((booking: IBooking) => (
                     <BookingItem
                       key={booking.id}
@@ -169,12 +182,12 @@ export const BookingList: React.SFC<any> = ({
                       onBookingsDataChange={onBookingsDataChange}
                     />
                   ))}
-                </div>
+                </BookingListDayBlock>
               );
             })}
-          </div>
+          </BookingListMonthBlock>
         );
       })}
-    </ul>
+    </BookingListContainer>
   );
 };
