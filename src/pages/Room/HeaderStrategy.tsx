@@ -2,7 +2,7 @@ import React from "react";
 import { CalendarHeader } from "./Headers/CalendarHeader";
 import { CalendarViewSelectors } from "utils/Enums";
 
-const { WEEK, MONTH } = CalendarViewSelectors;
+const { WEEK } = CalendarViewSelectors;
 
 export interface IHeaderStrategy {
   type: String;

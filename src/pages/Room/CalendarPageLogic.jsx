@@ -6,12 +6,12 @@ import { HeaderView } from "components/Calendar/HeaderView";
 import * as Utils from "./Utils.js";
 import { HeaderStrategy } from "./HeaderStrategy";
 import { roomService } from "services";
-import { Grid, withStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import { CalendarGrid } from "./CalendarGrid";
 import { ModalFormConsumer } from "providers";
 import { EasterEgg } from "./components/EasterEgg";
 
-const styles = theme => ({
+const styles = () => ({
   calendarContainer: {
     margin: "64px 5% 64px 5%"
   }
@@ -97,7 +97,6 @@ class CalendarPageLogicComponent extends React.Component {
     const {
       bookingsData,
       onBookingsDataChange,
-      isDrawerOpen,
       classes: styleClasses
     } = this.props;
     const { calendarContainer } = styleClasses;
