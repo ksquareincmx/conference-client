@@ -1,49 +1,34 @@
 import React from "react";
-import { Grid, Card } from "@material-ui/core/";
-import { withStyles } from "@material-ui/core/styles";
 import { BookingList } from "./BookingList";
 import * as colors from "styles/colors";
+import styled from "styled-components";
 
-const styles = () => ({
-  searchBarCard: {
-    width: "100%",
-  },
-  searchBarCardTittle: {
-    color: colors.TEXT,
-    fontSize: "1.2rem",
-    fontWeight: "600",
-    margin: 0,
-  },
-  searchBarHeader: {
-    boxSizing: "border-box",
-    paddingBottom: "1.5rem",
-    paddingLeft: "2.5rem",
-    paddingTop: "2.5rem",
-  },
-});
+export const BookingsSideBarHeader = styled.header`
+  box-sizing: border-box;
+  padding-bottom: 1.5rem;
+  padding-left: 2.5rem;
+  padding-top: 2.5rem;
+`;
 
-const BookingsSideBarComponent: React.FC<any> = props => {
-  const {
-    bookingsData,
-    onBookingsDataChange,
-    classes: { searchBarCard, searchBarCardTittle, searchBarHeader },
-  } = props;
+export const BookingsSideBarTitle = styled.h2`
+  color: ${colors.TEXT};
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+`;
+
+export const BookingsSideBar: React.FC<any> = props => {
+  const { bookingsData, onBookingsDataChange } = props;
 
   return (
-    <Grid container>
-      <Card className={searchBarCard} square elevation={1}>
-        <header className={searchBarHeader}>
-          <h2 className={searchBarCardTittle}>My Appointments</h2>
-        </header>
-      </Card>
+    <aside>
+      <BookingsSideBarHeader>
+        <BookingsSideBarTitle>My Appointments</BookingsSideBarTitle>
+      </BookingsSideBarHeader>
       <BookingList
         bookingsData={bookingsData}
         onBookingsDataChange={onBookingsDataChange}
       />
-    </Grid>
+    </aside>
   );
 };
-
-export const BookingsSideBar = withStyles(styles as any)(
-  BookingsSideBarComponent,
-);
