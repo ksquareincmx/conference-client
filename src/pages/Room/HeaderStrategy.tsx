@@ -21,10 +21,10 @@ export const HeaderStrategy: React.SFC<IHeaderStrategy> = ({
   numberDayInMonth,
   fullYear,
   onClickNext,
-  onClickPrev
+  onClickPrev,
 }) => (
   <React.Fragment>
-    {type === WEEK || type === MONTH ? (
+    {type === WEEK ? (
       <CalendarHeader
         titleTxt={monthName}
         subtitleTxt={fullYear}
