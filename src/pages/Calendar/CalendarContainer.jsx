@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useParams } from "react-router";
-import { withRouter } from "react-router-dom";
+import { useParams, useHistory } from "react-router";
 import { bookingService, roomService } from "services";
 import { Calendar } from "./Calendar";
 import { getUTCDateFilter } from "utils/BookingFilters";
@@ -9,8 +8,9 @@ import { useInterval } from "hooks/useInterval";
 
 const REFRESH_TIME = 5000;
 
-const CalendarContainerComponent = ({ history }) => {
+export const CalendarContainer = () => {
   const { roomId } = useParams();
+  const history = useHistory();
   const [bookings, updateBookings] = useState([]);
   const [allBookings, updateAllBookings] = useState([]);
   const [isLoading, updateIsLoading] = useState(true);
@@ -93,5 +93,3 @@ const CalendarContainerComponent = ({ history }) => {
     />
   );
 };
-
-export const CalendarContainer = withRouter(CalendarContainerComponent);
