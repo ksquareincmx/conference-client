@@ -88,7 +88,6 @@ export const CalendarContainer = () => {
       allBookingsData={allBookings}
       bookingsData={bookings}
       onBookingsDataChange={onBookingsDataChange}
-      URLRoomId={roomId}
       isLoading={isLoading}
     />
   );
