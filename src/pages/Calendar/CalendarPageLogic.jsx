@@ -3,7 +3,7 @@ import dates from "react-big-calendar/lib/utils/dates";
 import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { HeaderView } from "components/Calendar/HeaderView";
-import * as Utils from "./Utils.js";
+import * as Utils from "./Utils";
 import { HeaderStrategy } from "./HeaderStrategy";
 import { roomService } from "services";
 import { withStyles } from "@material-ui/core";

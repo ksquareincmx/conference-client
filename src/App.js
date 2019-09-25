@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { Routes } from "./Routes";
 import { AuthProvider } from "providers";
 import Konami from "react-konami";
