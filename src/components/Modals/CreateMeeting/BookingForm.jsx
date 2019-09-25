@@ -12,10 +12,13 @@ import {
   Typography,
   withStyles,
   CircularProgress,
-  Button
+  Button,
+  FormControl,
+  RadioGroup
 } from "@material-ui/core/";
 import compose from "lodash/fp/compose";
 import DatePicker from "./DatePicker";
+import RecurrentBooking from "./RecurrentBooking";
 import TimeSelect from "./TimeSelect";
 import MeetingDuration from "./MeetingDuration";
 import { RoomSelect } from "./RoomSelect";
@@ -146,7 +149,8 @@ class BookingFormComponent extends React.Component {
     isInviteEmpty: true,
     isLoading: false,
     meetingDuration: [],
-    timesDurationDisabled: true
+    timesDurationDisabled: true,
+    recurentBookings: []
   };
 
   enableStartTimeSelect = () => {
@@ -382,6 +386,44 @@ class BookingFormComponent extends React.Component {
         selected: false
       };
     });
+    const recbookings = [
+      {
+        startTime: {
+          hour: "17",
+          minute: "00"
+        },
+        endTime: {
+          hour: "17",
+          minute: "00"
+        },
+        conferenceRoom: "stark",
+        reason: "my reason is you"
+      },
+      {
+        startTime: {
+          hour: "17",
+          minute: "00"
+        },
+        endTime: {
+          hour: "17",
+          minute: "00"
+        },
+        conferenceRoom: "stark",
+        reason: "my reason is you x2"
+      },
+      {
+        startTime: {
+          hour: "17",
+          minute: "00"
+        },
+        endTime: {
+          hour: "17",
+          minute: "00"
+        },
+        conferenceRoom: "stark",
+        reason: "my reason is you x3"
+      }
+    ];
 
     if (this.props.quickAppointment) {
       if (!this.state.quickAppointment) {
@@ -406,7 +448,8 @@ class BookingFormComponent extends React.Component {
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
           disabledNextButton: roomName ? false : true,
-          meetingDuration: times
+          meetingDuration: times,
+          recurentBookings: recbookings
         });
       }
     } else if (this.props.isBookingEdition) {
@@ -436,7 +479,8 @@ class BookingFormComponent extends React.Component {
           disabledEndTimeSelect: false,
           disabledConferenceSelect: false,
           disabledNextButton: false,
-          meetingDuration: times
+          meetingDuration: times,
+          recurentBookings: recbookings
         });
 
         return this.refreshChipList();
@@ -483,29 +527,51 @@ class BookingFormComponent extends React.Component {
           <CardHeader classes={{ title: header }} title={formTitle} />
           <Divider />
           <CardContent className={root}>
-            <Grid container direction="column" className={content}>
-              <Typography className={subtitle} variant="subtitle1">
-                Reservation Date
-              </Typography>
-              <DatePicker
-                setDate={this.setDate}
-                disabled={this.state.disabledDate}
-                date={this.state.date}
-                isInvalidDate={this.state.isInvalidDate}
-              />
-              <Collapse in={this.state.isInvalidDate}>
-                <small className={alertMessage}>
-                  {this.state.invalidWeekendMessage !== "" ? (
-                    <Fragment>
-                      {this.state.invalidWeekendMessage}
-                      <br />
-                      {this.state.invalidDateMessage}
-                    </Fragment>
-                  ) : (
-                    <Fragment>{this.state.invalidDateMessage}</Fragment>
-                  )}
-                </small>
-              </Collapse>
+            <Grid container direction="row" className={content}>
+              <Grid item xs={6} direction="column" className={content}>
+                <Typography className={subtitle} variant="subtitle1">
+                  Reservation Date
+                </Typography>
+                <DatePicker
+                  setDate={this.setDate}
+                  disabled={this.state.disabledDate}
+                  date={this.state.date}
+                  isInvalidDate={this.state.isInvalidDate}
+                />
+                <Collapse in={this.state.isInvalidDate}>
+                  <small className={alertMessage}>
+                    {this.state.invalidWeekendMessage !== "" ? (
+                      <Fragment>
+                        {this.state.invalidWeekendMessage}
+                        <br />
+                        {this.state.invalidDateMessage}
+                      </Fragment>
+                    ) : (
+                      <Fragment>{this.state.invalidDateMessage}</Fragment>
+                    )}
+                  </small>
+                </Collapse>
+              </Grid>
+              <Grid item xs={6} direction="column" className={content}>
+                <Typography className={subtitle} variant="subtitle1">
+                  Recurrent booking
+                </Typography>
+                <FormControl>
+                  <RadioGroup name="recurrentBooking">
+                    {this.state.recurentBookings.map((booking, idx) => {
+                      console.log("weqwe", booking);
+                      return <RecurrentBooking booking={booking} key={idx} />;
+                    })}
+                  </RadioGroup>
+                </FormControl>
+                <Button //cambiar valores
+                  disabled={this.state.timesDurationDisabled}
+                  className={clearTimeMeeting}
+                  onClick={this.clearMeetingDuration}
+                >
+                  x Clear
+                </Button>
+              </Grid>
             </Grid>
             <Grid container direction="column" className={content}>
               <Typography className={subtitle} variant="subtitle1">
