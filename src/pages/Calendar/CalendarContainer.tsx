@@ -16,37 +16,21 @@ export const CalendarContainer = () => {
   const [isLoading, updateIsLoading] = useState(true);
   const [shouldFetch, updateShouldFetch] = useState(false);
   const authContext = useContext(AuthContext);
-  const [bookingsHash, updateBookingsHash] = useState("initial");
-  const [allBookingsHash, updateAllBookingsHash] = useState("initial");
   const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
 
   const fetchBookings = async () => {
     try {
       const allData = await bookingService.getAllWithDetails(
-        getUTCDateFilter()
+        getUTCDateFilter(),
       );
 
       const data = await bookingService.getAllWithDetailsByRoom(
         getUTCDateFilter(),
-        roomId
+        roomId,
       );
 
-      const allBookingsData = allData;
-      const bookingsData = data;
-      // We avoid extra rendering if the data is the same, since this function runs every 1.5 seconds
-      const allBookingsDataStr = JSON.stringify(allBookingsData);
-      const bookingsDataStr = JSON.stringify(bookingsData);
-
-      if (allBookingsDataStr !== allBookingsHash) {
-        updateAllBookings(allBookingsData);
-        updateAllBookingsHash(allBookingsDataStr);
-      }
-
-      if (bookingsDataStr !== bookingsHash) {
-        updateBookings(bookingsData);
-        updateBookingsHash(bookingsDataStr);
-      }
-
+      updateAllBookings(allData);
+      updateBookings(data);
       return updateIsLoading(false);
     } catch (error) {
       if (error.status === 401) {
