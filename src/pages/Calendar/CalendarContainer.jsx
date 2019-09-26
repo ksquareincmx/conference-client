@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams, useHistory } from "react-router";
-import { bookingService, roomService } from "services";
+import { bookingService } from "services";
 import { Calendar } from "./Calendar";
 import { getUTCDateFilter } from "utils/BookingFilters";
 import { AuthContext } from "context/AuthContext";
@@ -19,11 +19,9 @@ export const CalendarContainer = () => {
   const [bookingsHash, updateBookingsHash] = useState("initial");
   const [allBookingsHash, updateAllBookingsHash] = useState("initial");
   const onBookingsDataChange = () => updateShouldFetch(!shouldFetch);
-  const { onLogout } = authContext;
 
   const fetchBookings = async () => {
     try {
-      const reqRoom = await roomService.getOneById(roomId);
       const allData = await bookingService.getAllWithDetails(
         getUTCDateFilter()
       );
@@ -33,38 +31,26 @@ export const CalendarContainer = () => {
         roomId
       );
 
-      if (data && allData) {
-        const allBookingsData = allData;
-        const bookingsData = data;
-        // We avoid extra rendering if the data is the same, since this function runs every 1.5 seconds
-        const allBookingsDataStr = JSON.stringify(allBookingsData);
-        const bookingsDataStr = JSON.stringify(bookingsData);
-        if (allBookingsDataStr !== allBookingsHash) {
-          updateAllBookings(allBookingsData);
-          updateAllBookingsHash(allBookingsDataStr);
-        }
+      const allBookingsData = allData;
+      const bookingsData = data;
+      // We avoid extra rendering if the data is the same, since this function runs every 1.5 seconds
+      const allBookingsDataStr = JSON.stringify(allBookingsData);
+      const bookingsDataStr = JSON.stringify(bookingsData);
 
-        if (bookingsDataStr !== bookingsHash) {
-          updateBookings(bookingsData);
-          updateBookingsHash(bookingsDataStr);
-        }
-      } else {
-        const { name } = data;
-        // The webtoken is invalid for any reason
-        if (name === "JsonWebTokenError") {
-          onLogout();
-          return history.push("/login");
-        }
+      if (allBookingsDataStr !== allBookingsHash) {
+        updateAllBookings(allBookingsData);
+        updateAllBookingsHash(allBookingsDataStr);
       }
 
-      if (typeof reqRoom === "object") {
-        return updateIsLoading(false);
+      if (bookingsDataStr !== bookingsHash) {
+        updateBookings(bookingsData);
+        updateBookingsHash(bookingsDataStr);
       }
 
-      updateIsLoading(true);
+      return updateIsLoading(false);
     } catch (error) {
       if (error.status === 401) {
-        onLogout();
+        authContext.onLogout();
         return history.push("/login");
       }
     } finally {
