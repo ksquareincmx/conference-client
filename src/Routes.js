@@ -5,12 +5,12 @@ import {
   Redirect,
   Switch
 } from "react-router-dom";
-import { RoomPage, Login } from "pages";
+import { CalendarPage, Login } from "pages";
 
 export const Routes = () => (
   <Router>
     <Switch>
-      <Route exact path="/room/:roomId" component={RoomPage} />
+      <Route exact path="/room/:roomId" component={CalendarPage} />
       <Route path="/login" component={Login} />
       <Route path="/">
         <Redirect to="/login" />

@@ -1,7 +1,7 @@
 import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import * as Utils from "./Utils.js";
-import { CalendarStrategy } from "./CalendarStrategy.jsx";
+import * as Utils from "./Utils";
+import { CalendarStrategy } from "./CalendarStrategy";
 import { Event } from "components/Calendar";
 import { withNotifications } from "hocs";
 import { formatDate } from "utils/BookingFormater";

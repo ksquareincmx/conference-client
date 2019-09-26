@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { useParams } from "react-router";
 import { Redirect } from "react-router-dom";
 import { CalendarPageLogic } from "./CalendarPageLogic";
 import { NavBar } from "components/NavBar";
@@ -23,6 +24,7 @@ export const CalendarWrapper = styled.div`
 `;
 
 const CalendarPage = props => {
+  const { roomId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +36,6 @@ const CalendarPage = props => {
     allBookingsData,
     bookingsData,
     onBookingsDataChange,
-    URLRoomId,
     isLoading: isMainLoading
   } = props;
   const { isAuth, sessionInfo } = authContext;
@@ -58,14 +59,13 @@ const CalendarPage = props => {
                 <div>Loading...</div>
               </When>
 
-              <When predicate={!URLRoomId && !isMainLoading}>
+              <When predicate={!roomId && !isMainLoading}>
                 <NoteCard title="Error 404: Room not found." content={""} />
               </When>
 
-              <When predicate={URLRoomId && !isMainLoading}>
+              <When predicate={roomId && !isMainLoading}>
                 <CalendarPageLogic
                   auth={sessionInfo}
-                  URLRoomId={URLRoomId}
                   bookingsData={bookingsData}
                   onBookingsDataChange={onBookingsDataChange}
                   isDrawerOpen={true}

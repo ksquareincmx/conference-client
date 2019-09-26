@@ -3,7 +3,7 @@ import dates from "react-big-calendar/lib/utils/dates";
 import { withRouter } from "react-router-dom";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { HeaderView } from "components/Calendar/HeaderView";
-import * as Utils from "./Utils.js";
+import * as Utils from "./Utils";
 import { HeaderStrategy } from "./HeaderStrategy";
 import { roomService } from "services";
 import { withStyles } from "@material-ui/core";
@@ -58,7 +58,7 @@ class CalendarPageLogicComponent extends React.Component {
     try {
       const roomList = await roomService.getAll();
       const ROOMS_PER_CALENDAR = 2;
-      const pairedRooms = roomList.reduce((result, value, index, array) => {
+      const pairedRooms = roomList.reduce((result, _value, index, array) => {
         if (index % 2 === 0) {
           result.push(array.slice(index, index + ROOMS_PER_CALENDAR));
         }
@@ -67,7 +67,7 @@ class CalendarPageLogicComponent extends React.Component {
       const selectedRoom = [];
       selectedRoom.push(
         roomList.find(room => {
-          return room.id.toString() === this.props.URLRoomId;
+          return room.id.toString() === this.props.match.params.roomId;
         })
       );
       this.setState({
