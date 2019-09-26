@@ -11,6 +11,4 @@ export interface IBooking {
   id?: number;
   roomId: number;
   userId: number;
-  room: IRoom;
-  roomColor: string;
 }

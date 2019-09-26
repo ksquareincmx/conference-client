@@ -11,5 +11,4 @@ export interface IBookingDto {
   id?: number;
   room_id: number;
   user_id: number;
-  room: IRoomDto;
 }

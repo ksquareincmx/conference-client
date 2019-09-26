@@ -59,10 +59,6 @@ export const BookingItem: React.FC<IBookingItemProps> = ({ booking }) => {
   return (
     <BookingItemContainer>
       <BookingItemDesc>{booking.description}</BookingItemDesc>
-      <BookingItemColor color={booking.roomColor} />
-      <BookingItemRoom>
-        Room {booking.room.id} - {booking.room.name}
-      </BookingItemRoom>
       <BookingItemTime>
         {toHumanHour(booking.start)} - {toHumanHour(booking.end)}
       </BookingItemTime>

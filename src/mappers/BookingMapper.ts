@@ -2,7 +2,7 @@ import {
   getDateText,
   formatDate,
   formatTime,
-  abbreviateRoomName,
+  abbreviateRoomName
 } from "utils/BookingFormater";
 import { IBooking } from "models/Booking";
 import { IBookingDto } from "dtos/BookingDto";
@@ -90,8 +90,7 @@ export const fromEntityToDto = ({
   roomId,
   attendees,
   guests,
-  userId,
-  room,
+  userId
 }: IBooking): IBookingDto => ({
   start,
   end,
@@ -99,8 +98,7 @@ export const fromEntityToDto = ({
   room_id: roomId,
   attendees,
   guests,
-  user_id: userId,
-  room: roomMapper.fromEntityToDto(room),
+  user_id: userId
 });
 
 export const fromDtoToEntity = ({
@@ -110,8 +108,7 @@ export const fromDtoToEntity = ({
   room_id,
   attendees,
   guests,
-  user_id,
-  room,
+  user_id
 }: IBookingDto): IBooking => ({
   start,
   end,
@@ -119,19 +116,7 @@ export const fromDtoToEntity = ({
   roomId: room_id,
   attendees,
   guests,
-  userId: user_id,
-  room: room
-    ? roomMapper.fromDtoToEntity(room)
-    : {
-        bgColor: "",
-        minimumCapacity: 1,
-        id: 1,
-        txtColor: "",
-        guests: 1,
-        name: "",
-        presence: false,
-      },
-  roomColor: room ? room.bg_color : "#000",
+  userId: user_id
 });
 
 /**
@@ -159,7 +144,7 @@ export const mapToListFormat = (booking: any) => {
     roomNameAbbrev,
     roomColor,
     dateText,
-    attendees,
+    attendees
   };
 };
 
@@ -174,7 +159,7 @@ export const mapToNotificationContentFormat = ({ user, room }: any) => {
   const { name: roomName } = room;
   return {
     userName,
-    roomName,
+    roomName
   };
 };
 
@@ -187,7 +172,7 @@ export const mapToConfirmationDialogFormat = ({
   start,
   end,
   roomName,
-  dateText,
+  dateText
 }: any) => {
   const startTime = formatTime(formatDate(start));
   const endTime = formatTime(formatDate(end));
@@ -195,6 +180,6 @@ export const mapToConfirmationDialogFormat = ({
     roomName,
     startTime,
     endTime,
-    dateText,
+    dateText
   };
 };
