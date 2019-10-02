@@ -26,3 +26,6 @@ yarn.lock
 
 # JetBrains config
 .idea
+.env
+.vscode/
+

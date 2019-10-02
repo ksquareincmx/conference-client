@@ -6,7 +6,7 @@ import {
 } from "utils/BookingFormater";
 import { IBooking } from "models/Booking";
 import { IBookingDto } from "dtos/BookingDto";
-import * as roomMapper from "./RoomMapper";
+// import * as roomMapper from "./RoomMapper";
 
 /**
  * @typedef {Object} User
