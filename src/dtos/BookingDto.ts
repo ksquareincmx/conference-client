@@ -10,5 +10,5 @@ export interface IBookingDto {
   guests: number;
   id?: number;
   room_id: number;
-  user_id: number;
+  userId: number;
 }

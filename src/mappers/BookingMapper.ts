@@ -98,7 +98,7 @@ export const fromEntityToDto = ({
   room_id: roomId,
   attendees,
   guests,
-  user_id: userId
+  userId
 });
 
 export const fromDtoToEntity = ({
@@ -108,7 +108,7 @@ export const fromDtoToEntity = ({
   room_id,
   attendees,
   guests,
-  user_id
+  userId
 }: IBookingDto): IBooking => ({
   start,
   end,
@@ -116,7 +116,7 @@ export const fromDtoToEntity = ({
   roomId: room_id,
   attendees,
   guests,
-  userId: user_id
+  userId
 });
 
 /**
